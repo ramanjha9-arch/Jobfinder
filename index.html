@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="UTF-8"/>
@@ -433,7 +432,7 @@ font-size:12px;color:var(–muted);
 
   <div id="platform" class="hidden">
 
-```
+
 <!-- Step Bar -->
 <div class="stepbar" id="stepbar">
   <div class="step" id="st-upload">
@@ -474,7 +473,7 @@ font-size:12px;color:var(–muted);
 <div id="phase-tailor" class="panel hidden"></div>
 <div id="phase-preview" class="panel hidden"></div>
 <div id="phase-report" class="panel hidden"></div>
-```
+
 
   </div>
 
@@ -542,7 +541,7 @@ async function callGeminiWithFile(prompt, base64Data, mimeType) {
 
 function safeJSON(raw, fallback={}) {
   try {
-    const clean = raw.replace(/```json|```/g,'').replace(/^\s*|\s*$/g,'');
+    const clean = raw.replace(/json|/g,'').replace(/^\s*|\s*$/g,'');
     return JSON.parse(clean);
   } catch { return fallback; }
 }
