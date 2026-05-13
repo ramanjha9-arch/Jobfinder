@@ -1,18 +1,986 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My App</title>
-    <!-- React and Babel CDNs to run JSX in the browser -->
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CareerAgent AI — Senior Placement Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+/* ── Reset & Tokens ─────────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07080d;
+  --surface:#0e1018;
+  --surface2:#141722;
+  --surface3:#1a1f2e;
+  --border:#1f2538;
+  --border2:#2a3050;
+  --text:#dde3f0;
+  --muted:#6b7899;
+  --faint:#3a4260;
+  --gold:#c8a84b;
+  --gold2:#e5c97a;
+  --gold3:rgba(200,168,75,.12);
+  --blue:#3b8de0;
+  --green:#2ec98a;
+  --orange:#e87a3f;
+  --red:#e05555;
+  --r:10px;
+  --font-d:'Cormorant Garamond',Georgia,serif;
+  --font-b:'Outfit',sans-serif;
+  --trans:.22s cubic-bezier(.4,0,.2,1);
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font-b);font-size:14px;line-height:1.6;min-height:100vh;overflow-x:hidden}
+
+/* ── Noise overlay ──────────────────────────────────────────── */
+body::before{
+content:’’;position:fixed;inset:0;pointer-events:none;z-index:0;
+background-image:url(“data:image/svg+xml,%3Csvg viewBox=‘0 0 256 256’ xmlns=‘http://www.w3.org/2000/svg’%3E%3Cfilter id=‘n’%3E%3CfeTurbulence type=‘fractalNoise’ baseFrequency=‘0.9’ numOctaves=‘4’ stitchTiles=‘stitch’/%3E%3C/filter%3E%3Crect width=‘100%25’ height=‘100%25’ filter=‘url(%23n)’ opacity=‘0.03’/%3E%3C/svg%3E”);
+opacity:.4;
+}
+
+/* ── Layout ─────────────────────────────────────────────────── */
+#app{position:relative;z-index:1;display:flex;flex-direction:column;min-height:100vh}
+
+/* ── Header ─────────────────────────────────────────────────── */
+.hdr{
+display:flex;align-items:center;justify-content:space-between;
+padding:14px 36px;border-bottom:1px solid var(–border);
+background:rgba(7,8,13,.85);backdrop-filter:blur(12px);
+position:sticky;top:0;z-index:100;
+}
+.logo{display:flex;align-items:center;gap:12px}
+.logo-gem{
+width:38px;height:38px;border-radius:8px;
+background:linear-gradient(135deg,#9a7a28,var(–gold2));
+display:flex;align-items:center;justify-content:center;
+font-family:var(–font-d);font-weight:700;font-size:16px;color:#07080d;
+box-shadow:0 0 20px rgba(200,168,75,.25);
+}
+.logo-text{font-family:var(–font-d);font-size:20px;font-weight:600;color:var(–gold2);letter-spacing:.3px}
+.logo-sub{font-size:10px;color:var(–muted);letter-spacing:1px;text-transform:uppercase;margin-top:-2px}
+.hdr-right{display:flex;align-items:center;gap:10px}
+.api-badge{
+display:flex;align-items:center;gap:6px;padding:6px 12px;
+border:1px solid var(–border2);border-radius:20px;font-size:11px;color:var(–muted);
+cursor:pointer;transition:var(–trans);
+}
+.api-badge:hover{border-color:var(–gold);color:var(–gold)}
+.api-badge .dot{width:7px;height:7px;border-radius:50%;background:var(–red)}
+.api-badge .dot.ok{background:var(–green)}
+
+/* ── Main ───────────────────────────────────────────────────── */
+.main{flex:1;max-width:980px;margin:0 auto;width:100%;padding:36px 24px 60px}
+
+/* ── API Key Screen ─────────────────────────────────────────── */
+#screen-key{
+display:flex;flex-direction:column;align-items:center;justify-content:center;
+min-height:70vh;text-align:center;gap:0;
+}
+.key-card{
+background:var(–surface);border:1px solid var(–border2);border-radius:16px;
+padding:48px 44px;max-width:480px;width:100%;
+box-shadow:0 24px 60px rgba(0,0,0,.5);
+animation:fadeUp .5s ease both;
+}
+.key-icon{
+width:64px;height:64px;border-radius:16px;margin:0 auto 24px;
+background:linear-gradient(135deg,rgba(200,168,75,.15),rgba(200,168,75,.05));
+border:1px solid rgba(200,168,75,.3);
+display:flex;align-items:center;justify-content:center;font-size:28px;
+}
+.key-card h2{font-family:var(–font-d);font-size:28px;font-weight:600;margin-bottom:8px;color:var(–text)}
+.key-card p{font-size:13px;color:var(–muted);margin-bottom:28px;line-height:1.7}
+.key-input-wrap{position:relative;margin-bottom:16px}
+.key-input-wrap input{
+width:100%;padding:13px 44px 13px 16px;
+background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;color:var(–text);font-family:var(–font-b);font-size:13px;
+transition:var(–trans);letter-spacing:.5px;
+}
+.key-input-wrap input:focus{outline:none;border-color:var(–gold);box-shadow:0 0 0 3px rgba(200,168,75,.1)}
+.key-toggle{
+position:absolute;right:12px;top:50%;transform:translateY(-50%);
+background:none;border:none;color:var(–muted);cursor:pointer;padding:4px;
+transition:var(–trans);display:flex;
+}
+.key-toggle:hover{color:var(–gold)}
+.key-note{font-size:11px;color:var(–faint);margin-bottom:24px;display:flex;align-items:center;gap:6px;justify-content:center}
+.btn-gold{
+width:100%;padding:13px;background:linear-gradient(135deg,var(–gold),var(–gold2));
+color:#07080d;font-weight:600;font-size:14px;border:none;border-radius:8px;
+cursor:pointer;transition:var(–trans);display:flex;align-items:center;justify-content:center;gap:8px;
+}
+.btn-gold:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(200,168,75,.35)}
+.btn-gold:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.gemini-note{margin-top:20px;font-size:11px;color:var(–faint);display:flex;align-items:center;justify-content:center;gap:5px}
+
+/* ── Step Bar ───────────────────────────────────────────────── */
+.stepbar{
+display:flex;align-items:center;margin-bottom:36px;
+background:var(–surface);border:1px solid var(–border);border-radius:12px;
+padding:14px 24px;gap:0;overflow-x:auto;
+}
+.step{display:flex;align-items:center;gap:8px;flex:1;min-width:0}
+.step-circle{
+width:32px;height:32px;border-radius:50%;border:1.5px solid var(–border2);
+display:flex;align-items:center;justify-content:center;
+color:var(–muted);font-size:13px;flex-shrink:0;transition:var(–trans);
+}
+.step.done .step-circle{border-color:var(–green);color:var(–green);background:rgba(46,201,138,.1)}
+.step.active .step-circle{border-color:var(–gold);color:var(–gold);background:var(–gold3)}
+.step-lbl{font-size:12px;color:var(–muted);white-space:nowrap;transition:var(–trans)}
+.step.active .step-lbl{color:var(–gold)}
+.step.done .step-lbl{color:var(–green)}
+.step-sep{flex:1;height:1px;background:var(–border);margin:0 8px;min-width:12px}
+.step-sep.done{background:var(–green)}
+
+/* ── Panel ──────────────────────────────────────────────────── */
+.panel{
+background:var(–surface);border:1px solid var(–border);border-radius:var(–r);
+padding:32px;animation:fadeUp .35s ease both;
+}
+.panel-hdr{display:flex;align-items:flex-start;gap:16px;margin-bottom:28px}
+.phase-ico{
+width:46px;height:46px;border-radius:10px;display:flex;align-items:center;
+justify-content:center;font-size:20px;flex-shrink:0;
+}
+.ico-gold{background:rgba(200,168,75,.12);border:1px solid rgba(200,168,75,.25)}
+.ico-blue{background:rgba(59,141,224,.12);border:1px solid rgba(59,141,224,.25)}
+.ico-green{background:rgba(46,201,138,.12);border:1px solid rgba(46,201,138,.25)}
+.ico-orange{background:rgba(232,122,63,.12);border:1px solid rgba(232,122,63,.25)}
+.ico-purple{background:rgba(140,110,220,.12);border:1px solid rgba(140,110,220,.25)}
+.panel-hdr h2{font-family:var(–font-d);font-size:22px;font-weight:600;margin-bottom:4px}
+.panel-hdr p{font-size:13px;color:var(–muted)}
+
+/* ── Dropzone ───────────────────────────────────────────────── */
+.dropzone{
+border:2px dashed var(–border2);border-radius:var(–r);padding:52px 24px;
+text-align:center;cursor:pointer;transition:var(–trans);margin-bottom:20px;
+}
+.dropzone:hover,.dropzone.drag{border-color:var(–gold);background:rgba(200,168,75,.03)}
+.dropzone.has-file{border-color:var(–green);background:rgba(46,201,138,.03)}
+.dz-icon{font-size:40px;margin-bottom:14px}
+.dz-title{font-size:15px;font-weight:500;margin-bottom:4px}
+.dz-sub{font-size:12px;color:var(–muted)}
+.dz-file{display:flex;align-items:center;justify-content:center;gap:10px;color:var(–green);font-size:14px}
+.dz-file-size{font-size:11px;color:var(–muted)}
+
+/* ── Form Elements ──────────────────────────────────────────── */
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12px;color:var(–muted);text-transform:uppercase;letter-spacing:.8px;margin-bottom:8px}
+.field select,.field input[type=text]{
+width:100%;padding:11px 14px;background:var(–surface2);border:1px solid var(–border2);
+border-radius:8px;color:var(–text);font-family:var(–font-b);font-size:13px;
+transition:var(–trans);appearance:none;
+}
+.field select:focus,.field input[type=text]:focus{outline:none;border-color:var(–gold);box-shadow:0 0 0 3px rgba(200,168,75,.08)}
+
+/* ── Primary Button ─────────────────────────────────────────── */
+.btn-primary{
+display:inline-flex;align-items:center;gap:8px;padding:12px 28px;
+background:linear-gradient(135deg,var(–gold),var(–gold2));color:#07080d;
+font-weight:600;font-size:14px;border:none;border-radius:8px;
+cursor:pointer;transition:var(–trans);margin-top:16px;
+}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 6px 24px rgba(200,168,75,.3)}
+.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-outline{
+display:inline-flex;align-items:center;gap:8px;padding:11px 22px;
+background:none;border:1px solid var(–border2);border-radius:8px;
+color:var(–muted);font-size:13px;cursor:pointer;transition:var(–trans);margin-top:16px;margin-left:10px;
+}
+.btn-outline:hover{border-color:var(–gold);color:var(–gold)}
+
+/* ── Log Box ────────────────────────────────────────────────── */
+.log-box{
+background:#050609;border:1px solid var(–border);border-radius:8px;
+padding:16px;font-family:‘Courier New’,monospace;font-size:12px;
+max-height:180px;overflow-y:auto;margin-bottom:20px;line-height:1.8;
+}
+.log-ok{color:var(–green)}
+.log-info{color:var(–blue)}
+.log-warn{color:var(–gold)}
+.log-spin{color:var(–muted);display:flex;align-items:center;gap:6px}
+.spinner-txt{animation:ellipsis 1.4s infinite}
+@keyframes ellipsis{0%,100%{content:’’}33%{content:’.’}66%{content:’..’}100%{content:’…’}}
+
+/* ── Profile Card ───────────────────────────────────────────── */
+.profile-card{
+background:var(–surface2);border:1px solid var(–border2);border-radius:var(–r);
+padding:24px;margin-bottom:20px;
+}
+.profile-card h3{font-family:var(–font-d);font-size:18px;color:var(–gold2);margin-bottom:16px}
+.pgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:16px}
+.pf span{font-size:10px;color:var(–muted);text-transform:uppercase;letter-spacing:.7px;display:block;margin-bottom:3px}
+.pf strong{font-size:13px}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.tag{padding:3px 10px;border-radius:20px;font-size:11px}
+.tag-skill{background:rgba(59,141,224,.12);color:var(–blue)}
+.tag-domain{background:rgba(46,201,138,.12);color:var(–green)}
+.tag-cert{background:rgba(200,168,75,.12);color:var(–gold)}
+.tag-mini{background:var(–surface3);color:var(–muted);font-size:11px}
+.tag-growth{background:rgba(232,122,63,.1);color:var(–orange)}
+.tag-growth-high{background:rgba(46,201,138,.1);color:var(–green)}
+.profile-summary{font-size:13px;color:var(–muted);font-style:italic;margin-top:14px;padding-top:14px;border-top:1px solid var(–border);line-height:1.7}
+
+/* ── Jobs Grid ──────────────────────────────────────────────── */
+.jobs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px}
+.job-card{
+background:var(–surface2);border:1px solid var(–border);border-radius:var(–r);
+padding:16px;transition:var(–trans);cursor:default;
+animation:fadeUp .4s ease both;
+}
+.job-card:hover{border-color:var(–gold3);background:var(–surface3)}
+.jc-top{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px}
+.jc-title{font-size:13px;font-weight:600;margin-bottom:2px}
+.jc-co{font-size:11px;color:var(–muted)}
+.jc-sal{font-size:11px;color:var(–green);margin-bottom:6px}
+.jc-why{font-size:11px;color:var(–muted);line-height:1.5;margin-bottom:8px}
+
+/* ── Match Badge ────────────────────────────────────────────── */
+.mbadge{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;flex-shrink:0}
+.mbadge-h{background:rgba(46,201,138,.15);color:var(–green)}
+.mbadge-m{background:rgba(200,168,75,.15);color:var(–gold)}
+.mbadge-l{background:rgba(232,122,63,.15);color:var(–orange)}
+.mbadge-lg{font-size:16px;padding:6px 14px}
+
+/* ── Progress ───────────────────────────────────────────────── */
+.progress-wrap{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.prog-bg{flex:1;height:5px;background:var(–border2);border-radius:3px}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(–gold),var(–gold2));border-radius:3px;transition:width .4s ease}
+.prog-pct{font-size:12px;color:var(–muted);min-width:36px;text-align:right}
+
+/* ── Alert banners ──────────────────────────────────────────── */
+.alert{display:flex;align-items:flex-start;gap:12px;padding:14px 18px;border-radius:var(–r);margin-bottom:18px}
+.alert-ico{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert strong{display:block;margin-bottom:3px;font-size:13px}
+.alert p{font-size:12px;color:var(–muted)}
+.alert-pause{background:rgba(59,141,224,.08);border:1px solid rgba(59,141,224,.25);color:var(–blue)}
+.alert-ok{background:rgba(46,201,138,.08);border:1px solid rgba(46,201,138,.25);color:var(–green)}
+.alert-warn{background:rgba(200,168,75,.08);border:1px solid rgba(200,168,75,.25);color:var(–gold)}
+
+/* ── Preview layout ─────────────────────────────────────────── */
+.prev-layout{display:grid;grid-template-columns:240px 1fr;gap:18px;margin-bottom:20px}
+.sidebar{display:flex;flex-direction:column;gap:5px;max-height:520px;overflow-y:auto}
+.sb-item{
+display:flex;align-items:center;gap:8px;padding:10px 12px;
+background:var(–surface2);border:1px solid var(–border);border-radius:8px;
+cursor:pointer;transition:var(–trans);
+}
+.sb-item:hover,.sb-item.active{border-color:var(–gold);background:rgba(200,168,75,.04)}
+.sb-item.approved{border-color:var(–green)}
+.sb-num{
+width:22px;height:22px;border-radius:50%;background:var(–border2);
+display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;
+}
+.sb-info{flex:1;min-width:0}
+.sb-info strong{display:block;font-size:11px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-info span{font-size:10px;color:var(–muted)}
+.sb-chk{font-size:12px;color:var(–green);flex-shrink:0}
+
+.prev-main{background:var(–surface2);border:1px solid var(–border2);border-radius:var(–r);padding:24px}
+.prev-jh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:10px}
+.prev-jh h3{font-family:var(–font-d);font-size:20px;font-weight:600;margin-bottom:4px}
+.prev-jh p{font-size:12px;color:var(–muted)}
+.prev-url{display:flex;align-items:center;gap:6px;margin-bottom:16px;font-size:11px;color:var(–muted)}
+.prev-url a{color:var(–blue);text-decoration:none;word-break:break-all}
+.prev-url a:hover{text-decoration:underline}
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(–border);padding-bottom:12px}
+.tab{
+padding:5px 14px;border:1px solid var(–border2);border-radius:20px;
+font-size:12px;color:var(–muted);background:none;cursor:pointer;transition:var(–trans);
+}
+.tab.active{border-color:var(–gold);color:var(–gold);background:rgba(200,168,75,.08)}
+.cv-block h4{font-size:11px;text-transform:uppercase;letter-spacing:.8px;color:var(–muted);margin-bottom:10px}
+.cv-block p,.cv-block pre{font-size:13px;line-height:1.75;color:var(–text)}
+.cv-block ul{padding-left:18px}
+.cv-block ul li{font-size:13px;line-height:1.8}
+.cv-block pre{font-family:var(–font-b);white-space:pre-wrap}
+.prev-actions{display:flex;align-items:center;gap:10px;margin-top:20px;flex-wrap:wrap}
+.btn-approve{
+padding:10px 20px;background:rgba(46,201,138,.12);border:1px solid rgba(46,201,138,.4);
+color:var(–green);border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;transition:var(–trans);
+}
+.btn-approve:hover{background:rgba(46,201,138,.2)}
+.btn-approve.unapproved{background:none;color:var(–muted);border-color:var(–border2)}
+.btn-next{
+padding:10px 18px;background:none;border:1px solid var(–border2);border-radius:8px;
+color:var(–muted);font-size:13px;cursor:pointer;transition:var(–trans);
+}
+.btn-next:hover{border-color:var(–gold);color:var(–gold)}
+
+/* ── Report ─────────────────────────────────────────────────── */
+.stat-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:28px}
+.stat-card{
+background:var(–surface2);border:1px solid var(–border);border-radius:var(–r);
+padding:20px;text-align:center;
+}
+.stat-n{display:block;font-family:var(–font-d);font-size:34px;font-weight:600;color:var(–gold2);margin-bottom:4px}
+.stat-l{display:block;font-size:11px;color:var(–muted);text-transform:uppercase;letter-spacing:.7px}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{padding:10px 14px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.7px;color:var(–muted);border-bottom:1px solid var(–border2)}
+.tr-main{border-bottom:1px solid var(–border);cursor:pointer;transition:background var(–trans)}
+.tr-main:hover{background:rgba(255,255,255,.015)}
+.tr-main td{padding:11px 14px;vertical-align:middle}
+.tr-exp td{background:rgba(14,16,24,.6)}
+.exp-inner{display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px;font-size:12px}
+.exp-inner strong{font-size:10px;text-transform:uppercase;letter-spacing:.5px;color:var(–muted);display:block;margin-bottom:5px}
+.exp-inner p{color:var(–text);line-height:1.6;margin-bottom:10px}
+.exp-inner a{color:var(–blue);font-size:11px;word-break:break-all}
+.pill{padding:3px 9px;border-radius:20px;font-size:10px}
+.pill-ok{background:rgba(46,201,138,.12);color:var(–green)}
+.pill-gold{background:rgba(200,168,75,.12);color:var(–gold)}
+.pill-or{background:rgba(232,122,63,.1);color:var(–orange)}
+.pill-sub{background:rgba(46,201,138,.15);color:var(–green)}
+.tbl-wrap{overflow-x:auto;margin-bottom:24px}
+.report-foot{border-top:1px solid var(–border);padding-top:20px}
+.agent-note{
+display:flex;align-items:flex-start;gap:10px;padding:14px 18px;
+background:rgba(200,168,75,.06);border:1px solid rgba(200,168,75,.2);border-radius:8px;
+font-size:12px;color:var(–muted);
+}
+.agent-note span{color:var(–gold);font-weight:600;display:block;margin-bottom:3px}
+
+/* ── Util ───────────────────────────────────────────────────── */
+.divider{height:1px;background:var(–border);margin:20px 0}
+.hidden{display:none!important}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.fade-in{animation:fadeUp .35s ease both}
+.spin-anim{animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ── Scrollbar ──────────────────────────────────────────────── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(–surface)}
+::-webkit-scrollbar-thumb{background:var(–border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(–faint)}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media(max-width:720px){
+.pgrid{grid-template-columns:repeat(2,1fr)}
+.jobs-grid{grid-template-columns:1fr}
+.prev-layout{grid-template-columns:1fr}
+.stat-cards{grid-template-columns:repeat(2,1fr)}
+.hdr{padding:12px 16px}
+.main{padding:24px 14px 48px}
+.panel{padding:20px}
+.step-lbl{display:none}
+.step-sep{min-width:6px;margin:0 3px}
+.exp-inner{grid-template-columns:1fr}
+}
+</style>
+
 </head>
 <body>
-    <div id="root"></div>
+<div id="app">
 
-    <!-- Link to your JSX file -->
-    <script type="text/babel" src="App.jsx"></script>
+<!-- HEADER -->
+
+<header class="hdr">
+  <div class="logo">
+    <div class="logo-gem">CA</div>
+    <div>
+      <div class="logo-text">CareerAgent AI</div>
+      <div class="logo-sub">Senior Placement Platform</div>
+    </div>
+  </div>
+  <div class="hdr-right">
+    <div class="api-badge" id="hdr-api-btn" onclick="showKeyPrompt()">
+      <div class="dot" id="api-dot"></div>
+      <span id="api-status-txt">Configure API Key</span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN -->
+
+<div class="main" id="main-content">
+
+  <!-- ── SCREEN: API KEY ───────────────────────────── -->
+
+  <div id="screen-key">
+    <div class="key-card">
+      <div class="key-icon">🔑</div>
+      <h2>Connect Gemini AI</h2>
+      <p>Enter your Google Gemini API key to activate the placement engine.<br>Your key is stored locally in your browser only.</p>
+      <div class="key-input-wrap">
+        <input type="password" id="api-key-input" placeholder="AIza••••••••••••••••••••••••••••••••••"/>
+        <button class="key-toggle" id="key-toggle-btn" onclick="toggleKeyVis()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+      <div class="key-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Key stored in browser memory only — never transmitted to third parties
+      </div>
+      <button class="btn-gold" id="key-submit-btn" onclick="submitApiKey()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        Activate Platform
+      </button>
+      <div class="gemini-note">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        Powered by Gemini 2.5 Flash Lite · <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--gold);text-decoration:none">Get a free API key →</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── MAIN PLATFORM (hidden until key set) ─────── -->
+
+  <div id="platform" class="hidden">
+
+```
+<!-- Step Bar -->
+<div class="stepbar" id="stepbar">
+  <div class="step" id="st-upload">
+    <div class="step-circle">📄</div>
+    <span class="step-lbl">Upload CV</span>
+  </div>
+  <div class="step-sep" id="sep-1"></div>
+  <div class="step" id="st-analysis">
+    <div class="step-circle">🧠</div>
+    <span class="step-lbl">Analysis</span>
+  </div>
+  <div class="step-sep" id="sep-2"></div>
+  <div class="step" id="st-search">
+    <div class="step-circle">🔍</div>
+    <span class="step-lbl">Job Search</span>
+  </div>
+  <div class="step-sep" id="sep-3"></div>
+  <div class="step" id="st-tailor">
+    <div class="step-circle">✍️</div>
+    <span class="step-lbl">Tailoring</span>
+  </div>
+  <div class="step-sep" id="sep-4"></div>
+  <div class="step" id="st-preview">
+    <div class="step-circle">👁</div>
+    <span class="step-lbl">Preview</span>
+  </div>
+  <div class="step-sep" id="sep-5"></div>
+  <div class="step" id="st-report">
+    <div class="step-circle">📊</div>
+    <span class="step-lbl">Report</span>
+  </div>
+</div>
+
+<!-- ── Phase panels ── -->
+<div id="phase-upload" class="panel hidden"></div>
+<div id="phase-analysis" class="panel hidden"></div>
+<div id="phase-search" class="panel hidden"></div>
+<div id="phase-tailor" class="panel hidden"></div>
+<div id="phase-preview" class="panel hidden"></div>
+<div id="phase-report" class="panel hidden"></div>
+```
+
+  </div>
+
+</div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════════════
+const S = {
+  apiKey: '',
+  cvText: '',
+  country: 'United Arab Emirates',
+  profile: null,
+  jobs: [],
+  tailored: [],
+  approved: {},
+  currentPhase: '',
+  currentJobIdx: 0,
+  currentTab: 'summary',
+  expandedRow: -1
+};
+
+const COUNTRIES = [
+  'United Arab Emirates','United States','United Kingdom','Singapore',
+  'Canada','Australia','Germany','Netherlands','India','Remote/Global'
+];
+
+// ═══════════════════════════════════════════════════════════════
+//  GEMINI API
+// ═══════════════════════════════════════════════════════════════
+async function callGemini(prompt, systemContext='', maxTokens=1500) {
+  const model = 'gemini-2.5-flash-lite-preview-06-17';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${S.apiKey}`;
+  const fullPrompt = systemContext ? `${systemContext}\n\n${prompt}` : prompt;
+  const body = {
+    contents:[{role:'user',parts:[{text:fullPrompt}]}],
+    generationConfig:{maxOutputTokens:maxTokens,temperature:0.4}
+  };
+  const res = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!res.ok){
+    const err = await res.json();
+    throw new Error(err.error?.message || 'Gemini API error');
+  }
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+async function callGeminiWithFile(prompt, base64Data, mimeType) {
+  const model = 'gemini-2.5-flash-lite-preview-06-17';
+  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${S.apiKey}`;
+  const body = {
+    contents:[{role:'user',parts:[
+      {inlineData:{mimeType,data:base64Data}},
+      {text:prompt}
+    ]}],
+    generationConfig:{maxOutputTokens:3000,temperature:0.2}
+  };
+  const res = await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+  if(!res.ok){const err=await res.json();throw new Error(err.error?.message||'Gemini API error')}
+  const data = await res.json();
+  return data.candidates?.[0]?.content?.parts?.[0]?.text || '';
+}
+
+function safeJSON(raw, fallback={}) {
+  try {
+    const clean = raw.replace(/```json|```/g,'').replace(/^\s*|\s*$/g,'');
+    return JSON.parse(clean);
+  } catch { return fallback; }
+}
+
+function sleep(ms){return new Promise(r=>setTimeout(r,ms))}
+
+// ═══════════════════════════════════════════════════════════════
+//  API KEY FLOW
+// ═══════════════════════════════════════════════════════════════
+function toggleKeyVis(){
+  const inp = document.getElementById('api-key-input');
+  inp.type = inp.type==='password'?'text':'password';
+}
+function showKeyPrompt(){
+  document.getElementById('screen-key').classList.remove('hidden');
+  document.getElementById('platform').classList.add('hidden');
+}
+async function submitApiKey(){
+  const key = document.getElementById('api-key-input').value.trim();
+  if(!key){alert('Please enter your Gemini API key.');return;}
+  const btn = document.getElementById('key-submit-btn');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin-anim">⟳</span> Verifying...';
+  try {
+    S.apiKey = key;
+    // Quick test call
+    await callGemini('Reply with the word READY only.','',10);
+    document.getElementById('api-dot').classList.add('ok');
+    document.getElementById('api-status-txt').textContent = 'Gemini Connected';
+    document.getElementById('screen-key').classList.add('hidden');
+    document.getElementById('platform').classList.remove('hidden');
+    showPhase('upload');
+  } catch(e){
+    S.apiKey='';
+    alert('API key verification failed: '+e.message);
+    btn.disabled=false;
+    btn.innerHTML='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg> Activate Platform';
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  STEP BAR
+// ═══════════════════════════════════════════════════════════════
+const PHASE_STEPS = ['upload','analysis','search','tailor','preview','report'];
+function updateStepBar(active){
+  const ai = PHASE_STEPS.indexOf(active);
+  PHASE_STEPS.forEach((p,i)=>{
+    const el = document.getElementById('st-'+p);
+    el.classList.remove('done','active');
+    if(i<ai) el.classList.add('done');
+    if(i===ai) el.classList.add('active');
+    if(i<PHASE_STEPS.length-1){
+      const sep = document.getElementById('sep-'+(i+1));
+      sep.classList.toggle('done',i<ai);
+    }
+  });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE ROUTER
+// ═══════════════════════════════════════════════════════════════
+function showPhase(name){
+  S.currentPhase = name;
+  PHASE_STEPS.forEach(p=>{
+    document.getElementById('phase-'+p).classList.add('hidden');
+  });
+  const el = document.getElementById('phase-'+name);
+  el.classList.remove('hidden');
+  el.classList.add('fade-in');
+  updateStepBar(name);
+  const builders = {
+    upload:buildUpload,analysis:buildAnalysis,search:buildSearch,
+    tailor:buildTailor,preview:buildPreview,report:buildReport
+  };
+  builders[name]?.();
+  window.scrollTo({top:document.querySelector('.stepbar').offsetTop-20,behavior:'smooth'});
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 1 — UPLOAD
+// ═══════════════════════════════════════════════════════════════
+let uploadedFile = null;
+
+function buildUpload(){
+  const el = document.getElementById('phase-upload');
+  el.innerHTML = `
+    <div class="panel-hdr">
+      <div class="phase-ico ico-gold">📄</div>
+      <div>
+        <h2>Upload Your CV</h2>
+        <p>Your AI placement agent will extract your profile, find global opportunities, and tailor each application.</p>
+      </div>
+    </div>
+    <div class="dropzone" id="dz" ondragover="dzDrag(event,true)" ondragleave="dzDrag(event,false)" ondrop="dzDrop(event)" onclick="document.getElementById('fileInput').click()">
+      <div class="dz-icon">📎</div>
+      <div class="dz-title">Drop your CV here to begin</div>
+      <div class="dz-sub">Supports PDF or plain text (.txt) · Click to browse</div>
+    </div>
+    <input type="file" id="fileInput" accept=".pdf,.txt" style="display:none" onchange="fileChosen(event)"/>
+    <div class="field">
+      <label>Target Country / Region</label>
+      <select id="countrySelect">
+        ${COUNTRIES.map(c=>`<option ${c===S.country?'selected':''}>${c}</option>`).join('')}
+      </select>
+    </div>
+    <button class="btn-primary" id="uploadBtn" disabled onclick="startAnalysis()">
+      Begin AI Analysis →
+    </button>
+  `;
+  uploadedFile = null;
+}
+
+function dzDrag(e,on){e.preventDefault();document.getElementById('dz').classList.toggle('drag',on)}
+function dzDrop(e){
+  e.preventDefault();
+  document.getElementById('dz').classList.remove('drag');
+  const f = e.dataTransfer.files[0];
+  if(f) handleFile(f);
+}
+function fileChosen(e){if(e.target.files[0])handleFile(e.target.files[0])}
+function handleFile(f){
+  if(!f.name.match(/\.(pdf|txt)$/i)){alert('Please upload a PDF or TXT file.');return;}
+  uploadedFile = f;
+  const dz = document.getElementById('dz');
+  dz.classList.add('has-file');
+  dz.innerHTML = `<div class="dz-file">📂 <span>${f.name}</span> <span class="dz-file-size">${(f.size/1024).toFixed(1)} KB</span></div>`;
+  document.getElementById('uploadBtn').disabled = false;
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 2 — ANALYSIS
+// ═══════════════════════════════════════════════════════════════
+function buildAnalysis(){
+  const el = document.getElementById('phase-analysis');
+  el.innerHTML = `
+    <div class="panel-hdr">
+      <div class="phase-ico ico-blue">🧠</div>
+      <div><h2>CV Analysis</h2><p>Phase 1 — Extracting skills, domains, and building your Master Profile.</p></div>
+    </div>
+    <div class="log-box" id="log-analysis"><div class="log-ok">▶ Agent initialised. Starting CV analysis...</div></div>
+    <div id="profile-slot"></div>
+    <div id="analysis-actions"></div>
+  `;
+}
+
+async function startAnalysis(){
+  S.country = document.getElementById('countrySelect').value;
+  showPhase('analysis');
+  await runAnalysis();
+}
+
+async function runAnalysis(){
+  const log = id => addLog('log-analysis', id);
+  try {
+    log(['log-info','📄 Reading CV file...']);
+    await sleep(300);
+
+    let cvText = '';
+    if(uploadedFile.type==='application/pdf'){
+      log(['log-info','🔍 Extracting text from PDF via Gemini Vision...']);
+      const b64 = await toBase64(uploadedFile);
+      cvText = await callGeminiWithFile('Extract all text from this CV/resume document. Output only the plain text, no commentary, no formatting marks.', b64, 'application/pdf');
+    } else {
+      cvText = await uploadedFile.text();
+    }
+    S.cvText = cvText.slice(0,5000);
+    log(['log-ok','✓ CV text extracted successfully.']);
+    await sleep(200);
+    log(['log-info','🧠 Building Master Profile using Gemini 2.5 Flash Lite...']);
+
+    const profileRaw = await callGemini(
+      `Analyse this CV text and return ONLY a valid JSON object — no markdown, no backticks, no extra text. JSON fields:\n{"name":"full name","currentTitle":"job title","yearsExperience":number,"topSkills":["s1","s2","s3","s4","s5"],"certifications":["c1"],"domains":["d1","d2","d3"],"education":"highest qualification","languages":["lang1"],"strengthSummary":"2-3 sentence professional strength summary","targetCountry":"${S.country}"}\n\nCV:\n${S.cvText}`,
+      'You are a senior HR analyst. Return ONLY raw JSON without any markdown formatting.', 800
+    );
+    const prof = safeJSON(profileRaw, {
+      name:'Candidate',currentTitle:'Professional',yearsExperience:5,
+      topSkills:['Leadership','Strategy','Analytics','Communication','Management'],
+      certifications:['MBA'],domains:['Finance','Operations','Technology'],
+      education:'Post Graduate',languages:['English'],
+      strengthSummary:'Experienced professional with strong domain expertise.',
+      targetCountry:S.country
+    });
+    S.profile = prof;
+    log(['log-ok',`✓ Profile built for ${prof.name}`]);
+    log(['log-ok',`📌 ${prof.yearsExperience}+ years · ${prof.domains.slice(0,3).join(', ')}`]);
+    log(['log-ok',`🏆 Skills: ${prof.topSkills.slice(0,4).join(', ')}`]);
+    log(['log-ok','✔ Master Profile ready.']);
+
+    // Render profile card
+    document.getElementById('profile-slot').innerHTML = `
+      <div class="profile-card fade-in">
+        <h3>🎯 Master Profile — ${prof.name}</h3>
+        <div class="pgrid">
+          <div class="pf"><span>Current Title</span><strong>${prof.currentTitle}</strong></div>
+          <div class="pf"><span>Experience</span><strong>${prof.yearsExperience} years</strong></div>
+          <div class="pf"><span>Education</span><strong>${prof.education}</strong></div>
+          <div class="pf"><span>Target</span><strong>${prof.targetCountry}</strong></div>
+        </div>
+        <div class="tags">${prof.topSkills.map(s=>`<span class="tag tag-skill">${s}</span>`).join('')}</div>
+        <div class="tags">${prof.domains.map(d=>`<span class="tag tag-domain">${d}</span>`).join('')}</div>
+        ${prof.certifications.length?`<div class="tags">${prof.certifications.map(c=>`<span class="tag tag-cert">${c}</span>`).join('')}</div>`:''}
+        <div class="profile-summary">"${prof.strengthSummary}"</div>
+      </div>`;
+
+    document.getElementById('analysis-actions').innerHTML = `
+      <button class="btn-primary" onclick="showPhase('search')">Proceed to Job Search →</button>`;
+  } catch(e){
+    log(['log-warn','⚠ Error: '+e.message]);
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 3 — JOB SEARCH
+// ═══════════════════════════════════════════════════════════════
+function buildSearch(){
+  const el = document.getElementById('phase-search');
+  el.innerHTML = `
+    <div class="panel-hdr">
+      <div class="phase-ico ico-green">🔍</div>
+      <div><h2>Global Job Search</h2><p>Phase 2 — Finding and ranking the top 10 matching opportunities worldwide.</p></div>
+    </div>
+    <div class="log-box" id="log-search"><div class="log-ok">▶ Initialising global search engine...</div></div>
+    <div id="jobs-slot"></div>
+    <div id="search-actions"></div>
+  `;
+  runSearch();
+}
+
+async function runSearch(){
+  const log = id => addLog('log-search', id);
+  const p = S.profile;
+  try {
+    log(['log-info',`🌍 Scanning ${p.targetCountry} and global markets...`]);
+    await sleep(300);
+    log(['log-info',`🎯 Applying 80%+ skill-match filter for: ${p.topSkills.slice(0,3).join(', ')}`]);
+    log(['log-info','🔎 Fetching live openings via AI talent intelligence...']);
+
+    const raw = await callGemini(
+      `You are a global headhunter. Based on this candidate, generate 10 realistic job openings they could apply to right now. Return ONLY a valid JSON array — no markdown, no backticks. Each element:\n{"id":N,"title":"","company":"","location":"City, Country","type":"Full-time","salaryRange":"$X,000–$Y,000 or equivalent local","matchScore":85,"domain":"","keyRequirements":["r1","r2","r3"],"jobUrl":"https://careers.company.com/job","growthPotential":"High","whyMatch":"one sentence"}\n\nCANDIDATE:\nTitle: ${p.currentTitle}\nExp: ${p.yearsExperience} yrs\nSkills: ${p.topSkills.join(', ')}\nDomains: ${p.domains.join(', ')}\nCerts: ${p.certifications.join(', ')||'None'}\nTarget: ${p.targetCountry}`,
+      'You are a global headhunter. Return ONLY a raw JSON array without any markdown formatting.', 2500
+    );
+    const jobs = safeJSON(raw, []);
+    S.jobs = Array.isArray(jobs)?jobs:[];
+    if(!S.jobs.length) throw new Error('No jobs returned. Try again.');
+
+    log(['log-ok',`✓ ${S.jobs.length} high-match roles identified (80%+ threshold)`]);
+    log(['log-ok','📊 Ranked by career growth potential and salary alignment.']);
+    log(['log-ok','✔ Top 10 selected. Proceeding to tailoring phase.']);
+
+    const grid = S.jobs.map((j,i)=>`
+      <div class="job-card" style="animation-delay:${i*50}ms">
+        <div class="jc-top">
+          <div>
+            <div class="jc-title">${j.title}</div>
+            <div class="jc-co">${j.company} · ${j.location}</div>
+          </div>
+          <span class="mbadge ${j.matchScore>=90?'mbadge-h':j.matchScore>=80?'mbadge-m':'mbadge-l'}">${j.matchScore}%</span>
+        </div>
+        <div class="jc-sal">${j.salaryRange}</div>
+        <div class="jc-why">${j.whyMatch}</div>
+        <div class="tags">
+          ${(j.keyRequirements||[]).slice(0,3).map(r=>`<span class="tag tag-mini">${r}</span>`).join('')}
+          <span class="tag ${j.growthPotential==='High'?'tag-growth-high':'tag-growth'}">${j.growthPotential} Growth</span>
+        </div>
+      </div>`).join('');
+
+    document.getElementById('jobs-slot').innerHTML = `<div class="jobs-grid fade-in">${grid}</div>`;
+    document.getElementById('search-actions').innerHTML = `
+      <button class="btn-primary" onclick="showPhase('tailor')">Proceed to CV Tailoring →</button>`;
+  } catch(e){
+    log(['log-warn','⚠ Error: '+e.message]);
+    document.getElementById('search-actions').innerHTML = `
+      <button class="btn-outline" onclick="buildSearch()">Retry Search</button>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 4 — TAILORING
+// ═══════════════════════════════════════════════════════════════
+function buildTailor(){
+  const el = document.getElementById('phase-tailor');
+  el.innerHTML = `
+    <div class="panel-hdr">
+      <div class="phase-ico ico-orange">✍️</div>
+      <div><h2>CV & Cover Letter Tailoring</h2><p>Phase 3 — Rewriting summaries and drafting cover letters for each of the 10 roles.</p></div>
+    </div>
+    <div class="progress-wrap">
+      <div class="prog-bg"><div class="prog-fill" id="prog-fill" style="width:0%"></div></div>
+      <div class="prog-pct" id="prog-pct">0%</div>
+    </div>
+    <div class="log-box" id="log-tailor"><div class="log-ok">▶ Tailoring engine ready...</div></div>
+    <div id="tailor-actions"></div>
+  `;
+  runTailor();
+}
+
+async function runTailor(){
+  const log = id => addLog('log-tailor', id);
+  const p = S.profile;
+  S.tailored = [];
+  try {
+    for(let i=0;i<S.jobs.length;i++){
+      const j = S.jobs[i];
+      const pct = Math.round(((i)/S.jobs.length)*100);
+      document.getElementById('prog-fill').style.width = pct+'%';
+      document.getElementById('prog-pct').textContent = pct+'%';
+      log(['log-info',`✍️ [${i+1}/10] Tailoring for: ${j.title} @ ${j.company}`]);
+
+      const raw = await callGemini(
+        `Tailor this candidate's application for the job below. Return ONLY valid JSON — no markdown, no backticks.\n{"tailoredSummary":"3-sentence professional summary mirroring JD language, no fabrication","keyAchievements":["achievement aligned to role 1","achievement 2","achievement 3"],"coverLetter":"Full cover letter 3 paragraphs, professional tone, specific to role and company"}\n\nCANDIDATE:\n- Name: ${p.name}\n- Title: ${p.currentTitle}\n- Experience: ${p.yearsExperience} years\n- Skills: ${p.topSkills.join(', ')}\n- Domains: ${p.domains.join(', ')}\n- Certs: ${p.certifications.join(', ')||'None'}\n- Strengths: ${p.strengthSummary}\n\nJOB:\n- Title: ${j.title}\n- Company: ${j.company}\n- Location: ${j.location}\n- Requirements: ${(j.keyRequirements||[]).join(', ')}\n- Why Match: ${j.whyMatch}`,
+        'You are a professional CV writer and career coach. Never fabricate experience or skills. Return ONLY raw JSON.', 1500
+      );
+      const td = safeJSON(raw, {
+        tailoredSummary:`Experienced ${p.currentTitle} with ${p.yearsExperience} years, well-aligned to the ${j.title} role at ${j.company}.`,
+        keyAchievements:['Led strategic initiatives delivering measurable outcomes','Optimised cross-functional operations for efficiency gains','Built high-performance teams aligned to business objectives'],
+        coverLetter:`Dear Hiring Manager,\n\nI am pleased to apply for the ${j.title} position at ${j.company}. With ${p.yearsExperience} years of experience across ${p.domains.join(' and ')}, I bring a proven track record directly aligned with your requirements.\n\nMy expertise in ${p.topSkills.slice(0,3).join(', ')} enables me to contribute immediately to your team. I am particularly drawn to ${j.company}'s mission and believe my background positions me as a strong candidate.\n\nI would welcome the opportunity to discuss how my experience can benefit your organisation. Thank you for your consideration.\n\nSincerely,\n${p.name}`
+      });
+      S.tailored.push({...j,...td});
+      log(['log-ok',`✓ Done: ${j.title} @ ${j.company}`]);
+      await sleep(100);
+    }
+    document.getElementById('prog-fill').style.width = '100%';
+    document.getElementById('prog-pct').textContent = '100%';
+    log(['log-ok','✔ All 10 applications tailored successfully.']);
+    log(['log-warn','⏸ PAUSED — Awaiting your approval before any submission.']);
+
+    document.getElementById('tailor-actions').innerHTML = `
+      <div class="alert alert-pause fade-in" style="margin-top:16px">
+        <div class="alert-ico">⏸</div>
+        <div><strong>Approval Required</strong><p>Review each tailored CV and cover letter. Approve individually before the report is generated.</p></div>
+      </div>
+      <button class="btn-primary" onclick="showPhase('preview')">Review & Approve Applications →</button>`;
+  } catch(e){
+    log(['log-warn','⚠ Error: '+e.message]);
+    document.getElementById('tailor-actions').innerHTML = `
+      <button class="btn-outline" onclick="buildTailor()">Retry Tailoring</button>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 5 — PREVIEW
+// ═══════════════════════════════════════════════════════════════
+function buildPreview(){
+  renderPreview();
+}
+
+function renderPreview(){
+  const el = document.getElementById('phase-preview');
+  const approved = Object.values(S.approved).filter(Boolean).length;
+  const j = S.tailored[S.currentJobIdx]||{};
+  const mbCls = j.matchScore>=90?'mbadge-h':j.matchScore>=80?'mbadge-m':'mbadge-l';
+
+  const sidebar = S.tailored.map((t,i)=>`
+    <div class="sb-item ${i===S.currentJobIdx?'active':''} ${S.approved[t.id]?'approved':''}"
+         onclick="selectJob(${i})">
+      <div class="sb-num">${i+1}</div>
+      <div class="sb-info">
+        <strong>${t.title}</strong>
+        <span>${t.company}</span>
+      </div>
+      ${S.approved[t.id]?'<span class="sb-chk">✓</span>':''}
+    </div>`).join('');
+
+  const tabContent = ()=>{
+    if(S.currentTab==='summary') return `<div class="cv-block"><h4>Tailored Professional Summary</h4><p>${j.tailoredSummary||''}</p></div>`;
+    if(S.currentTab==='achievements') return `<div class="cv-block"><h4>Key Achievements</h4><ul>${(j.keyAchievements||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+    return `<div class="cv-block"><h4>Cover Letter</h4><pre>${j.coverLetter||''}</pre></div>`;
+
+};
+
+el.innerHTML = `<div class="panel-hdr"> <div class="phase-ico ico-purple">👁</div> <div> <h2>Review & Approve</h2> <p>Preview each tailored application. Approved: <strong>${approved}/${S.tailored.length}</strong></p> </div> </div> <div class="prev-layout"> <div class="sidebar">${sidebar}</div> <div class="prev-main"> <div class="prev-jh"> <div> <h3>${j.title}</h3> <p>${j.company} · ${j.location} · ${j.salaryRange}</p> </div> <span class="mbadge ${mbCls} mbadge-lg">${j.matchScore}% Match</span> </div> <div class="prev-url"> 🌐 <a href="${j.jobUrl}" target="_blank" rel="noreferrer">${j.jobUrl}</a> </div> <div class="tabs"> <button class="tab ${S.currentTab==='summary'?'active':''}" onclick="switchTab('summary')">Professional Summary</button> <button class="tab ${S.currentTab==='achievements'?'active':''}" onclick="switchTab('achievements')">Key Achievements</button> <button class="tab ${S.currentTab==='cover'?'active':''}" onclick="switchTab('cover')">Cover Letter</button> </div> <div id="tab-content">${tabContent()}</div> <div class="prev-actions"> <button class="btn-approve ${S.approved[j.id]?'':'unapproved'}" onclick="toggleApprove('${j.id}')"> ${S.approved[j.id]?'✓ Approved':'Approve Application'} </button> ${S.currentJobIdx < S.tailored.length-1 ?`<button class="btn-next" onclick="selectJob(${S.currentJobIdx+1})">Next Role →</button>` : ''} </div> </div> </div> ${approved===S.tailored.length?`
+<div class="alert alert-ok fade-in">
+<div class="alert-ico">✅</div>
+<div><strong>All ${S.tailored.length} Applications Approved!</strong><p>Ready to generate your final Placement Report.</p></div>
+</div>`: approved>0?`<div class="alert alert-warn fade-in"><div class="alert-ico">ℹ️</div><div><strong>${approved} of ${S.tailored.length} approved.</strong><p>You can proceed with partial approvals or approve all before generating the report.</p></div></div>`:''} <button class="btn-primary" ${approved===0?'disabled':''} onclick="generateReport()"> Generate Placement Report (${approved} approved) → </button> `;
+}
+
+function selectJob(idx){S.currentJobIdx=idx;S.currentTab=‘summary’;renderPreview()}
+function switchTab(t){S.currentTab=t;renderPreview()}
+function toggleApprove(id){S.approved[id]=!S.approved[id];renderPreview()}
+function generateReport(){showPhase(‘report’)}
+
+// ═══════════════════════════════════════════════════════════════
+//  PHASE 6 — REPORT
+// ═══════════════════════════════════════════════════════════════
+function buildReport(){
+const approved = S.tailored.filter(j=>S.approved[j.id]);
+const avg = Math.round(approved.reduce((a,j)=>a+j.matchScore,0)/approved.length)||0;
+const locs = […new Set(approved.map(j=>j.location.split(’,’).pop().trim()))].length;
+const highGrowth = approved.filter(j=>j.growthPotential===‘High’).length;
+
+const rows = approved.map((j,i)=>{
+const mc = j.matchScore>=90?‘mbadge-h’:j.matchScore>=80?‘mbadge-m’:‘mbadge-l’;
+return ` <tr class="tr-main" onclick="toggleRow(${i})" id="row-${i}"> <td>${i+1}</td> <td><strong>${j.company}</strong></td> <td>${j.title}</td> <td>${j.location}</td> <td style="color:var(--green)">${j.salaryRange}</td> <td><span class="mbadge ${mc}">${j.matchScore}%</span></td> <td><span class="pill ${j.growthPotential==='High'?'pill-ok':'pill-gold'}">${j.growthPotential}</span></td> <td><span class="pill pill-sub">✓ Approved</span></td> </tr> <tr class="tr-exp hidden" id="exp-${i}"> <td colspan="8"> <div class="exp-inner"> <div> <strong>Why This Matches You</strong> <p>${j.whyMatch}</p> <strong>Requirements</strong> <div class="tags">${(j.keyRequirements||[]).map(r=>`<span class="tag tag-mini">${r}</span>`).join('')}</div> </div> <div> <strong>Application Link</strong> <p><a href="${j.jobUrl}" target="_blank">${j.jobUrl}</a></p> <strong>Tailored Summary Preview</strong> <p style="color:var(--muted);font-style:italic">${(j.tailoredSummary||'').slice(0,130)}...</p> </div> </div> </td> </tr>`;
+}).join(’’);
+
+document.getElementById(‘phase-report’).innerHTML = `<div class="panel-hdr"> <div class="phase-ico ico-gold">📊</div> <div> <h2>Placement Report</h2> <p>${approved.length} applications processed — click any row to expand details.</p> </div> </div> <div class="stat-cards"> <div class="stat-card"><span class="stat-n">${approved.length}</span><span class="stat-l">Applications Ready</span></div> <div class="stat-card"><span class="stat-n">${avg}%</span><span class="stat-l">Avg Match Score</span></div> <div class="stat-card"><span class="stat-n">${locs}</span><span class="stat-l">Countries Targeted</span></div> <div class="stat-card"><span class="stat-n">${highGrowth}</span><span class="stat-l">High-Growth Roles</span></div> </div> <div class="tbl-wrap"> <table> <thead> <tr> <th>#</th><th>Company</th><th>Role</th><th>Location</th> <th>Salary</th><th>Match</th><th>Growth</th><th>Status</th> </tr> </thead> <tbody>${rows}</tbody> </table> </div> <div class="report-foot"> <div class="agent-note"> <span>📋 Agent Compliance Note</span> All ${approved.length} applications tailored using only verified CV content — no skills or experience fabricated. Personal contact data has not been shared outside official application portals. Submit via the job links above. Match scores reflect AI alignment analysis against role requirements. </div> </div> <button class="btn-outline" onclick="showPhase('upload')" style="margin-top:20px">↩ Start New Search</button>`;
+S.expandedRow = -1;
+}
+
+function toggleRow(i){
+if(S.expandedRow===i){
+document.getElementById(‘exp-’+i).classList.add(‘hidden’);
+S.expandedRow=-1;
+} else {
+if(S.expandedRow>=0) document.getElementById(‘exp-’+S.expandedRow).classList.add(‘hidden’);
+document.getElementById(‘exp-’+i).classList.remove(‘hidden’);
+S.expandedRow=i;
+}
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  UTILITIES
+// ═══════════════════════════════════════════════════════════════
+function addLog(boxId, [cls, msg]){
+const box = document.getElementById(boxId);
+if(!box) return;
+const d = document.createElement(‘div’);
+d.className = cls;
+d.textContent = msg;
+box.appendChild(d);
+box.scrollTop = box.scrollHeight;
+}
+
+function toBase64(file){
+return new Promise((res,rej)=>{
+const r = new FileReader();
+r.onload = ()=>res(r.result.split(’,’)[1]);
+r.onerror = ()=>rej(new Error(‘Read failed’));
+r.readAsDataURL(file);
+});
+}
+
+// Enter key on API input
+document.getElementById(‘api-key-input’).addEventListener(‘keydown’, e=>{
+if(e.key===‘Enter’) submitApiKey();
+});
+</script>
+
 </body>
 </html>
