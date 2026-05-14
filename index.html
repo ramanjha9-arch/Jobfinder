@@ -3,629 +3,684 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>CareerAgent AI — Smart Placement Platform</title>
+<title>CareerAxis AI — Intelligent Placement Platform</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Lora:ital,wght@0,500;0,600;1,400&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f0f4fa;
-  --bg2:#e8eef8;
-  --white:#ffffff;
-  --surface:#ffffff;
-  --surface2:#f7f9fd;
-  --border:#dce4f0;
-  --border2:#c8d6eb;
-  --text:#1a2540;
-  --text2:#3a4a6b;
-  --muted:#7a8aaa;
-  --faint:#b8c8de;
-  --primary:#2563eb;
-  --primary2:#3b82f6;
-  --primary-lt:#dbeafe;
-  --primary-glow:rgba(37,99,235,.12);
-  --accent:#0ea5e9;
-  --accent-lt:#e0f2fe;
-  --green:#059669;
-  --green-lt:#d1fae5;
-  --orange:#ea580c;
-  --orange-lt:#ffedd5;
-  --red:#dc2626;
-  --red-lt:#fee2e2;
-  --purple:#7c3aed;
-  --purple-lt:#ede9fe;
-  --gold:#b45309;
-  --gold-lt:#fef3c7;
-  --r:12px;
-  --r2:8px;
-  --shadow:0 1px 3px rgba(37,99,235,.08),0 4px 16px rgba(37,99,235,.06);
-  --shadow2:0 4px 24px rgba(37,99,235,.12);
-  --font:'Plus Jakarta Sans',sans-serif;
-  --font-d:'Lora',Georgia,serif;
-  --trans:.2s cubic-bezier(.4,0,.2,1);
+  --bg:#f0f5ff;--bg2:#e4ecfb;--white:#fff;
+  --surface:#fff;--s2:#f7f9ff;--s3:#eef3ff;
+  --border:#dce6f8;--border2:#c5d6f0;
+  --text:#0f1e3d;--text2:#344871;--muted:#7088b4;--faint:#b8cceb;
+  --p:#1d4ed8;--p2:#2563eb;--p3:#3b82f6;--plt:#dbeafe;--pglow:rgba(29,78,216,.13);
+  --acc:#0284c7;--aclt:#e0f2fe;
+  --g:#047857;--glt:#d1fae5;
+  --or:#c2410c;--olt:#ffedd5;
+  --re:#b91c1c;--rlt:#fee2e2;
+  --pu:#6d28d9;--pult:#ede9fe;
+  --go:#92400e;--golt:#fef3c7;
+  --cyan:#0891b2;--clt:#cffafe;
+  --r:12px;--r2:8px;--r3:6px;
+  --sh:0 1px 3px rgba(29,78,216,.07),0 4px 16px rgba(29,78,216,.05);
+  --sh2:0 8px 32px rgba(29,78,216,.14);
+  --sh3:0 20px 60px rgba(29,78,216,.2);
+  --f:'Plus Jakarta Sans',sans-serif;--fd:'Lora',Georgia,serif;
+  --tr:.2s cubic-bezier(.4,0,.2,1);
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:14px;line-height:1.6;min-height:100vh}
+body{background:var(--bg);color:var(--text);font-family:var(--f);font-size:14px;line-height:1.6;min-height:100vh}
 .hidden{display:none!important}
-@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
-.fade-in{animation:fadeUp .35s ease both}
-.spin-ic{animation:spin .9s linear infinite;display:inline-block}
+@keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+@keyframes pulse2{0%,100%{box-shadow:0 0 0 0 rgba(29,78,216,.3)}50%{box-shadow:0 0 0 8px rgba(29,78,216,0)}}
+.fi{animation:fadeIn .3s ease both}
+.fu{animation:fadeUp .38s ease both}
+.spin{animation:spin .9s linear infinite;display:inline-block}
 
-/* ── HEADER ── */
-.hdr{
-  background:var(--white);border-bottom:1px solid var(--border);
-  padding:0 32px;height:60px;display:flex;align-items:center;justify-content:space-between;
-  position:sticky;top:0;z-index:200;box-shadow:0 1px 8px rgba(37,99,235,.07);
-}
-.logo{display:flex;align-items:center;gap:10px;text-decoration:none}
-.logo-mark{
-  width:36px;height:36px;border-radius:9px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  display:flex;align-items:center;justify-content:center;
-  color:#fff;font-weight:800;font-size:14px;letter-spacing:-.5px;
-  box-shadow:0 2px 10px rgba(37,99,235,.35);
-}
-.logo-name{font-weight:700;font-size:16px;color:var(--text)}
-.logo-name span{color:var(--primary)}
-.hdr-nav{display:flex;align-items:center;gap:6px}
-.hdr-tab{
-  padding:6px 14px;border-radius:20px;border:none;background:none;
-  font-family:var(--font);font-size:13px;color:var(--muted);cursor:pointer;
-  transition:var(--trans);font-weight:500;
-}
-.hdr-tab:hover{background:var(--primary-lt);color:var(--primary)}
-.hdr-tab.active{background:var(--primary-lt);color:var(--primary)}
+/* ═══ SCROLLBAR ═══ */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ═══ LAYOUT ═══ */
+#root{display:flex;flex-direction:column;min-height:100vh}
+
+/* ═══ HEADER ═══ */
+.hdr{background:var(--white);border-bottom:1px solid var(--border);height:62px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;position:sticky;top:0;z-index:300;box-shadow:var(--sh)}
+.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
+.logo-mk{width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(135deg,var(--p),var(--acc));
+  display:flex;align-items:center;justify-content:center;color:#fff;
+  font-weight:800;font-size:15px;box-shadow:0 3px 12px rgba(29,78,216,.35)}
+.logo-tx{font-weight:800;font-size:17px;color:var(--text)}
+.logo-tx span{color:var(--p)}
+.logo-badge{font-size:9px;background:var(--plt);color:var(--p);
+  padding:2px 6px;border-radius:10px;font-weight:700;letter-spacing:.5px;margin-left:4px}
+.hdr-nav{display:flex;align-items:center;gap:2px}
+.nav-btn{padding:7px 14px;border-radius:20px;border:none;background:none;
+  font-family:var(--f);font-size:13px;color:var(--muted);cursor:pointer;
+  transition:var(--tr);font-weight:500}
+.nav-btn:hover{background:var(--plt);color:var(--p)}
+.nav-btn.active{background:var(--plt);color:var(--p);font-weight:600}
 .hdr-right{display:flex;align-items:center;gap:8px}
-.api-pill{
-  display:flex;align-items:center;gap:6px;padding:6px 14px;
-  border:1.5px solid var(--border2);border-radius:20px;
-  font-size:12px;color:var(--muted);cursor:pointer;transition:var(--trans);
-  background:var(--surface2);font-weight:500;
-}
-.api-pill:hover{border-color:var(--primary);color:var(--primary)}
-.api-pill .dot{width:7px;height:7px;border-radius:50%;background:var(--red);flex-shrink:0}
-.api-pill .dot.ok{background:var(--green)}
-.btn-prefs{
-  padding:6px 14px;border:1.5px solid var(--border2);border-radius:20px;
-  background:var(--surface2);font-family:var(--font);font-size:12px;
-  color:var(--muted);cursor:pointer;transition:var(--trans);font-weight:500;
-}
-.btn-prefs:hover{border-color:var(--primary);color:var(--primary)}
-
-/* ── MAIN ── */
-.main{max-width:1040px;margin:0 auto;padding:32px 20px 64px;width:100%}
-
-/* ── KEY SCREEN ── */
-#screen-key{
+.user-chip{display:flex;align-items:center;gap:7px;padding:5px 12px 5px 5px;
+  border:1.5px solid var(--border2);border-radius:24px;cursor:pointer;
+  transition:var(--tr);background:var(--s2)}
+.user-chip:hover{border-color:var(--p)}
+.user-av{width:30px;height:30px;border-radius:50%;
+  background:linear-gradient(135deg,var(--p),var(--acc));
   display:flex;align-items:center;justify-content:center;
-  min-height:calc(100vh - 60px);
-}
-.key-wrap{
-  width:100%;max-width:460px;
-  background:var(--white);border:1px solid var(--border);border-radius:20px;
-  padding:48px 40px;box-shadow:var(--shadow2);animation:fadeUp .5s ease both;
-}
-.key-hero{
-  width:72px;height:72px;border-radius:18px;margin:0 auto 24px;
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  display:flex;align-items:center;justify-content:center;font-size:30px;
-  box-shadow:0 6px 24px rgba(37,99,235,.3);
-}
-.key-wrap h2{font-family:var(--font-d);font-size:26px;text-align:center;margin-bottom:6px;color:var(--text)}
-.key-wrap .sub{font-size:13px;color:var(--muted);text-align:center;margin-bottom:28px;line-height:1.7}
-.inp-row{position:relative;margin-bottom:10px}
-.inp-row input{
-  width:100%;padding:12px 44px 12px 14px;
-  background:var(--surface2);border:1.5px solid var(--border2);
-  border-radius:var(--r2);color:var(--text);font-family:var(--font);font-size:13px;
-  transition:var(--trans);
-}
-.inp-row input:focus{outline:none;border-color:var(--primary);background:#fff;box-shadow:0 0 0 3px var(--primary-glow)}
-.eye-btn{
-  position:absolute;right:12px;top:50%;transform:translateY(-50%);
-  background:none;border:none;cursor:pointer;color:var(--muted);
-  display:flex;padding:2px;transition:var(--trans);
-}
-.eye-btn:hover{color:var(--primary)}
-.key-note2{
-  display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);
-  margin-bottom:22px;justify-content:center;
-}
-.btn-activate{
-  width:100%;padding:13px;border:none;border-radius:var(--r2);
-  background:linear-gradient(135deg,var(--primary),var(--accent));
-  color:#fff;font-family:var(--font);font-weight:700;font-size:14px;
-  cursor:pointer;transition:var(--trans);
-  display:flex;align-items:center;justify-content:center;gap:8px;
-}
-.btn-activate:hover{transform:translateY(-1px);box-shadow:0 6px 20px rgba(37,99,235,.35)}
-.btn-activate:disabled{opacity:.5;cursor:not-allowed;transform:none;box-shadow:none}
-.key-footer{text-align:center;font-size:11px;color:var(--muted);margin-top:18px}
-.key-footer a{color:var(--primary);text-decoration:none}
-.err-msg{font-size:12px;color:var(--red);margin-bottom:12px;padding:8px 12px;background:var(--red-lt);border-radius:6px;display:none}
+  color:#fff;font-weight:700;font-size:12px}
+.user-name{font-size:12px;font-weight:600;color:var(--text2)}
+.trial-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  background:var(--golt);color:var(--go);border:1px solid rgba(146,64,14,.2)}
+.pro-badge{padding:4px 10px;border-radius:20px;font-size:11px;font-weight:700;
+  background:linear-gradient(135deg,var(--p),var(--acc));color:#fff;
+  box-shadow:0 2px 8px rgba(29,78,216,.3)}
+.api-chip{display:flex;align-items:center;gap:5px;padding:5px 12px;
+  border:1.5px solid var(--border2);border-radius:20px;
+  font-size:11px;color:var(--muted);cursor:pointer;transition:var(--tr);
+  background:var(--s2);font-weight:500}
+.api-chip:hover{border-color:var(--p);color:var(--p)}
+.dot{width:7px;height:7px;border-radius:50%;background:var(--re)}
+.dot.ok{background:var(--g)}
 
-/* ── PREFS MODAL ── */
-.modal-bg{
-  position:fixed;inset:0;background:rgba(26,37,64,.5);
-  z-index:500;display:flex;align-items:center;justify-content:center;
-  backdrop-filter:blur(4px);
-}
-.modal{
-  background:var(--white);border-radius:20px;padding:36px;
-  max-width:560px;width:calc(100% - 32px);max-height:90vh;overflow-y:auto;
-  box-shadow:0 20px 60px rgba(37,99,235,.2);animation:fadeUp .3s ease;
-}
-.modal-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}
-.modal-hdr h3{font-family:var(--font-d);font-size:20px}
-.close-btn{background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:var(--trans)}
-.close-btn:hover{background:var(--bg);color:var(--text)}
-.pref-section{margin-bottom:22px}
-.pref-section label{display:block;font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
-.pref-section select,.pref-section input[type=text],.pref-section textarea{
-  width:100%;padding:10px 12px;border:1.5px solid var(--border2);border-radius:var(--r2);
-  font-family:var(--font);font-size:13px;color:var(--text);background:var(--surface2);
-  transition:var(--trans);resize:vertical;
-}
-.pref-section select:focus,.pref-section input:focus,.pref-section textarea:focus{outline:none;border-color:var(--primary);background:#fff}
-.chip-row{display:flex;flex-wrap:wrap;gap:6px}
-.chip{
-  padding:5px 12px;border-radius:20px;border:1.5px solid var(--border2);
-  font-size:12px;font-weight:500;cursor:pointer;transition:var(--trans);
-  background:var(--surface2);color:var(--text2);
-}
-.chip:hover{border-color:var(--primary);color:var(--primary)}
-.chip.sel{background:var(--primary-lt);border-color:var(--primary);color:var(--primary)}
-.range-row{display:flex;gap:8px}
-.range-row input{flex:1}
-.btn-save-prefs{
-  width:100%;padding:12px;border:none;border-radius:var(--r2);
-  background:var(--primary);color:#fff;font-family:var(--font);font-weight:600;
-  font-size:14px;cursor:pointer;transition:var(--trans);
-}
-.btn-save-prefs:hover{background:var(--primary2)}
+/* ═══ MAIN ═══ */
+.main{flex:1;max-width:1060px;margin:0 auto;width:100%;padding:32px 20px 80px}
 
-/* ── STEP BAR ── */
-.stepbar{
-  display:flex;align-items:center;margin-bottom:28px;
-  background:var(--white);border:1px solid var(--border);border-radius:var(--r);
-  padding:12px 20px;box-shadow:var(--shadow);overflow-x:auto;gap:0;
-}
-.step{display:flex;align-items:center;gap:7px;flex:1;min-width:0}
-.step-dot{
-  width:30px;height:30px;border-radius:50%;border:2px solid var(--border2);
-  display:flex;align-items:center;justify-content:center;font-size:12px;
-  flex-shrink:0;transition:var(--trans);background:var(--surface2);color:var(--muted);
-}
-.step.done .step-dot{border-color:var(--green);background:var(--green-lt);color:var(--green)}
-.step.active .step-dot{border-color:var(--primary);background:var(--primary-lt);color:var(--primary)}
-.step-txt{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;transition:var(--trans);letter-spacing:.3px}
-.step.active .step-txt{color:var(--primary)}
-.step.done .step-txt{color:var(--green)}
-.step-line{flex:1;height:2px;background:var(--border);margin:0 6px;min-width:8px;border-radius:1px}
-.step-line.done{background:var(--green)}
+/* ═══ AUTH SCREENS ═══ */
+.auth-wrap{min-height:calc(100vh - 62px);display:flex;align-items:center;justify-content:center;padding:24px}
+.auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;max-width:900px;width:100%;
+  background:var(--white);border-radius:20px;overflow:hidden;box-shadow:var(--sh3)}
+.auth-left{background:linear-gradient(145deg,var(--p) 0%,var(--acc) 100%);
+  padding:48px 40px;display:flex;flex-direction:column;justify-content:space-between}
+.auth-left h1{font-family:var(--fd);font-size:32px;color:#fff;font-weight:600;margin-bottom:12px}
+.auth-left p{color:rgba(255,255,255,.75);font-size:14px;line-height:1.7}
+.auth-feat{margin-top:28px;display:flex;flex-direction:column;gap:12px}
+.auth-feat-item{display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.9);font-size:13px}
+.auth-feat-ic{width:28px;height:28px;border-radius:8px;background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.auth-owner{margin-top:auto;padding-top:32px;color:rgba(255,255,255,.6);font-size:11px}
+.auth-owner strong{color:#fff;display:block;font-size:13px;margin-bottom:2px}
+.auth-right{padding:48px 44px}
+.auth-right h2{font-family:var(--fd);font-size:26px;margin-bottom:6px}
+.auth-right .sub{font-size:13px;color:var(--muted);margin-bottom:28px}
+.auth-tabs{display:flex;gap:0;margin-bottom:28px;border-bottom:2px solid var(--border)}
+.auth-tab{padding:8px 20px;border:none;background:none;font-family:var(--f);
+  font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;
+  border-bottom:2px solid transparent;margin-bottom:-2px;transition:var(--tr)}
+.auth-tab.active{color:var(--p);border-bottom-color:var(--p)}
+.form-group{margin-bottom:16px}
+.form-group label{display:block;font-size:11px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.7px;color:var(--text2);margin-bottom:6px}
+.form-group input,.form-group select,.form-group textarea{
+  width:100%;padding:11px 14px;background:var(--s2);
+  border:1.5px solid var(--border2);border-radius:var(--r2);
+  font-family:var(--f);font-size:13px;color:var(--text);transition:var(--tr)}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{
+  outline:none;border-color:var(--p);background:var(--white);box-shadow:0 0 0 3px var(--pglow)}
+.inp-ico{position:relative}
+.inp-ico input{padding-right:42px}
+.inp-ico .eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  background:none;border:none;cursor:pointer;color:var(--muted);display:flex;padding:2px}
+.inp-ico .eye:hover{color:var(--p)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.err-box{background:var(--rlt);border:1px solid rgba(185,28,28,.25);
+  border-radius:var(--r3);padding:10px 12px;font-size:12px;color:var(--re);
+  margin-bottom:14px;display:none}
+.suc-box{background:var(--glt);border:1px solid rgba(4,120,87,.25);
+  border-radius:var(--r3);padding:10px 12px;font-size:12px;color:var(--g);
+  margin-bottom:14px;display:none}
+.auth-switch{text-align:center;font-size:13px;color:var(--muted);margin-top:16px}
+.auth-switch a{color:var(--p);cursor:pointer;font-weight:600;text-decoration:none}
+.auth-switch a:hover{text-decoration:underline}
 
-/* ── PANEL ── */
-.panel{
-  background:var(--white);border:1px solid var(--border);border-radius:var(--r);
-  padding:32px;box-shadow:var(--shadow);
-}
-.panel-hdr{display:flex;align-items:flex-start;gap:14px;margin-bottom:26px}
-.phase-ico{
-  width:44px;height:44px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;
-}
-.ico-blue{background:var(--primary-lt);border:1px solid rgba(37,99,235,.2)}
-.ico-sky{background:var(--accent-lt);border:1px solid rgba(14,165,233,.2)}
-.ico-green{background:var(--green-lt);border:1px solid rgba(5,150,105,.2)}
-.ico-orange{background:var(--orange-lt);border:1px solid rgba(234,88,12,.2)}
-.ico-purple{background:var(--purple-lt);border:1px solid rgba(124,58,237,.2)}
-.ico-gold{background:var(--gold-lt);border:1px solid rgba(180,83,9,.2)}
-.panel-hdr h2{font-family:var(--font-d);font-size:22px;font-weight:600;margin-bottom:3px;color:var(--text)}
+/* ═══ BUTTONS ═══ */
+.btn{display:inline-flex;align-items:center;gap:7px;padding:10px 22px;
+  border-radius:var(--r2);font-family:var(--f);font-size:13px;
+  font-weight:600;cursor:pointer;transition:var(--tr);border:none}
+.btn-p{background:var(--p);color:#fff}
+.btn-p:hover{background:var(--p2);transform:translateY(-1px);box-shadow:0 4px 18px rgba(29,78,216,.3)}
+.btn-p:disabled{opacity:.45;cursor:not-allowed;transform:none;box-shadow:none}
+.btn-o{background:var(--white);color:var(--p);border:1.5px solid var(--p)}
+.btn-o:hover{background:var(--plt)}
+.btn-g{background:var(--s2);color:var(--text2);border:1.5px solid var(--border2)}
+.btn-g:hover{border-color:var(--p);color:var(--p)}
+.btn-green{background:var(--g);color:#fff}
+.btn-green:hover{opacity:.9}
+.btn-red{background:var(--re);color:#fff}
+.btn-sm{padding:7px 15px;font-size:12px}
+.btn-lg{padding:14px 32px;font-size:15px}
+.btn-full{width:100%;justify-content:center}
+.btn-icon{width:36px;height:36px;padding:0;border-radius:8px;justify-content:center}
+
+/* ═══ PANEL ═══ */
+.panel{background:var(--white);border:1px solid var(--border);border-radius:var(--r);
+  padding:28px;box-shadow:var(--sh)}
+.panel-hdr{display:flex;align-items:flex-start;gap:14px;margin-bottom:22px}
+.ph-ico{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;
+  justify-content:center;font-size:20px;flex-shrink:0}
+.ico-b{background:var(--plt);border:1px solid rgba(29,78,216,.2)}
+.ico-a{background:var(--aclt);border:1px solid rgba(2,132,199,.2)}
+.ico-g{background:var(--glt);border:1px solid rgba(4,120,87,.2)}
+.ico-o{background:var(--olt);border:1px solid rgba(194,65,12,.2)}
+.ico-p{background:var(--pult);border:1px solid rgba(109,40,217,.2)}
+.ico-go{background:var(--golt);border:1px solid rgba(146,64,14,.2)}
+.ico-c{background:var(--clt);border:1px solid rgba(8,145,178,.2)}
+.panel-hdr h2{font-family:var(--fd);font-size:21px;font-weight:600;margin-bottom:3px}
 .panel-hdr p{font-size:13px;color:var(--muted)}
 
-/* ── DROPZONE ── */
-.dz{
-  border:2px dashed var(--border2);border-radius:var(--r);padding:48px 20px;
-  text-align:center;cursor:pointer;transition:var(--trans);margin-bottom:18px;
-  background:var(--surface2);
-}
-.dz:hover,.dz.drag{border-color:var(--primary);background:var(--primary-lt)}
-.dz.has-file{border-color:var(--green);background:var(--green-lt)}
-.dz-ico{font-size:36px;margin-bottom:10px}
-.dz-t{font-size:15px;font-weight:600;margin-bottom:4px;color:var(--text2)}
-.dz-s{font-size:12px;color:var(--muted)}
-.dz-ok{display:flex;align-items:center;gap:8px;justify-content:center;color:var(--green);font-weight:600}
+/* ═══ STEP BAR ═══ */
+.stepbar{background:var(--white);border:1px solid var(--border);border-radius:var(--r);
+  padding:12px 18px;margin-bottom:24px;display:flex;align-items:center;
+  box-shadow:var(--sh);overflow-x:auto;gap:0}
+.step{display:flex;align-items:center;gap:6px;flex:1;min-width:0}
+.step-dot{width:28px;height:28px;border-radius:50%;border:2px solid var(--border2);
+  display:flex;align-items:center;justify-content:center;font-size:11px;
+  flex-shrink:0;transition:var(--tr);background:var(--s2);color:var(--muted)}
+.step.done .step-dot{border-color:var(--g);background:var(--glt);color:var(--g)}
+.step.active .step-dot{border-color:var(--p);background:var(--plt);color:var(--p)}
+.step-lb{font-size:11px;font-weight:600;color:var(--muted);white-space:nowrap;transition:var(--tr)}
+.step.active .step-lb{color:var(--p)}
+.step.done .step-lb{color:var(--g)}
+.step-ln{flex:1;height:2px;background:var(--border);margin:0 5px;min-width:6px;border-radius:1px}
+.step-ln.done{background:var(--g)}
 
-/* ── FIELDS ── */
-.field{margin-bottom:16px}
-.field label{display:block;font-size:11px;font-weight:700;color:var(--text2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:6px}
-.field select,.field input{
-  width:100%;padding:10px 12px;background:var(--surface2);
+/* ═══ FIELDS ═══ */
+.field{margin-bottom:14px}
+.field label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.7px;color:var(--text2);margin-bottom:6px}
+.field select,.field input,.field textarea{
+  width:100%;padding:10px 12px;background:var(--s2);
   border:1.5px solid var(--border2);border-radius:var(--r2);
-  font-family:var(--font);font-size:13px;color:var(--text);transition:var(--trans);
-}
-.field select:focus,.field input:focus{outline:none;border-color:var(--primary);background:#fff}
-.field-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  font-family:var(--f);font-size:13px;color:var(--text);transition:var(--tr)}
+.field select:focus,.field input:focus,.field textarea:focus{
+  outline:none;border-color:var(--p);background:var(--white)}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
 
-/* ── BUTTONS ── */
-.btn{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:10px 22px;border-radius:var(--r2);font-family:var(--font);
-  font-size:13px;font-weight:600;cursor:pointer;transition:var(--trans);border:none;
-}
-.btn-primary{background:var(--primary);color:#fff}
-.btn-primary:hover{background:var(--primary2);transform:translateY(-1px);box-shadow:0 4px 16px rgba(37,99,235,.3)}
-.btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none;box-shadow:none}
-.btn-outline{background:var(--white);color:var(--primary);border:1.5px solid var(--primary)}
-.btn-outline:hover{background:var(--primary-lt)}
-.btn-ghost{background:var(--surface2);color:var(--text2);border:1.5px solid var(--border2)}
-.btn-ghost:hover{border-color:var(--primary);color:var(--primary)}
-.btn-green{background:var(--green);color:#fff}
-.btn-green:hover{opacity:.9}
-.btn-sm{padding:7px 16px;font-size:12px}
+/* ═══ DROPZONE ═══ */
+.dz{border:2px dashed var(--border2);border-radius:var(--r);padding:40px 20px;
+  text-align:center;cursor:pointer;transition:var(--tr);background:var(--s2);margin-bottom:16px}
+.dz:hover,.dz.drag{border-color:var(--p);background:var(--plt)}
+.dz.ok{border-color:var(--g);background:var(--glt)}
+.dz-ic{font-size:34px;margin-bottom:8px}
+.dz-t{font-size:14px;font-weight:600;color:var(--text2);margin-bottom:3px}
+.dz-s{font-size:12px;color:var(--muted)}
+.dz-ok{display:flex;align-items:center;gap:8px;justify-content:center;
+  color:var(--g);font-weight:600;font-size:13px}
 
-/* ── LOG ── */
-.log{
-  background:var(--text);border-radius:var(--r2);padding:16px;
-  font-family:'Courier New',monospace;font-size:12px;
-  max-height:160px;overflow-y:auto;margin-bottom:16px;line-height:1.9;
-  border:1px solid rgba(255,255,255,.05);
-}
-.l-ok{color:#34d399}.l-info{color:#60a5fa}.l-warn{color:#fbbf24}.l-err{color:#f87171}
+/* ═══ LOG ═══ */
+.log{background:#0d1117;border-radius:var(--r2);padding:14px;
+  font-family:'Courier New',monospace;font-size:11.5px;
+  max-height:150px;overflow-y:auto;margin-bottom:14px;line-height:1.9;
+  border:1px solid #21262d}
+.l-ok{color:#3fb950}.l-info{color:#58a6ff}.l-w{color:#d29922}.l-e{color:#f85149}
 
-/* ── CARDS ── */
-.profile-card{
-  background:linear-gradient(135deg,var(--primary-lt),var(--accent-lt));
-  border:1px solid rgba(37,99,235,.2);border-radius:var(--r);padding:22px;margin-bottom:18px;
-}
-.profile-card h3{font-family:var(--font-d);font-size:17px;color:var(--primary);margin-bottom:14px}
-.pg4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:14px}
-.pf span{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:2px}
-.pf strong{font-size:13px;color:var(--text)}
-.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+/* ═══ TAGS ═══ */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
 .tag{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:500}
-.tag-blue{background:var(--primary-lt);color:var(--primary)}
-.tag-sky{background:var(--accent-lt);color:#0369a1}
-.tag-green{background:var(--green-lt);color:var(--green)}
-.tag-purple{background:var(--purple-lt);color:var(--purple)}
-.tag-gold{background:var(--gold-lt);color:var(--gold)}
-.tag-grey{background:var(--bg2);color:var(--text2)}
-.profile-quote{font-size:12px;color:var(--text2);font-style:italic;margin-top:12px;padding-top:12px;border-top:1px solid rgba(37,99,235,.15);line-height:1.7}
+.t-b{background:var(--plt);color:var(--p)}
+.t-a{background:var(--aclt);color:var(--acc)}
+.t-g{background:var(--glt);color:var(--g)}
+.t-o{background:var(--olt);color:var(--or)}
+.t-p{background:var(--pult);color:var(--pu)}
+.t-go{background:var(--golt);color:var(--go)}
+.t-gr{background:var(--s3);color:var(--text2)}
+.t-c{background:var(--clt);color:var(--cyan)}
 
-/* ── JOB GRID ── */
-.jobs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:18px}
-.jcard{
-  background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);
-  padding:14px;transition:var(--trans);cursor:default;
-  animation:fadeUp .4s ease both;box-shadow:var(--shadow);
-}
-.jcard:hover{border-color:var(--primary);transform:translateY(-1px);box-shadow:var(--shadow2)}
-.jc-top{display:flex;justify-content:space-between;gap:8px;margin-bottom:6px}
-.jc-source{font-size:10px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px;display:flex;align-items:center;gap:4px}
-.jc-source .src-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);display:inline-block}
-.jc-title{font-size:13px;font-weight:700;margin-bottom:2px;color:var(--text)}
+/* ═══ PROGRESS ═══ */
+.prog{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.prog-bg{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--p),var(--acc));
+  border-radius:3px;transition:width .4s ease}
+.prog-pct{font-size:12px;color:var(--muted);font-weight:600;min-width:34px;text-align:right}
+
+/* ═══ ALERTS ═══ */
+.alert{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;
+  border-radius:var(--r2);margin-bottom:14px}
+.al-b{background:var(--plt);border:1px solid rgba(29,78,216,.2);color:var(--p)}
+.al-g{background:var(--glt);border:1px solid rgba(4,120,87,.2);color:var(--g)}
+.al-w{background:var(--golt);border:1px solid rgba(146,64,14,.2);color:var(--go)}
+.al-r{background:var(--rlt);border:1px solid rgba(185,28,28,.2);color:var(--re)}
+.al-ic{font-size:17px;flex-shrink:0;margin-top:1px}
+.al-body strong{display:block;font-size:13px;margin-bottom:2px}
+.al-body p{font-size:12px;color:var(--text2)}
+
+/* ═══ PROFILE CARD ═══ */
+.profile-card{background:linear-gradient(135deg,var(--plt),var(--aclt));
+  border:1px solid rgba(29,78,216,.2);border-radius:var(--r);padding:20px;margin-bottom:16px}
+.profile-card h3{font-family:var(--fd);font-size:16px;color:var(--p);margin-bottom:12px}
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px}
+.pf span{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.6px;color:var(--muted);display:block;margin-bottom:2px}
+.pf strong{font-size:12px;color:var(--text)}
+.pq{font-size:12px;color:var(--text2);font-style:italic;margin-top:10px;
+  padding-top:10px;border-top:1px solid rgba(29,78,216,.15);line-height:1.7}
+
+/* ═══ JOB CARDS ═══ */
+.jobs-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:11px;margin-bottom:16px}
+.jcard{background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);
+  padding:13px;transition:var(--tr);box-shadow:var(--sh);animation:fadeUp .4s ease both}
+.jcard:hover{border-color:var(--p);transform:translateY(-1px);box-shadow:var(--sh2)}
+.jc-src{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;
+  color:var(--muted);margin-bottom:2px;display:flex;align-items:center;gap:4px}
+.src-dot{width:5px;height:5px;border-radius:50%;background:var(--acc);display:inline-block}
+.jc-title{font-size:13px;font-weight:700;margin-bottom:1px;color:var(--text)}
 .jc-co{font-size:11px;color:var(--muted)}
-.jc-sal{font-size:11px;color:var(--green);font-weight:600;margin-bottom:5px}
-.jc-why{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:7px}
-.mbadge{padding:3px 8px;border-radius:12px;font-size:11px;font-weight:700}
-.mb-h{background:var(--green-lt);color:var(--green)}
-.mb-m{background:var(--primary-lt);color:var(--primary)}
-.mb-l{background:var(--gold-lt);color:var(--gold)}
+.jc-top{display:flex;justify-content:space-between;gap:6px;margin-bottom:6px}
+.jc-sal{font-size:11px;color:var(--g);font-weight:600;margin-bottom:5px}
+.jc-why{font-size:11px;color:var(--text2);line-height:1.5;margin-bottom:6px}
+.jc-date{font-size:10px;color:var(--muted);margin-bottom:5px}
+.mb{padding:3px 8px;border-radius:10px;font-size:11px;font-weight:700}
+.mb-h{background:var(--glt);color:var(--g)}
+.mb-m{background:var(--plt);color:var(--p)}
+.mb-l{background:var(--golt);color:var(--go)}
 .mb-lg{font-size:15px;padding:5px 12px}
 
-/* ── PROGRESS ── */
-.prog-wrap{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-.prog-bg{flex:1;height:6px;background:var(--bg2);border-radius:3px;overflow:hidden}
-.prog-fill{height:100%;background:linear-gradient(90deg,var(--primary),var(--accent));border-radius:3px;transition:width .4s ease}
-.prog-txt{font-size:12px;color:var(--muted);min-width:34px;text-align:right;font-weight:600}
+/* ═══ DATE FILTER ═══ */
+.date-filter{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.df-btn{padding:5px 14px;border-radius:20px;border:1.5px solid var(--border2);
+  background:var(--s2);color:var(--text2);font-size:12px;font-weight:600;
+  cursor:pointer;transition:var(--tr)}
+.df-btn:hover{border-color:var(--p);color:var(--p)}
+.df-btn.sel{background:var(--plt);border-color:var(--p);color:var(--p)}
 
-/* ── ALERT ── */
-.alert{display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-radius:var(--r2);margin-bottom:16px}
-.alert-ico{font-size:17px;flex-shrink:0;margin-top:1px}
-.alert strong{display:block;font-size:13px;margin-bottom:2px}
-.alert p{font-size:12px;color:var(--text2)}
-.al-blue{background:var(--primary-lt);border:1px solid rgba(37,99,235,.2);color:var(--primary)}
-.al-green{background:var(--green-lt);border:1px solid rgba(5,150,105,.2);color:var(--green)}
-.al-warn{background:var(--gold-lt);border:1px solid rgba(180,83,9,.2);color:var(--gold)}
+/* ═══ PREVIEW ═══ */
+.prev-layout{display:grid;grid-template-columns:220px 1fr;gap:14px;margin-bottom:16px}
+.prev-sb{display:flex;flex-direction:column;gap:4px;max-height:480px;overflow-y:auto}
+.sbi{display:flex;align-items:center;gap:7px;padding:9px 10px;
+  background:var(--s2);border:1.5px solid var(--border);border-radius:var(--r2);
+  cursor:pointer;transition:var(--tr)}
+.sbi:hover,.sbi.active{border-color:var(--p);background:var(--plt)}
+.sbi.appr{border-color:var(--g);background:var(--glt)}
+.sbi-n{width:20px;height:20px;border-radius:50%;background:var(--bg2);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:700;flex-shrink:0;color:var(--text2)}
+.sbi-info strong{display:block;font-size:11px;font-weight:600;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
+.sbi-info span{font-size:10px;color:var(--muted)}
+.sbi-chk{color:var(--g);font-size:13px;flex-shrink:0}
+.prev-main{background:var(--s2);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:20px}
+.tabs{display:flex;gap:4px;margin-bottom:12px;
+  border-bottom:1px solid var(--border);padding-bottom:10px;flex-wrap:wrap}
+.tab{padding:5px 12px;border:1.5px solid var(--border2);border-radius:20px;
+  font-size:12px;font-weight:500;color:var(--muted);background:none;cursor:pointer;transition:var(--tr)}
+.tab.active{border-color:var(--p);color:var(--p);background:var(--plt)}
+.cv-blk h4{font-size:10px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.7px;color:var(--muted);margin-bottom:7px}
+.cv-blk p,.cv-blk pre{font-size:13px;line-height:1.75;color:var(--text)}
+.cv-blk ul{padding-left:15px}
+.cv-blk li{font-size:13px;line-height:1.8}
+.cv-blk pre{font-family:var(--f);white-space:pre-wrap}
+.prev-acts{display:flex;align-items:center;gap:8px;margin-top:14px;flex-wrap:wrap}
+.btn-appr{padding:9px 18px;background:var(--glt);border:1.5px solid var(--g);
+  color:var(--g);border-radius:var(--r2);font-size:12px;font-weight:600;cursor:pointer;transition:var(--tr)}
+.btn-appr:hover{background:var(--g);color:#fff}
+.btn-unappr{background:var(--s2);border:1.5px solid var(--border2);color:var(--muted)}
+.btn-unappr:hover{border-color:var(--g);color:var(--g)}
 
-/* ── PREVIEW LAYOUT ── */
-.prev-layout{display:grid;grid-template-columns:220px 1fr;gap:16px;margin-bottom:18px}
-.prev-sidebar{display:flex;flex-direction:column;gap:4px;max-height:500px;overflow-y:auto}
-.sb-item{
-  display:flex;align-items:center;gap:8px;padding:9px 10px;
-  background:var(--surface2);border:1.5px solid var(--border);
-  border-radius:var(--r2);cursor:pointer;transition:var(--trans);
-}
-.sb-item:hover,.sb-item.active{border-color:var(--primary);background:var(--primary-lt)}
-.sb-item.appr{border-color:var(--green);background:var(--green-lt)}
-.sb-n{width:20px;height:20px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0;color:var(--text2)}
-.sb-info strong{display:block;font-size:11px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px}
-.sb-info span{font-size:10px;color:var(--muted)}
-.sb-chk{color:var(--green);font-size:13px;flex-shrink:0}
-.prev-main{background:var(--surface2);border:1.5px solid var(--border);border-radius:var(--r);padding:22px}
-.prev-jh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;margin-bottom:8px}
-.prev-jh h3{font-family:var(--font-d);font-size:19px;font-weight:600;margin-bottom:3px;color:var(--text)}
-.prev-jh p{font-size:12px;color:var(--muted)}
-.prev-url{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--muted);margin-bottom:14px}
-.prev-url a{color:var(--primary);text-decoration:none;word-break:break-all}
-.prev-url a:hover{text-decoration:underline}
-.tabs{display:flex;gap:4px;margin-bottom:14px;border-bottom:1px solid var(--border);padding-bottom:10px;flex-wrap:wrap}
-.tab{padding:5px 12px;border:1.5px solid var(--border2);border-radius:20px;font-size:12px;font-weight:500;color:var(--muted);background:none;cursor:pointer;transition:var(--trans)}
-.tab.active{border-color:var(--primary);color:var(--primary);background:var(--primary-lt)}
-.cv-blk h4{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:8px}
-.cv-blk p{font-size:13px;line-height:1.75;color:var(--text)}
-.cv-blk ul{padding-left:16px}
-.cv-blk ul li{font-size:13px;line-height:1.8}
-.cv-blk pre{font-family:var(--font);font-size:12px;white-space:pre-wrap;line-height:1.75;color:var(--text)}
-.prev-acts{display:flex;align-items:center;gap:8px;margin-top:16px;flex-wrap:wrap}
-.btn-appr{padding:9px 18px;background:var(--green-lt);border:1.5px solid var(--green);color:var(--green);border-radius:var(--r2);font-size:12px;font-weight:600;cursor:pointer;transition:var(--trans)}
-.btn-appr:hover{background:var(--green);color:#fff}
-.btn-unappr{background:var(--surface2);border:1.5px solid var(--border2);color:var(--muted)}
-.btn-unappr:hover{border-color:var(--green);color:var(--green)}
-
-/* ── ATS SCORE ── */
-.ats-wrap{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px;margin-bottom:14px}
-.ats-card{
-  background:var(--white);border:1.5px solid var(--border);border-radius:var(--r2);
-  padding:16px;text-align:center;
-}
-.ats-card .lbl{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:8px}
-.ats-ring{width:72px;height:72px;margin:0 auto 8px;position:relative}
+/* ═══ ATS RING ═══ */
+.ats-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:12px 0}
+.ats-card{background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r2);padding:14px;text-align:center;box-shadow:var(--sh)}
+.ats-lbl{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:7px}
+.ats-ring{width:70px;height:70px;margin:0 auto 6px;position:relative}
 .ats-ring svg{transform:rotate(-90deg)}
-.ats-ring .ring-bg{fill:none;stroke:var(--bg2);stroke-width:7}
-.ats-ring .ring-fill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
-.ats-num{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;color:var(--text)}
-.ats-change{font-size:11px;font-weight:700;margin-top:4px}
-.ats-change.up{color:var(--green)}.ats-change.down{color:var(--red)}
+.ring-bg{fill:none;stroke:var(--bg2);stroke-width:7}
+.ring-fill{fill:none;stroke-width:7;stroke-linecap:round;transition:stroke-dashoffset .8s ease}
+.ats-num{position:absolute;inset:0;display:flex;align-items:center;
+  justify-content:center;font-size:15px;font-weight:800;color:var(--text)}
+.ats-ch{font-size:11px;font-weight:700;margin-top:3px}
+.ats-ch.up{color:var(--g)}.ats-ch.dn{color:var(--re)}
 
-/* ── CV BUILDER ── */
-.tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:18px}
-.tmpl-card{
-  border:2px solid var(--border);border-radius:var(--r2);padding:12px;
-  cursor:pointer;transition:var(--trans);background:var(--surface2);
-}
-.tmpl-card:hover{border-color:var(--primary)}
-.tmpl-card.sel{border-color:var(--primary);background:var(--primary-lt)}
-.tmpl-preview{height:100px;border-radius:6px;margin-bottom:8px;position:relative;overflow:hidden}
-.tmpl-name{font-size:12px;font-weight:600;text-align:center;color:var(--text2)}
-.tmpl-card.sel .tmpl-name{color:var(--primary)}
+/* ═══ SMART APPLY MODAL ═══ */
+.modal-bg{position:fixed;inset:0;background:rgba(15,30,61,.5);z-index:600;
+  display:flex;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
+.modal{background:var(--white);border-radius:20px;padding:32px;
+  max-width:600px;width:calc(100%-24px);max-height:90vh;overflow-y:auto;
+  box-shadow:var(--sh3);animation:fadeUp .3s ease}
+.modal h3{font-family:var(--fd);font-size:20px;margin-bottom:4px}
+.modal-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px}
+.close-x{background:none;border:none;font-size:20px;cursor:pointer;
+  color:var(--muted);width:32px;height:32px;display:flex;align-items:center;
+  justify-content:center;border-radius:8px;transition:var(--tr)}
+.close-x:hover{background:var(--bg);color:var(--text)}
+.apply-steps{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.apply-step{display:flex;align-items:flex-start;gap:12px;padding:12px;
+  background:var(--s2);border-radius:var(--r2);border:1px solid var(--border)}
+.apply-step-n{width:26px;height:26px;border-radius:50%;background:var(--p);
+  color:#fff;font-size:12px;font-weight:700;display:flex;align-items:center;
+  justify-content:center;flex-shrink:0;margin-top:1px}
+.apply-step-body strong{display:block;font-size:13px;margin-bottom:3px}
+.apply-step-body p{font-size:12px;color:var(--muted)}
+.copy-box{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r2);
+  padding:12px;font-size:12px;font-family:'Courier New',monospace;
+  white-space:pre-wrap;max-height:120px;overflow-y:auto;margin:8px 0;color:var(--text2)}
+.mail-preview{background:var(--bg);border:1px solid var(--border2);border-radius:var(--r2);padding:14px;font-size:12px;margin-top:10px}
+.mail-preview .mf{font-weight:700;color:var(--text2);margin-bottom:4px}
+.mail-preview pre{white-space:pre-wrap;color:var(--text);line-height:1.7;font-family:var(--f)}
 
-/* Template previews */
-.tp-modern{background:linear-gradient(180deg,#2563eb 40px,#f0f4fa 40px)}
-.tp-modern::before{content:'';position:absolute;top:8px;left:10px;right:10px;height:24px;background:rgba(255,255,255,.3);border-radius:4px}
-.tp-modern::after{content:'';position:absolute;top:48px;left:10px;right:10px;height:6px;background:#dce4f0;border-radius:3px;box-shadow:0 12px 0 #dce4f0,0 24px 0 #dce4f0,0 36px 0 #dce4f0}
-.tp-classic{background:#fff;border:1px solid #dce4f0}
-.tp-classic::before{content:'';position:absolute;top:8px;left:10px;right:10px;height:4px;background:#1a2540;border-radius:2px;box-shadow:0 10px 0 #dce4f0,0 20px 0 #dce4f0,0 30px 0 #dce4f0,0 40px 0 #dce4f0,0 50px 0 #dce4f0,0 60px 0 #dce4f0,0 70px 0 #dce4f0,0 80px 0 #dce4f0}
-.tp-executive{background:linear-gradient(135deg,#1e3a5f,#2563eb)}
-.tp-executive::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,.25)}
-.tp-executive::after{content:'';position:absolute;top:56px;left:10px;right:10px;height:5px;background:rgba(255,255,255,.2);border-radius:2px;box-shadow:0 12px 0 rgba(255,255,255,.15),0 24px 0 rgba(255,255,255,.15),0 36px 0 rgba(255,255,255,.1)}
-.tp-minimal{background:#fafafa;border:1px solid #e5e7eb}
-.tp-minimal::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:#2563eb}
-.tp-minimal::after{content:'';position:absolute;top:15px;left:12px;right:10px;height:3px;background:#e5e7eb;border-radius:2px;box-shadow:0 12px 0 #e5e7eb,0 24px 0 #e5e7eb,0 36px 0 #e5e7eb,0 48px 0 #e5e7eb,0 60px 0 #e5e7eb,0 72px 0 #e5e7eb}
-.tp-creative{background:linear-gradient(135deg,#7c3aed,#0ea5e9)}
-.tp-creative::before{content:'';position:absolute;top:8px;right:8px;width:50px;height:50px;border-radius:50%;background:rgba(255,255,255,.15)}
-.tp-creative::after{content:'';position:absolute;bottom:10px;left:10px;right:10px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;box-shadow:0 -12px 0 rgba(255,255,255,.15),0 -24px 0 rgba(255,255,255,.1)}
-.tp-compact{background:#fff;border:1px solid #dce4f0}
-.tp-compact::before{content:'';position:absolute;top:0;left:0;right:0;height:28px;background:#f0f4fa}
-.tp-compact::after{content:'';position:absolute;top:36px;left:10px;right:10px;height:4px;background:#dce4f0;border-radius:2px;box-shadow:0 10px 0 #dce4f0,0 20px 0 #dce4f0,0 30px 0 #dce4f0,0 40px 0 #dce4f0,0 50px 0 #dce4f0,0 60px 0 #dce4f0}
-
-/* ── REPORT ── */
-.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px}
-.stat{
-  background:var(--white);border:1px solid var(--border);border-radius:var(--r2);
-  padding:18px;text-align:center;box-shadow:var(--shadow);
-}
-.stat-n{display:block;font-size:30px;font-weight:800;color:var(--primary);margin-bottom:3px}
-.stat-l{font-size:11px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:.5px}
-.tbl-wrap{overflow-x:auto;margin-bottom:20px;border:1px solid var(--border);border-radius:var(--r2)}
+/* ═══ REPORT ═══ */
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);
+  padding:16px;text-align:center;box-shadow:var(--sh)}
+.stat-n{display:block;font-size:28px;font-weight:800;color:var(--p);margin-bottom:2px}
+.stat-l{font-size:10px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.tbl-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r2);margin-bottom:18px}
 table{width:100%;border-collapse:collapse;font-size:12px}
-thead{background:var(--bg2)}
-th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border-bottom:1px solid var(--border)}
-.tr-main{border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--trans)}
-.tr-main:hover{background:var(--primary-lt)}
-.tr-main td{padding:10px 12px;vertical-align:middle}
-.tr-exp{background:var(--surface2)}
-.tr-exp td{padding:0}
-.exp-inner{display:grid;grid-template-columns:1fr 1fr;gap:18px;padding:14px 12px;font-size:12px}
-.exp-inner h5{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:5px}
-.exp-inner p{color:var(--text2);line-height:1.6;margin-bottom:8px}
-.exp-inner a{color:var(--primary)}
-.pill{padding:3px 8px;border-radius:10px;font-size:10px;font-weight:600}
-.pl-green{background:var(--green-lt);color:var(--green)}
-.pl-blue{background:var(--primary-lt);color:var(--primary)}
-.pl-gold{background:var(--gold-lt);color:var(--gold)}
-.pl-sub{background:var(--green-lt);color:var(--green)}
-.agent-note{
-  display:flex;align-items:flex-start;gap:10px;padding:14px 16px;
-  background:var(--primary-lt);border:1px solid rgba(37,99,235,.2);border-radius:var(--r2);
-  font-size:12px;color:var(--text2);
-}
-.agent-note strong{color:var(--primary);display:block;margin-bottom:3px}
+thead{background:var(--s3)}
+th{padding:9px 11px;text-align:left;font-size:10px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.7px;color:var(--muted);border-bottom:1px solid var(--border)}
+.tr-m{border-bottom:1px solid var(--border);cursor:pointer;transition:background var(--tr)}
+.tr-m:hover{background:var(--plt)}
+.tr-m td{padding:9px 11px;vertical-align:middle}
+.tr-x{background:var(--s2)}
+.tr-x td{padding:0}
+.ex-in{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;padding:12px 11px;font-size:12px}
+.ex-in h5{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:4px}
+.ex-in p{color:var(--text2);line-height:1.6;margin-bottom:6px}
+.ex-in a{color:var(--p)}
+.pill{padding:2px 8px;border-radius:10px;font-size:10px;font-weight:600}
+.pl-g{background:var(--glt);color:var(--g)}.pl-b{background:var(--plt);color:var(--p)}
+.pl-go{background:var(--golt);color:var(--go)}.pl-o{background:var(--olt);color:var(--or)}
+.agent-note{display:flex;gap:10px;padding:12px 14px;background:var(--plt);
+  border:1px solid rgba(29,78,216,.2);border-radius:var(--r2);font-size:12px;color:var(--text2)}
 
-/* ── SECTION DIVIDER ── */
-.section-div{display:flex;align-items:center;gap:12px;margin:20px 0}
-.section-div span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);white-space:nowrap}
-.section-div::before,.section-div::after{content:'';flex:1;height:1px;background:var(--border)}
+/* ═══ CV BUILDER ═══ */
+.tmpl-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:16px}
+.tmpl-c{border:2px solid var(--border);border-radius:var(--r2);padding:10px;
+  cursor:pointer;transition:var(--tr);background:var(--s2)}
+.tmpl-c:hover{border-color:var(--p)}.tmpl-c.sel{border-color:var(--p);background:var(--plt)}
+.tmpl-prev{height:90px;border-radius:5px;margin-bottom:7px;position:relative;overflow:hidden}
+.tmpl-nm{font-size:11px;font-weight:600;text-align:center;color:var(--text2)}
+.tmpl-c.sel .tmpl-nm{color:var(--p)}
+.tp-modern{background:linear-gradient(180deg,#1d4ed8 36px,#f7f9ff 36px)}
+.tp-modern::before{content:'';position:absolute;top:7px;left:8px;right:8px;height:20px;background:rgba(255,255,255,.3);border-radius:3px}
+.tp-modern::after{content:'';position:absolute;top:44px;left:8px;right:8px;height:5px;background:#dce6f8;border-radius:2px;box-shadow:0 10px 0 #dce6f8,0 20px 0 #dce6f8,0 30px 0 #dce6f8,0 40px 0 #dce6f8}
+.tp-classic{background:#fff;border:1px solid #dce6f8}
+.tp-classic::before{content:'';position:absolute;top:7px;left:8px;right:8px;height:3px;background:#0f1e3d;border-radius:1px;box-shadow:0 9px 0 #dce6f8,0 18px 0 #dce6f8,0 27px 0 #dce6f8,0 36px 0 #dce6f8,0 45px 0 #dce6f8,0 54px 0 #dce6f8,0 63px 0 #dce6f8,0 72px 0 #dce6f8}
+.tp-executive{background:linear-gradient(135deg,#0f1e3d,#1d4ed8)}
+.tp-executive::before{content:'';position:absolute;top:10px;left:50%;transform:translateX(-50%);width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.2)}
+.tp-executive::after{content:'';position:absolute;top:54px;left:8px;right:8px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;box-shadow:0 11px 0 rgba(255,255,255,.15),0 22px 0 rgba(255,255,255,.1)}
+.tp-minimal{background:#fafafa;border:1px solid #e5e7eb}
+.tp-minimal::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;background:#1d4ed8}
+.tp-minimal::after{content:'';position:absolute;top:13px;left:11px;right:8px;height:3px;background:#e5e7eb;border-radius:2px;box-shadow:0 11px 0 #e5e7eb,0 22px 0 #e5e7eb,0 33px 0 #e5e7eb,0 44px 0 #e5e7eb,0 55px 0 #e5e7eb,0 66px 0 #e5e7eb}
+.tp-creative{background:linear-gradient(135deg,#6d28d9,#0284c7)}
+.tp-creative::before{content:'';position:absolute;top:6px;right:6px;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,.15)}
+.tp-creative::after{content:'';position:absolute;bottom:8px;left:8px;right:8px;height:4px;background:rgba(255,255,255,.2);border-radius:2px;box-shadow:0 -11px 0 rgba(255,255,255,.15),0 -22px 0 rgba(255,255,255,.1)}
+.tp-compact{background:#fff;border:1px solid #dce6f8}
+.tp-compact::before{content:'';position:absolute;top:0;left:0;right:0;height:24px;background:#eef3ff}
+.tp-compact::after{content:'';position:absolute;top:32px;left:8px;right:8px;height:3px;background:#dce6f8;border-radius:2px;box-shadow:0 9px 0 #dce6f8,0 18px 0 #dce6f8,0 27px 0 #dce6f8,0 36px 0 #dce6f8,0 45px 0 #dce6f8,0 54px 0 #dce6f8}
 
-/* ── PORTAL PILLS ── */
-.portal-row{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px}
-.portal-pill{
-  padding:5px 12px;border-radius:20px;border:1.5px solid var(--border2);
-  font-size:11px;font-weight:600;cursor:pointer;transition:var(--trans);
-  background:var(--surface2);color:var(--text2);display:flex;align-items:center;gap:5px;
-}
-.portal-pill:hover{border-color:var(--primary);color:var(--primary)}
-.portal-pill.sel{background:var(--primary-lt);border-color:var(--primary);color:var(--primary)}
-.portal-pill .pdot{width:6px;height:6px;border-radius:50%;background:var(--muted)}
-.portal-pill.sel .pdot{background:var(--primary)}
+/* ═══ CV EDITOR ═══ */
+.cv-editor{background:var(--white);border:1.5px solid var(--border);
+  border-radius:var(--r);padding:24px;margin-top:16px}
+.cv-editor h4{font-family:var(--fd);font-size:16px;margin-bottom:14px;color:var(--p)}
+.ce-section{margin-bottom:20px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.ce-section:last-child{border:none}
+.ce-section label{font-size:11px;font-weight:700;text-transform:uppercase;
+  letter-spacing:.7px;color:var(--text2);display:block;margin-bottom:6px}
+.ce-section input,.ce-section textarea{
+  width:100%;padding:9px 11px;background:var(--s2);
+  border:1.5px solid var(--border2);border-radius:var(--r3);
+  font-family:var(--f);font-size:13px;color:var(--text);transition:var(--tr);resize:vertical}
+.ce-section input:focus,.ce-section textarea:focus{
+  outline:none;border-color:var(--p);background:var(--white)}
+.exp-entry{background:var(--s2);border:1px solid var(--border);
+  border-radius:var(--r2);padding:14px;margin-bottom:10px;position:relative}
+.exp-del{position:absolute;top:10px;right:10px;background:var(--rlt);border:none;
+  color:var(--re);border-radius:6px;width:26px;height:26px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;font-size:14px}
+.add-more{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;
+  background:none;border:1.5px dashed var(--border2);border-radius:var(--r2);
+  color:var(--muted);font-size:12px;font-weight:600;cursor:pointer;transition:var(--tr)}
+.add-more:hover{border-color:var(--p);color:var(--p)}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:var(--bg2)}
-::-webkit-scrollbar-thumb{background:var(--faint);border-radius:3px}
-::-webkit-scrollbar-thumb:hover{background:var(--border2)}
+/* ═══ PRICING ═══ */
+.pricing-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:640px;margin:0 auto}
+.plan-card{background:var(--white);border:2px solid var(--border);border-radius:16px;padding:28px}
+.plan-card.pro{border-color:var(--p);position:relative;
+  box-shadow:0 0 0 1px var(--p),var(--sh2)}
+.plan-badge{position:absolute;top:-12px;left:50%;transform:translateX(-50%);
+  background:linear-gradient(135deg,var(--p),var(--acc));color:#fff;
+  padding:4px 16px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap}
+.plan-name{font-size:13px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.7px;margin-bottom:8px}
+.plan-price{font-size:36px;font-weight:800;color:var(--text);margin-bottom:4px}
+.plan-price span{font-size:14px;font-weight:400;color:var(--muted)}
+.plan-sub{font-size:12px;color:var(--muted);margin-bottom:18px}
+.plan-feats{list-style:none;margin-bottom:20px;display:flex;flex-direction:column;gap:8px}
+.plan-feats li{display:flex;align-items:flex-start;gap:8px;font-size:13px;color:var(--text2)}
+.plan-feats li::before{content:'✓';color:var(--g);font-weight:700;flex-shrink:0}
+.plan-feats li.no{color:var(--muted)}.plan-feats li.no::before{content:'✗';color:var(--faint)}
 
-/* ── RESPONSIVE ── */
-@media(max-width:700px){
-  .hdr{padding:0 14px}
-  .hdr-nav{display:none}
+/* ═══ ABOUT ═══ */
+.about-hero{background:linear-gradient(145deg,var(--p),var(--acc));
+  border-radius:16px;padding:48px;color:#fff;text-align:center;margin-bottom:28px}
+.about-hero h1{font-family:var(--fd);font-size:36px;margin-bottom:12px}
+.about-hero p{font-size:15px;opacity:.85;max-width:560px;margin:0 auto;line-height:1.7}
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:28px}
+.about-card{background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:24px;box-shadow:var(--sh)}
+.about-card h3{font-family:var(--fd);font-size:18px;color:var(--p);margin-bottom:10px}
+.about-card p{font-size:13px;color:var(--text2);line-height:1.75}
+.team-card{background:linear-gradient(135deg,var(--plt),var(--aclt));
+  border:1px solid rgba(29,78,216,.2);border-radius:16px;padding:32px;
+  display:flex;align-items:center;gap:24px}
+.team-av{width:80px;height:80px;border-radius:50%;
+  background:linear-gradient(135deg,var(--p),var(--acc));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:28px;font-weight:800;flex-shrink:0;
+  box-shadow:0 6px 24px rgba(29,78,216,.3)}
+.team-info h3{font-family:var(--fd);font-size:22px;margin-bottom:4px}
+.team-info .role{color:var(--p);font-weight:600;font-size:13px;margin-bottom:8px}
+.team-info p{font-size:13px;color:var(--text2);line-height:1.7}
+
+/* ═══ PROFILE PAGE ═══ */
+.profile-page-hdr{background:linear-gradient(135deg,var(--p),var(--acc));
+  border-radius:var(--r);padding:24px;display:flex;align-items:center;gap:20px;
+  margin-bottom:20px;color:#fff}
+.pp-av{width:60px;height:60px;border-radius:50%;background:rgba(255,255,255,.2);
+  display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800}
+.pp-info h2{font-family:var(--fd);font-size:22px;margin-bottom:3px}
+.pp-info p{font-size:12px;opacity:.8}
+.pp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.pp-card{background:var(--white);border:1px solid var(--border);
+  border-radius:var(--r);padding:20px;box-shadow:var(--sh)}
+.pp-card h4{font-size:13px;font-weight:700;color:var(--text2);margin-bottom:12px;
+  display:flex;align-items:center;gap:7px}
+
+/* ═══ SECTION DIVIDER ═══ */
+.sdiv{display:flex;align-items:center;gap:10px;margin:18px 0}
+.sdiv span{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);white-space:nowrap}
+.sdiv::before,.sdiv::after{content:'';flex:1;height:1px;background:var(--border)}
+
+/* ═══ PORTAL CHIPS ═══ */
+.portal-row{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:14px}
+.pc{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border2);
+  font-size:11px;font-weight:600;cursor:pointer;transition:var(--tr);
+  background:var(--s2);color:var(--text2);display:flex;align-items:center;gap:4px}
+.pc:hover{border-color:var(--p);color:var(--p)}
+.pc.sel{background:var(--plt);border-color:var(--p);color:var(--p)}
+
+/* ═══ CHIPS ═══ */
+.chip-row{display:flex;flex-wrap:wrap;gap:5px}
+.chip{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border2);
+  font-size:12px;font-weight:500;cursor:pointer;transition:var(--tr);
+  background:var(--s2);color:var(--text2)}
+.chip:hover{border-color:var(--p);color:var(--p)}
+.chip.sel{background:var(--plt);border-color:var(--p);color:var(--p)}
+
+/* ═══ RESPONSIVE ═══ */
+@media(max-width:720px){
+  .auth-grid{grid-template-columns:1fr}.auth-left{display:none}
   .main{padding:20px 12px 48px}
-  .panel{padding:18px}
-  .pg4,.field-row{grid-template-columns:1fr 1fr}
-  .jobs-grid,.tmpl-grid{grid-template-columns:1fr}
+  .panel{padding:16px}
+  .pg,.field-row,.field-row3,.about-grid,.pp-grid{grid-template-columns:1fr 1fr}
+  .jobs-grid,.tmpl-grid,.pricing-grid{grid-template-columns:1fr}
   .prev-layout{grid-template-columns:1fr}
   .stat-row{grid-template-columns:repeat(2,1fr)}
-  .ats-wrap{grid-template-columns:1fr 1fr}
-  .exp-inner{grid-template-columns:1fr}
-  .step-txt{display:none}
-  .step-line{min-width:4px;margin:0 2px}
+  .step-lb{display:none}.step-ln{min-width:4px;margin:0 2px}
+  .ex-in{grid-template-columns:1fr}
+  .hdr{padding:0 14px}.hdr-nav{display:none}
+  .team-card{flex-direction:column;text-align:center}
 }
 </style>
 </head>
 <body>
-<div id="app">
+<div id="root">
 
-<!-- HEADER -->
-<header class="hdr">
-  <a class="logo" href="#">
-    <div class="logo-mark">CA</div>
+<!-- ═══ HEADER ═══ -->
+<header class="hdr" id="hdr">
+  <div class="logo" onclick="goHome()">
+    <div class="logo-mk">CA</div>
     <div>
-      <div class="logo-name">Career<span>Agent</span> AI</div>
+      <div class="logo-tx">Career<span>Axis</span> <span class="logo-badge">AI</span></div>
     </div>
-  </a>
+  </div>
   <nav class="hdr-nav" id="hdr-nav" style="display:none">
-    <button class="hdr-tab active" onclick="switchMainTab('placement')">🎯 Placement</button>
-    <button class="hdr-tab" onclick="switchMainTab('cvbuilder')">📄 CV Builder</button>
+    <button class="nav-btn" id="nav-placement" onclick="gotoTab('placement')">🎯 Placement</button>
+    <button class="nav-btn" id="nav-cvbuilder" onclick="gotoTab('cvbuilder')">📄 CV Builder</button>
+    <button class="nav-btn" id="nav-profile" onclick="gotoTab('profile')">👤 My Profile</button>
+    <button class="nav-btn" id="nav-pricing" onclick="gotoTab('pricing')">💎 Plans</button>
+    <button class="nav-btn" id="nav-about" onclick="gotoTab('about')">🏢 About Us</button>
   </nav>
-  <div class="hdr-right">
-    <button class="btn-prefs" onclick="openPrefs()">⚙️ Preferences</button>
-    <div class="api-pill" id="api-pill" onclick="showKeyScreen()">
+  <div class="hdr-right" id="hdr-right">
+    <div id="hdr-trial" class="hidden"></div>
+    <div class="api-chip" id="api-chip" onclick="showApiModal()">
       <div class="dot" id="api-dot"></div>
-      <span id="api-txt">Connect API</span>
+      <span id="api-txt">Connect Gemini</span>
     </div>
+    <div class="user-chip hidden" id="user-chip" onclick="gotoTab('profile')">
+      <div class="user-av" id="user-av">?</div>
+      <div class="user-name" id="user-name-hdr">User</div>
+    </div>
+    <button class="btn btn-sm btn-g hidden" id="logout-btn" onclick="doLogout()">Sign Out</button>
   </div>
 </header>
 
-<!-- PREFS MODAL -->
-<div class="modal-bg hidden" id="prefs-modal">
+<!-- ═══ API MODAL ═══ -->
+<div class="modal-bg hidden" id="api-modal">
+  <div class="modal" style="max-width:420px">
+    <div class="modal-hdr">
+      <div><h3>🔑 Gemini API Key</h3><p style="font-size:12px;color:var(--muted)">Required to power AI features</p></div>
+      <button class="close-x" onclick="closeModal('api-modal')">✕</button>
+    </div>
+    <div class="err-box" id="api-err"></div>
+    <div class="form-group"><label>API Key</label>
+      <div class="inp-ico">
+        <input type="password" id="api-key-inp" placeholder="AIza••••••••••••••••••••"/>
+        <button class="eye" onclick="toggleEye('api-key-inp')">👁</button>
+      </div>
+    </div>
+    <p style="font-size:11px;color:var(--muted);margin-bottom:16px">🔒 Stored in browser memory only. Get a free key at <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--p)">aistudio.google.com</a> — uses Gemini 2.5 Flash Lite.</p>
+    <button class="btn btn-p btn-full" onclick="verifyApiKey()" id="api-verify-btn">Verify & Activate</button>
+  </div>
+</div>
+
+<!-- ═══ SMART APPLY MODAL ═══ -->
+<div class="modal-bg hidden" id="apply-modal">
   <div class="modal">
     <div class="modal-hdr">
-      <h3>⚙️ Your Preferences</h3>
-      <button class="close-btn" onclick="closePrefs()">✕</button>
+      <div><h3>🚀 Smart Apply Assistant</h3><p style="font-size:12px;color:var(--muted)" id="apply-job-title">Applying to: Role @ Company</p></div>
+      <button class="close-x" onclick="closeModal('apply-modal')">✕</button>
     </div>
-    <div class="pref-section">
-      <label>Job Types</label>
-      <div class="chip-row" id="pref-jobtypes">
-        <span class="chip sel" data-v="Full-time">Full-time</span>
-        <span class="chip" data-v="Part-time">Part-time</span>
-        <span class="chip" data-v="Contract">Contract</span>
-        <span class="chip" data-v="Remote">Remote</span>
-        <span class="chip" data-v="Hybrid">Hybrid</span>
-        <span class="chip" data-v="Freelance">Freelance</span>
-      </div>
+    <div class="alert al-w"><div class="al-ic">ℹ️</div><div class="al-body"><strong>Browser Security Note</strong><p>Direct auto-apply is blocked by job portals (CORS/anti-bot). Follow the steps below — your data is pre-filled for instant paste.</p></div></div>
+    <div class="apply-steps" id="apply-steps"></div>
+    <div id="apply-email-section" class="hidden">
+      <div class="sdiv"><span>📧 Direct Email to Recruiter</span></div>
+      <div class="mail-preview" id="apply-mail-preview"></div>
+      <button class="btn btn-p btn-sm" style="margin-top:10px" onclick="openMailto()">📬 Open in Email Client</button>
+      <button class="btn btn-g btn-sm" style="margin-top:10px;margin-left:8px" onclick="copyMailContent()">📋 Copy Email</button>
     </div>
-    <div class="pref-section">
-      <label>Experience Level</label>
-      <div class="chip-row" id="pref-levels">
-        <span class="chip" data-v="Entry">Entry</span>
-        <span class="chip" data-v="Mid">Mid-Level</span>
-        <span class="chip sel" data-v="Senior">Senior</span>
-        <span class="chip" data-v="Director">Director</span>
-        <span class="chip" data-v="C-Suite">C-Suite</span>
-      </div>
+  </div>
+</div>
+
+<!-- ═══ PRICING MODAL (upgrade) ═══ -->
+<div class="modal-bg hidden" id="upgrade-modal">
+  <div class="modal" style="max-width:560px">
+    <div class="modal-hdr">
+      <div><h3>💎 Upgrade to Pro</h3><p style="font-size:12px;color:var(--muted)">You've used your 3 free searches</p></div>
+      <button class="close-x" onclick="closeModal('upgrade-modal')">✕</button>
     </div>
-    <div class="pref-section">
-      <label>Preferred Industries</label>
-      <div class="chip-row" id="pref-industries">
-        <span class="chip" data-v="Insurance">Insurance</span>
-        <span class="chip" data-v="Banking">Banking</span>
-        <span class="chip" data-v="FinTech">FinTech</span>
-        <span class="chip" data-v="Consulting">Consulting</span>
-        <span class="chip" data-v="Technology">Technology</span>
-        <span class="chip" data-v="Healthcare">Healthcare</span>
-        <span class="chip" data-v="Manufacturing">Manufacturing</span>
-        <span class="chip" data-v="Education">Education</span>
-      </div>
+    <div class="alert al-b"><div class="al-ic">⭐</div><div class="al-body"><strong>Unlock Unlimited Access</strong><p>Continue finding dream jobs, tailoring CVs and generating cover letters with CareerAxis Pro.</p></div></div>
+    <div id="upgrade-plans"></div>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:12px">💳 Payment integration (Razorpay/Stripe) can be added. Contact us to activate billing.</p>
+  </div>
+</div>
+
+<!-- ═══ PREFS MODAL ═══ -->
+<div class="modal-bg hidden" id="prefs-modal">
+  <div class="modal" style="max-width:580px">
+    <div class="modal-hdr">
+      <h3>⚙️ Job Preferences</h3>
+      <button class="close-x" onclick="closeModal('prefs-modal')">✕</button>
     </div>
-    <div class="pref-section">
-      <label>Salary Expectation (Annual, USD equivalent)</label>
-      <div class="range-row">
-        <input type="text" id="pref-sal-min" placeholder="Min e.g. 80,000"/>
-        <input type="text" id="pref-sal-max" placeholder="Max e.g. 150,000"/>
-      </div>
-    </div>
-    <div class="pref-section">
-      <label>Notice Period</label>
-      <select id="pref-notice">
-        <option>Immediate</option>
-        <option>2 weeks</option>
-        <option>1 month</option>
-        <option selected>3 months</option>
-        <option>6 months</option>
-      </select>
-    </div>
-    <div class="pref-section">
-      <label>Willing to Relocate</label>
-      <div class="chip-row" id="pref-reloc">
-        <span class="chip sel" data-v="Yes">Yes</span>
-        <span class="chip" data-v="No">No</span>
-        <span class="chip" data-v="Domestically only">Domestically only</span>
-      </div>
-    </div>
-    <div class="pref-section">
-      <label>Additional Notes for AI Agent</label>
-      <textarea id="pref-notes" rows="3" placeholder="E.g. prefer management roles, avoid startups, open to relocation to GCC..."></textarea>
-    </div>
-    <button class="btn-save-prefs" onclick="savePrefs()">💾 Save Preferences</button>
+    <div id="prefs-body"></div>
+    <button class="btn btn-p btn-full" onclick="savePrefs()">💾 Save Preferences</button>
   </div>
 </div>
 
 <div class="main" id="main-area">
 
-  <!-- ── KEY SCREEN ── -->
-  <div id="screen-key">
-    <div class="key-wrap">
-      <div class="key-hero">🤖</div>
-      <h2>CareerAgent AI</h2>
-      <p class="sub">Enter your Google Gemini API key to power your intelligent job placement platform. Your key never leaves your browser.</p>
-      <div class="err-msg" id="key-err"></div>
-      <div class="inp-row">
-        <input type="password" id="key-inp" placeholder="AIza••••••••••••••••••••••••••"/>
-        <button class="eye-btn" onclick="toggleEye()">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        </button>
+  <!-- ── AUTH ── -->
+  <div id="screen-auth" class="hidden">
+    <div class="auth-wrap">
+      <div class="auth-grid">
+        <div class="auth-left">
+          <div>
+            <div style="font-size:32px;margin-bottom:12px">🎯</div>
+            <h1>CareerAxis AI</h1>
+            <p>Your intelligent career placement platform — find global jobs, tailor applications, build ATS-optimised CVs, and land interviews faster.</p>
+            <div class="auth-feat">
+              <div class="auth-feat-item"><div class="auth-feat-ic">🌍</div>Search 14+ global job portals simultaneously</div>
+              <div class="auth-feat-item"><div class="auth-feat-ic">🧠</div>AI tailors your CV for every application</div>
+              <div class="auth-feat-item"><div class="auth-feat-ic">📊</div>ATS score optimisation — before & after</div>
+              <div class="auth-feat-item"><div class="auth-feat-ic">📄</div>Professional CV builder with 6 templates</div>
+              <div class="auth-feat-item"><div class="auth-feat-ic">🚀</div>Smart Apply assistant with email drafting</div>
+            </div>
+          </div>
+          <div class="auth-owner">
+            <strong>Raman Jha</strong>
+            Founder & CEO, CareerAxis AI
+          </div>
+        </div>
+        <div class="auth-right">
+          <div class="auth-tabs">
+            <button class="auth-tab active" id="tab-signin" onclick="switchAuthTab('signin')">Sign In</button>
+            <button class="auth-tab" id="tab-signup" onclick="switchAuthTab('signup')">Create Account</button>
+          </div>
+          <div id="auth-form-area"></div>
+        </div>
       </div>
-      <div class="key-note2">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-        Stored in browser memory only — never shared
-      </div>
-      <button class="btn-activate" id="key-btn" onclick="activateKey()">
-        <span id="key-btn-txt">🚀 Activate Platform</span>
-      </button>
-      <div class="key-footer">Powered by Gemini 2.5 Flash Lite · <a href="https://aistudio.google.com/apikey" target="_blank">Get free API key →</a></div>
     </div>
   </div>
 
   <!-- ── PLATFORM ── -->
-  <div id="platform" class="hidden">
+  <div id="screen-platform" class="hidden">
 
-    <!-- Placement Tab -->
-    <div id="tab-placement">
+    <!-- PLACEMENT TAB -->
+    <div id="tab-placement" class="hidden">
       <div class="stepbar" id="stepbar">
-        <div class="step" id="st-upload"><div class="step-dot">📄</div><span class="step-txt">Upload</span></div>
-        <div class="step-line" id="sl-1"></div>
-        <div class="step" id="st-prefs2"><div class="step-dot">⚙️</div><span class="step-txt">Preferences</span></div>
-        <div class="step-line" id="sl-2"></div>
-        <div class="step" id="st-analysis"><div class="step-dot">🧠</div><span class="step-txt">Analysis</span></div>
-        <div class="step-line" id="sl-3"></div>
-        <div class="step" id="st-search"><div class="step-dot">🔍</div><span class="step-txt">Job Search</span></div>
-        <div class="step-line" id="sl-4"></div>
-        <div class="step" id="st-tailor"><div class="step-dot">✍️</div><span class="step-txt">Tailoring</span></div>
-        <div class="step-line" id="sl-5"></div>
-        <div class="step" id="st-preview"><div class="step-dot">👁</div><span class="step-txt">Preview</span></div>
-        <div class="step-line" id="sl-6"></div>
-        <div class="step" id="st-report"><div class="step-dot">📊</div><span class="step-txt">Report</span></div>
+        <div class="step" id="st-upload"><div class="step-dot">📄</div><span class="step-lb">Upload</span></div>
+        <div class="step-ln" id="sl-1"></div>
+        <div class="step" id="st-prefs2"><div class="step-dot">⚙️</div><span class="step-lb">Prefs</span></div>
+        <div class="step-ln" id="sl-2"></div>
+        <div class="step" id="st-analysis"><div class="step-dot">🧠</div><span class="step-lb">Analysis</span></div>
+        <div class="step-ln" id="sl-3"></div>
+        <div class="step" id="st-search"><div class="step-dot">🔍</div><span class="step-lb">Search</span></div>
+        <div class="step-ln" id="sl-4"></div>
+        <div class="step" id="st-tailor"><div class="step-dot">✍️</div><span class="step-lb">Tailor</span></div>
+        <div class="step-ln" id="sl-5"></div>
+        <div class="step" id="st-preview"><div class="step-dot">👁</div><span class="step-lb">Preview</span></div>
+        <div class="step-ln" id="sl-6"></div>
+        <div class="step" id="st-report"><div class="step-dot">📊</div><span class="step-lb">Report</span></div>
       </div>
       <div id="phase-upload" class="panel hidden"></div>
       <div id="phase-prefs2" class="panel hidden"></div>
@@ -636,845 +691,1268 @@ th{padding:10px 12px;text-align:left;font-size:10px;font-weight:700;text-transfo
       <div id="phase-report" class="panel hidden"></div>
     </div>
 
-    <!-- CV Builder Tab -->
+    <!-- CV BUILDER TAB -->
     <div id="tab-cvbuilder" class="hidden">
-      <div class="panel" id="cv-builder-panel"></div>
+      <div class="panel" id="cvb-panel"></div>
+    </div>
+
+    <!-- PROFILE TAB -->
+    <div id="tab-profile" class="hidden">
+      <div id="profile-tab-content"></div>
+    </div>
+
+    <!-- PRICING TAB -->
+    <div id="tab-pricing" class="hidden">
+      <div id="pricing-content"></div>
+    </div>
+
+    <!-- ABOUT TAB -->
+    <div id="tab-about" class="hidden">
+      <div id="about-content"></div>
     </div>
 
   </div>
 </div>
-</div><!-- /app -->
+</div>
 
 <script>
 'use strict';
-// ═══════════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════════
-const S = {
-  apiKey:'', cvText:'', country:'United Arab Emirates',
-  profile:null, jobs:[], tailored:[], approved:{},
-  phase:'upload', jobIdx:0, tab:'summary',
-  expandedRow:-1, activeMainTab:'placement',
-  prefs:{
-    jobTypes:['Full-time'], levels:['Senior'],
-    industries:[], salMin:'', salMax:'',
-    notice:'3 months', reloc:'Yes', notes:''
-  },
-  // portals selected
-  portals:['LinkedIn','Indeed','Glassdoor','Naukri','Gulf Talent','Bayt'],
-  // CV builder
-  cvTemplate:'modern', cvGenerated:'',
-  cvAtsBase:0, cvAtsNew:0
+// ═══════════════════════════════════════════
+//  GLOBAL STATE
+// ═══════════════════════════════════════════
+const DB_KEY='careeaxis_db';
+const S={
+  apiKey:'',user:null,db:null,
+  cvText:'',country:'United Arab Emirates',
+  profile:null,jobs:[],tailored:[],approved:{},
+  phase:'upload',jobIdx:0,tab:'summary',expandedRow:-1,
+  activeTab:'placement',portals:['LinkedIn','Indeed','Glassdoor','Naukri','Gulf Talent','Bayt'],
+  prefs:{jobTypes:['Full-time'],levels:['Senior'],industries:[],salMin:'',notice:'3 months',reloc:'Yes',notes:''},
+  dateFilter:'30',
+  cvTemplate:'modern',cvData:null,cvAtsBase:0,cvAtsNew:0,
+  currentJobForApply:null,applyMailtoHref:''
 };
 
-const COUNTRIES=['United Arab Emirates','United States','United Kingdom','Singapore','Canada','Australia','Germany','Netherlands','Saudi Arabia','Qatar','India','Remote/Global'];
-const PORTALS=[
-  {id:'LinkedIn',flag:'🌐',region:'Global'},
-  {id:'Indeed',flag:'🌐',region:'Global'},
-  {id:'Glassdoor',flag:'🌐',region:'Global'},
-  {id:'Monster',flag:'🌐',region:'Global'},
-  {id:'Naukri',flag:'🇮🇳',region:'India'},
-  {id:'Shine',flag:'🇮🇳',region:'India'},
-  {id:'Gulf Talent',flag:'🇦🇪',region:'GCC'},
-  {id:'Bayt',flag:'🇦🇪',region:'GCC'},
-  {id:'Dubizzle Jobs',flag:'🇦🇪',region:'UAE'},
-  {id:'Reed UK',flag:'🇬🇧',region:'UK'},
-  {id:'Totaljobs',flag:'🇬🇧',region:'UK'},
-  {id:'SEEK',flag:'🇦🇺',region:'Aus'},
-  {id:'JobStreet',flag:'🌏',region:'SEA'},
-  {id:'Stepstone',flag:'🇩🇪',region:'EU'},
-];
-const PHASES=['upload','prefs2','analysis','search','tailor','preview','report'];
-const TEMPLATES=[
-  {id:'modern',name:'Modern Blue',cls:'tp-modern'},
-  {id:'classic',name:'Classic',cls:'tp-classic'},
-  {id:'executive',name:'Executive',cls:'tp-executive'},
-  {id:'minimal',name:'Minimal',cls:'tp-minimal'},
-  {id:'creative',name:'Creative',cls:'tp-creative'},
-  {id:'compact',name:'Compact',cls:'tp-compact'},
-];
+// ═══ DB (localStorage as simple user store) ═══
+function loadDB(){
+  try{return JSON.parse(localStorage.getItem(DB_KEY)||'{}')}catch{return {}}
+}
+function saveDB(){localStorage.setItem(DB_KEY,JSON.stringify(S.db))}
+function initDB(){
+  S.db=loadDB();
+  if(!S.db.users)S.db.users={};
+  if(!S.db.sessions)S.db.sessions={};
+}
 
-// ═══════════════════════════════════════════════════
-//  GEMINI
-// ═══════════════════════════════════════════════════
-async function gemini(prompt, sys='', maxTok=1500){
+// ═══ TRIALS ═══
+function getTrialsLeft(){
+  if(!S.user)return 0;
+  const u=S.db.users[S.user.email];
+  if(u.plan==='pro')return 999;
+  return Math.max(0,3-(u.trialsUsed||0));
+}
+function useTrial(){
+  if(!S.user)return false;
+  const u=S.db.users[S.user.email];
+  if(u.plan==='pro')return true;
+  if((u.trialsUsed||0)>=3){showUpgradeModal();return false}
+  u.trialsUsed=(u.trialsUsed||0)+1;
+  saveDB();updateTrialBadge();
+  return true;
+}
+function updateTrialBadge(){
+  const el=document.getElementById('hdr-trial');
+  if(!S.user){el.classList.add('hidden');return}
+  const u=S.db.users[S.user.email];
+  el.classList.remove('hidden');
+  if(u.plan==='pro'){
+    el.innerHTML=`<div class="pro-badge">⭐ Pro</div>`;
+  }else{
+    const left=3-(u.trialsUsed||0);
+    el.innerHTML=`<div class="trial-badge">${left} free search${left!==1?'es':''} left</div>`;
+  }
+}
+
+// ═══ AUTH ═══
+function initApp(){
+  initDB();
+  // check session
+  const sess=localStorage.getItem('ca_session');
+  if(sess&&S.db.users[sess]){
+    S.user=S.db.users[sess];
+    S.user.email=sess;
+    afterLogin();
+  }else{
+    showAuth();
+  }
+}
+function showAuth(){
+  document.getElementById('screen-auth').classList.remove('hidden');
+  document.getElementById('screen-platform').classList.add('hidden');
+  document.getElementById('hdr-nav').style.display='none';
+  document.getElementById('user-chip').classList.add('hidden');
+  document.getElementById('logout-btn').classList.add('hidden');
+  document.getElementById('hdr-trial').classList.add('hidden');
+  switchAuthTab('signin');
+}
+function switchAuthTab(t){
+  ['signin','signup'].forEach(x=>document.getElementById('tab-'+x).classList.toggle('active',x===t));
+  const area=document.getElementById('auth-form-area');
+  if(t==='signin'){
+    area.innerHTML=`
+      <div class="err-box" id="si-err"></div>
+      <div class="suc-box" id="si-suc"></div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="si-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Password</label>
+        <div class="inp-ico"><input type="password" id="si-pass" placeholder="••••••••"/>
+        <button class="eye" onclick="toggleEye('si-pass')">👁</button></div>
+      </div>
+      <button class="btn btn-p btn-full btn-lg" style="margin-top:4px" onclick="doSignIn()">Sign In →</button>
+      <div class="auth-switch">Don't have an account? <a onclick="switchAuthTab('signup')">Create one free →</a></div>`;
+    document.getElementById('si-email').addEventListener('keydown',e=>{if(e.key==='Enter')doSignIn()});
+    document.getElementById('si-pass').addEventListener('keydown',e=>{if(e.key==='Enter')doSignIn()});
+  }else{
+    area.innerHTML=`
+      <div class="err-box" id="su-err"></div>
+      <div class="form-row">
+        <div class="form-group"><label>First Name</label><input type="text" id="su-fn" placeholder="Raman"/></div>
+        <div class="form-group"><label>Last Name</label><input type="text" id="su-ln" placeholder="Jha"/></div>
+      </div>
+      <div class="form-group"><label>Email Address</label><input type="email" id="su-email" placeholder="you@example.com"/></div>
+      <div class="form-group"><label>Password</label>
+        <div class="inp-ico"><input type="password" id="su-pass" placeholder="Min. 6 characters"/>
+        <button class="eye" onclick="toggleEye('su-pass')">👁</button></div>
+      </div>
+      <div class="form-group"><label>Job Title / Profession</label><input type="text" id="su-title" placeholder="Senior Underwriter, VP Finance..."/></div>
+      <button class="btn btn-p btn-full btn-lg" style="margin-top:4px" onclick="doSignUp()">Create Free Account →</button>
+      <div class="auth-switch">Already have an account? <a onclick="switchAuthTab('signin')">Sign In →</a></div>`;
+  }
+}
+function doSignIn(){
+  const email=q('si-email').value.trim();
+  const pass=q('si-pass').value;
+  const err=q('si-err');
+  if(!email||!pass){showErr(err,'Please fill in all fields.');return}
+  const u=S.db.users[email];
+  if(!u||u.password!==btoa(pass)){showErr(err,'Invalid email or password.');return}
+  S.user=u;S.user.email=email;
+  localStorage.setItem('ca_session',email);
+  afterLogin();
+}
+function doSignUp(){
+  const fn=q('su-fn').value.trim(),ln=q('su-ln').value.trim();
+  const email=q('su-email').value.trim(),pass=q('su-pass').value;
+  const title=q('su-title').value.trim();
+  const err=q('su-err');
+  if(!fn||!email||!pass){showErr(err,'Please fill in required fields.');return}
+  if(pass.length<6){showErr(err,'Password must be at least 6 characters.');return}
+  if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){showErr(err,'Please enter a valid email.');return}
+  if(S.db.users[email]){showErr(err,'Account already exists. Please sign in.');return}
+  const user={firstName:fn,lastName:ln,email,password:btoa(pass),title,
+    plan:'free',trialsUsed:0,savedCVText:'',savedProfile:null,
+    applications:[],createdAt:new Date().toISOString()};
+  S.db.users[email]=user;saveDB();
+  S.user=user;S.user.email=email;
+  localStorage.setItem('ca_session',email);
+  afterLogin();
+}
+function afterLogin(){
+  const u=S.db.users[S.user.email];
+  S.user=u;S.user.email=Object.keys(S.db.users).find(k=>S.db.users[k]===u)||'';
+  if(u.savedCVText)S.cvText=u.savedCVText;
+  if(u.savedProfile)S.profile=u.savedProfile;
+  document.getElementById('screen-auth').classList.add('hidden');
+  document.getElementById('screen-platform').classList.remove('hidden');
+  document.getElementById('hdr-nav').style.display='flex';
+  document.getElementById('user-chip').classList.remove('hidden');
+  document.getElementById('logout-btn').classList.remove('hidden');
+  document.getElementById('user-av').textContent=(u.firstName||'U')[0].toUpperCase();
+  document.getElementById('user-name-hdr').textContent=u.firstName||'User';
+  updateTrialBadge();
+  gotoTab('placement');
+}
+function doLogout(){
+  localStorage.removeItem('ca_session');
+  S.user=null;S.profile=null;S.cvText='';S.jobs=[];S.tailored=[];S.approved={};
+  showAuth();
+}
+function goHome(){if(S.user)gotoTab('placement');else showAuth()}
+function showErr(el,msg){el.textContent=msg;el.style.display='block';setTimeout(()=>el.style.display='none',4000)}
+function q(id){return document.getElementById(id)}
+
+// ═══ API KEY ═══
+function showApiModal(){
+  if(S.apiKey)q('api-key-inp').value=S.apiKey;
+  showModal('api-modal');
+}
+async function verifyApiKey(){
+  const key=q('api-key-inp').value.trim();
+  const err=q('api-err');
+  if(!key){err.textContent='Enter your API key.';err.style.display='block';return}
+  const btn=q('api-verify-btn');
+  btn.disabled=true;btn.textContent='⟳ Verifying...';
+  try{
+    S.apiKey=key;
+    await gemini('Say OK','',5);
+    q('api-dot').classList.add('ok');
+    q('api-txt').textContent='Gemini ✓';
+    closeModal('api-modal');
+  }catch(e){
+    S.apiKey='';
+    err.textContent='❌ '+e.message;err.style.display='block';
+  }
+  btn.disabled=false;btn.textContent='Verify & Activate';
+}
+
+// ═══ GEMINI ═══
+async function gemini(prompt,sys='',maxTok=1500){
+  if(!S.apiKey)throw new Error('No API key. Click "Connect Gemini" in the header.');
   const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${S.apiKey}`;
-  const full = sys ? sys+'\n\n'+prompt : prompt;
-  const r = await fetch(url,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      contents:[{role:'user',parts:[{text:full}]}],
-      generationConfig:{maxOutputTokens:maxTok,temperature:0.4}
-    })
-  });
-  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Gemini error '+r.status)}
+  const full=sys?sys+'\n\n'+prompt:prompt;
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{role:'user',parts:[{text:full}]}],
+      generationConfig:{maxOutputTokens:maxTok,temperature:0.4}})});
+  if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Gemini API error '+r.status)}
   const d=await r.json();
   return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
 }
-
 async function geminiPDF(b64,mime,prompt){
+  if(!S.apiKey)throw new Error('No API key.');
   const url=`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:generateContent?key=${S.apiKey}`;
-  const r=await fetch(url,{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({
-      contents:[{role:'user',parts:[
-        {inlineData:{mimeType:mime,data:b64}},
-        {text:prompt}
-      ]}],
-      generationConfig:{maxOutputTokens:3000,temperature:0.2}
-    })
-  });
+  const r=await fetch(url,{method:'POST',headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({contents:[{role:'user',parts:[{inlineData:{mimeType:mime,data:b64}},{text:prompt}]}],
+      generationConfig:{maxOutputTokens:3000,temperature:0.2}})});
   if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Gemini error')}
   const d=await r.json();
   return d.candidates?.[0]?.content?.parts?.[0]?.text||'';
 }
-
-function parseJSON(raw,fb={}){
+function parseJ(raw,fb={}){
   try{return JSON.parse(raw.replace(/```json|```/g,'').trim())}
   catch{return fb}
 }
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('read failed'));r.readAsDataURL(f)})}
+function toB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=()=>rej(new Error('Read failed'));r.readAsDataURL(f)})}
 
-// ═══════════════════════════════════════════════════
-//  API KEY FLOW
-// ═══════════════════════════════════════════════════
-function toggleEye(){
-  const i=document.getElementById('key-inp');
-  i.type=i.type==='password'?'text':'password';
-}
-function showKeyScreen(){
-  document.getElementById('screen-key').classList.remove('hidden');
-  document.getElementById('platform').classList.add('hidden');
-  document.getElementById('hdr-nav').style.display='none';
-}
+// ═══ MODALS ═══
+function showModal(id){document.getElementById(id).classList.remove('hidden')}
+function closeModal(id){document.getElementById(id).classList.add('hidden')}
+function toggleEye(id){const i=q(id);i.type=i.type==='password'?'text':'password'}
 
-async function activateKey(){
-  const key=document.getElementById('key-inp').value.trim();
-  const errEl=document.getElementById('key-err');
-  errEl.style.display='none';
-  if(!key){errEl.textContent='Please enter your API key.';errEl.style.display='block';return}
-  const btn=document.getElementById('key-btn');
-  btn.disabled=true;
-  document.getElementById('key-btn-txt').innerHTML='<span class="spin-ic">⟳</span> Verifying...';
-  try{
-    S.apiKey=key;
-    await gemini('Say OK','',5);
-    document.getElementById('api-dot').classList.add('ok');
-    document.getElementById('api-txt').textContent='Gemini ✓';
-    document.getElementById('screen-key').classList.add('hidden');
-    document.getElementById('platform').classList.remove('hidden');
-    document.getElementById('hdr-nav').style.display='flex';
-    showPhase('upload');
-  }catch(e){
-    S.apiKey='';
-    errEl.textContent='❌ '+e.message+'. Check your key at aistudio.google.com.';
-    errEl.style.display='block';
-    btn.disabled=false;
-    document.getElementById('key-btn-txt').textContent='🚀 Activate Platform';
-  }
-}
-
-document.getElementById('key-inp').addEventListener('keydown',e=>{if(e.key==='Enter')activateKey()});
-
-// ═══════════════════════════════════════════════════
-//  PREFS
-// ═══════════════════════════════════════════════════
-function openPrefs(){
-  document.getElementById('prefs-modal').classList.remove('hidden');
-  // restore chip selections
-  restoreChips('pref-jobtypes',S.prefs.jobTypes);
-  restoreChips('pref-levels',S.prefs.levels);
-  restoreChips('pref-industries',S.prefs.industries);
-  restoreChips('pref-reloc',[S.prefs.reloc]);
-  document.getElementById('pref-sal-min').value=S.prefs.salMin;
-  document.getElementById('pref-sal-max').value=S.prefs.salMax;
-  document.getElementById('pref-notice').value=S.prefs.notice;
-  document.getElementById('pref-notes').value=S.prefs.notes;
-  // chip toggle
-  ['pref-jobtypes','pref-levels','pref-industries','pref-reloc'].forEach(id=>{
-    document.getElementById(id).querySelectorAll('.chip').forEach(c=>{
-      c.onclick=()=>c.classList.toggle('sel');
-    });
+// ═══ TAB NAVIGATION ═══
+const TABS=['placement','cvbuilder','profile','pricing','about'];
+function gotoTab(t){
+  S.activeTab=t;
+  TABS.forEach(x=>{
+    const el=q('tab-'+x);if(el)el.classList.add('hidden');
+    const nb=q('nav-'+x);if(nb)nb.classList.remove('active');
   });
-}
-function restoreChips(id,vals){
-  document.getElementById(id).querySelectorAll('.chip').forEach(c=>{
-    c.classList.toggle('sel',vals.includes(c.dataset.v));
-  });
-}
-function getChips(id){
-  return [...document.getElementById(id).querySelectorAll('.chip.sel')].map(c=>c.dataset.v);
-}
-function closePrefs(){document.getElementById('prefs-modal').classList.add('hidden')}
-function savePrefs(){
-  S.prefs.jobTypes=getChips('pref-jobtypes');
-  S.prefs.levels=getChips('pref-levels');
-  S.prefs.industries=getChips('pref-industries');
-  S.prefs.reloc=getChips('pref-reloc')[0]||'Yes';
-  S.prefs.salMin=document.getElementById('pref-sal-min').value;
-  S.prefs.salMax=document.getElementById('pref-sal-max').value;
-  S.prefs.notice=document.getElementById('pref-notice').value;
-  S.prefs.notes=document.getElementById('pref-notes').value;
-  closePrefs();
+  const el=q('tab-'+t);if(el)el.classList.remove('hidden');
+  const nb=q('nav-'+t);if(nb)nb.classList.add('active');
+  const builders={placement:()=>showPhase(S.phase||'upload'),cvbuilder:buildCVBuilder,profile:buildProfileTab,pricing:buildPricingTab,about:buildAboutTab};
+  builders[t]?.();
+  window.scrollTo({top:0,behavior:'smooth'});
 }
 
-// ═══════════════════════════════════════════════════
-//  MAIN TAB SWITCH
-// ═══════════════════════════════════════════════════
-function switchMainTab(t){
-  S.activeMainTab=t;
-  document.getElementById('tab-placement').classList.toggle('hidden',t!=='placement');
-  document.getElementById('tab-cvbuilder').classList.toggle('hidden',t!=='cvbuilder');
-  document.querySelectorAll('.hdr-tab').forEach(b=>b.classList.remove('active'));
-  event.target.classList.add('active');
-  if(t==='cvbuilder') buildCVBuilder();
-}
-
-// ═══════════════════════════════════════════════════
-//  STEP BAR
-// ═══════════════════════════════════════════════════
+// ═══ STEP BAR ═══
+const PHASES=['upload','prefs2','analysis','search','tailor','preview','report'];
 function updateSteps(active){
   const ai=PHASES.indexOf(active);
   PHASES.forEach((p,i)=>{
-    const el=document.getElementById('st-'+p);
-    if(!el)return;
+    const el=q('st-'+p);if(!el)return;
     el.classList.remove('done','active');
     if(i<ai)el.classList.add('done');
     if(i===ai)el.classList.add('active');
-    if(i<PHASES.length-1){
-      const sl=document.getElementById('sl-'+(i+1));
-      if(sl)sl.classList.toggle('done',i<ai);
-    }
+    if(i<PHASES.length-1){const sl=q('sl-'+(i+1));if(sl)sl.classList.toggle('done',i<ai)}
   });
 }
 function showPhase(name){
   S.phase=name;
-  PHASES.forEach(p=>{
-    const el=document.getElementById('phase-'+p);
-    if(el){el.classList.add('hidden');el.innerHTML=''}
-  });
-  const el=document.getElementById('phase-'+name);
-  if(!el)return;
+  PHASES.forEach(p=>{const el=q('phase-'+p);if(el){el.classList.add('hidden');el.innerHTML=''}});
+  const el=q('phase-'+name);if(!el)return;
   el.classList.remove('hidden');
   updateSteps(name);
-  const map={upload:buildUpload,prefs2:buildPrefs2,analysis:buildAnalysis,search:buildSearch,tailor:buildTailor,preview:()=>{S.jobIdx=0;S.tab='summary';renderPreview()},report:buildReport};
+  const map={upload:buildUpload,prefs2:buildPrefs2,analysis:buildAnalysisPhase,
+    search:buildSearch,tailor:buildTailor,
+    preview:()=>{S.jobIdx=0;S.tab='summary';renderPreview()},report:buildReport};
   map[name]?.();
-  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),50);
+  setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'start'}),60);
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  PHASE 1 — UPLOAD
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+const PORTALS=[
+  {id:'LinkedIn',f:'🌐',r:'Global'},{id:'Indeed',f:'🌐',r:'Global'},
+  {id:'Glassdoor',f:'🌐',r:'Global'},{id:'Monster',f:'🌐',r:'Global'},
+  {id:'Naukri',f:'🇮🇳',r:'India'},{id:'Shine',f:'🇮🇳',r:'India'},
+  {id:'Gulf Talent',f:'🇦🇪',r:'GCC'},{id:'Bayt',f:'🇦🇪',r:'GCC'},
+  {id:'Dubizzle',f:'🇦🇪',r:'UAE'},{id:'Reed UK',f:'🇬🇧',r:'UK'},
+  {id:'Totaljobs',f:'🇬🇧',r:'UK'},{id:'SEEK',f:'🇦🇺',r:'AU'},
+  {id:'JobStreet',f:'🌏',r:'SEA'},{id:'Stepstone',f:'🇩🇪',r:'EU'}
+];
+const COUNTRIES=['United Arab Emirates','United States','United Kingdom','Singapore','Canada','Australia','Germany','Netherlands','Saudi Arabia','Qatar','India','Remote/Global'];
 let _file=null;
+
 function buildUpload(){
-  const el=document.getElementById('phase-upload');
-  el.classList.add('fade-in');
-  el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-blue">📄</div>
-      <div><h2>Upload Your CV</h2><p>Start by uploading your existing CV (PDF or TXT). The AI will extract your full profile automatically.</p></div>
+  const savedNote=S.profile?`<div class="alert al-g fi"><div class="al-ic">✅</div><div class="al-body"><strong>Saved profile found</strong><p>Your previously analysed profile is loaded. Upload a new CV to update it, or skip to search.</p></div></div>`:'';
+  q('phase-upload').classList.add('fu');
+  q('phase-upload').innerHTML=`
+    <div class="panel-hdr"><div class="ph-ico ico-b">📄</div><div><h2>Upload Your CV</h2><p>Upload your CV to begin. Supported: PDF, TXT. Your API key must be connected first.</p></div></div>
+    ${savedNote}
+    <div class="dz" id="dz" ondragover="dzDrag(event,true)" ondragleave="dzDrag(event,false)" ondrop="dzDrop(event)" onclick="q('fi').click()">
+      <div class="dz-ic">📎</div><div class="dz-t">Drop CV here or click to browse</div><div class="dz-s">PDF or TXT · Max 10MB</div>
     </div>
-    <div class="dz" id="dz" ondragover="doDrag(event,true)" ondragleave="doDrag(event,false)" ondrop="doDrop(event)" onclick="document.getElementById('fi').click()">
-      <div class="dz-ico">📎</div>
-      <div class="dz-t">Drop your CV here or click to browse</div>
-      <div class="dz-s">PDF or TXT · Max 10 MB</div>
-    </div>
-    <input type="file" id="fi" accept=".pdf,.txt" style="display:none" onchange="onFile(event)"/>
+    <input type="file" id="fi" accept=".pdf,.txt" style="display:none" onchange="onFileChange(event)"/>
     <div class="field-row">
-      <div class="field">
-        <label>Target Country / Region</label>
-        <select id="sel-country">${COUNTRIES.map(c=>`<option ${c===S.country?'selected':''}>${c}</option>`).join('')}</select>
-      </div>
-      <div class="field">
-        <label>Additional Target Country</label>
-        <select id="sel-country2"><option value="">— Any / Global —</option>${COUNTRIES.map(c=>`<option>${c}</option>`).join('')}</select>
-      </div>
+      <div class="field"><label>Primary Country</label><select id="sel-c">${COUNTRIES.map(c=>`<option ${c===S.country?'selected':''}>${c}</option>`).join('')}</select></div>
+      <div class="field"><label>Secondary Country</label><select id="sel-c2"><option value="">Global / Any</option>${COUNTRIES.map(c=>`<option>${c}</option>`).join('')}</select></div>
     </div>
-    <div class="section-div"><span>Job Portals to Search</span></div>
-    <div class="portal-row" id="portal-row">
-      ${PORTALS.map(p=>`<div class="portal-pill ${S.portals.includes(p.id)?'sel':''}" onclick="togglePortal('${p.id}',this)">${p.flag} ${p.id} <span class="tag tag-grey" style="font-size:9px;padding:1px 5px">${p.region}</span></div>`).join('')}
-    </div>
-    <button class="btn btn-primary" id="upload-btn" disabled onclick="proceedToPrefs()">Next: Set Preferences →</button>
-  `;
+    <div class="sdiv"><span>Job Portals to Search</span></div>
+    <div class="portal-row">${PORTALS.map(p=>`<div class="pc ${S.portals.includes(p.id)?'sel':''}" onclick="togglePortal('${p.id}',this)">${p.f} ${p.id} <span style="font-size:9px;opacity:.7">${p.r}</span></div>`).join('')}</div>
+    <div style="display:flex;gap:10px;margin-top:6px;flex-wrap:wrap">
+      <button class="btn btn-p" id="upload-next" disabled onclick="proceedFromUpload()">Next: Preferences →</button>
+      ${S.profile?`<button class="btn btn-g" onclick="proceedFromUpload(true)">Skip → Use Saved Profile</button>`:''}
+    </div>`;
   _file=null;
 }
 
-function doDrag(e,on){e.preventDefault();document.getElementById('dz')?.classList.toggle('drag',on)}
-function doDrop(e){e.preventDefault();document.getElementById('dz')?.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f)}
-function onFile(e){if(e.target.files[0])handleFile(e.target.files[0])}
+function dzDrag(e,on){e.preventDefault();q('dz')?.classList.toggle('drag',on)}
+function dzDrop(e){e.preventDefault();q('dz')?.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleFile(f)}
+function onFileChange(e){if(e.target.files[0])handleFile(e.target.files[0])}
 function handleFile(f){
-  if(!f.name.match(/\.(pdf|txt)$/i)){alert('Please upload PDF or TXT only.');return}
+  if(!f.name.match(/\.(pdf|txt)$/i)){alert('PDF or TXT only.');return}
   _file=f;
-  const dz=document.getElementById('dz');
-  dz.classList.add('has-file');
-  dz.innerHTML=`<div class="dz-ok">✅ <span>${f.name}</span> <span style="font-size:11px;color:var(--muted)">(${(f.size/1024).toFixed(1)} KB)</span></div>`;
-  document.getElementById('upload-btn').disabled=false;
+  const dz=q('dz');dz.classList.add('ok');
+  dz.innerHTML=`<div class="dz-ok">✅ ${f.name} <span style="font-size:11px;opacity:.7">(${(f.size/1024).toFixed(1)} KB)</span></div>`;
+  q('upload-next').disabled=false;
 }
 function togglePortal(id,el){
   el.classList.toggle('sel');
-  if(S.portals.includes(id)) S.portals=S.portals.filter(p=>p!==id);
-  else S.portals.push(id);
-  el.querySelector('.pdot').style.background=el.classList.contains('sel')?'var(--primary)':'var(--muted)';
+  if(S.portals.includes(id))S.portals=S.portals.filter(p=>p!==id);else S.portals.push(id);
 }
-function proceedToPrefs(){
-  S.country=document.getElementById('sel-country').value;
+function proceedFromUpload(skip=false){
+  S.country=q('sel-c').value;
+  if(!skip&&!_file){alert('Please upload a CV file first.');return}
   showPhase('prefs2');
 }
 
-// ═══════════════════════════════════════════════════
-//  PHASE 2 — QUICK PREFS CONFIRM
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  PHASE 2 — PREFERENCES
+// ═══════════════════════════════════════════
 function buildPrefs2(){
-  const el=document.getElementById('phase-prefs2');
-  el.classList.add('fade-in');
-  el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-sky">⚙️</div>
-      <div><h2>Confirm Your Preferences</h2><p>Quickly confirm what kind of roles you're targeting before the AI begins searching.</p></div>
-    </div>
+  q('phase-prefs2').classList.add('fu');
+  q('phase-prefs2').innerHTML=`
+    <div class="panel-hdr"><div class="ph-ico ico-a">⚙️</div><div><h2>Job Preferences</h2><p>Tell the AI exactly what you're looking for.</p></div></div>
     <div class="field-row">
-      <div class="pref-section">
-        <label>Job Types</label>
-        <div class="chip-row" id="p2-jobtypes">${['Full-time','Part-time','Contract','Remote','Hybrid'].map(v=>`<span class="chip ${S.prefs.jobTypes.includes(v)?'sel':''}" onclick="this.classList.toggle('sel')" data-v="${v}">${v}</span>`).join('')}</div>
+      <div>
+        <div class="field"><label>Job Types</label></div>
+        <div class="chip-row" id="p-jt">${['Full-time','Part-time','Contract','Remote','Hybrid','Freelance'].map(v=>`<span class="chip ${S.prefs.jobTypes.includes(v)?'sel':''}" onclick="this.classList.toggle('sel')" data-v="${v}">${v}</span>`).join('')}</div>
       </div>
-      <div class="pref-section">
-        <label>Seniority</label>
-        <div class="chip-row" id="p2-levels">${['Entry','Mid','Senior','Director','C-Suite'].map(v=>`<span class="chip ${S.prefs.levels.includes(v)?'sel':''}" onclick="this.classList.toggle('sel')" data-v="${v}">${v}</span>`).join('')}</div>
+      <div>
+        <div class="field"><label>Seniority Level</label></div>
+        <div class="chip-row" id="p-lv">${['Entry','Mid','Senior','Director','VP','C-Suite'].map(v=>`<span class="chip ${S.prefs.levels.includes(v)?'sel':''}" onclick="this.classList.toggle('sel')" data-v="${v}">${v}</span>`).join('')}</div>
       </div>
     </div>
-    <div class="pref-section" style="margin-top:8px">
-      <label>Preferred Industries (select all that apply)</label>
-      <div class="chip-row" id="p2-industries">${['Insurance','Banking','FinTech','Consulting','Technology','Healthcare','FMCG','Manufacturing','Education','Real Estate','Telecom','Logistics'].map(v=>`<span class="chip ${S.prefs.industries.includes(v)?'sel':''}" onclick="this.classList.toggle('sel')" data-v="${v}">${v}</span>`).join('')}</div>
+    <div class="field" style="margin-top:10px"><label>Preferred Industries</label>
+      <div class="chip-row" id="p-ind">${['Insurance','Banking','FinTech','Consulting','Technology','Healthcare','FMCG','Telecom','Real Estate','Logistics','Education','Manufacturing'].map(v=>`<span class="chip ${S.prefs.industries.includes(v)?'sel':''}" onclick="this.classList.toggle('sel')" data-v="${v}">${v}</span>`).join('')}</div>
     </div>
-    <div class="field-row" style="margin-top:12px">
-      <div class="field"><label>Min. Salary (USD/year)</label><input type="text" id="p2-salmin" placeholder="e.g. 80000" value="${S.prefs.salMin}"/></div>
-      <div class="field"><label>Notice Period</label><select id="p2-notice"><option>Immediate</option><option>2 weeks</option><option>1 month</option><option ${S.prefs.notice==='3 months'?'selected':''}>3 months</option><option>6 months</option></select></div>
+    <div class="field-row" style="margin-top:10px">
+      <div class="field"><label>Min. Salary (USD/yr equiv.)</label><input type="text" id="p-sal" placeholder="e.g. 80000" value="${S.prefs.salMin}"/></div>
+      <div class="field"><label>Notice Period</label><select id="p-notice"><option>Immediate</option><option>2 weeks</option><option>1 month</option><option ${S.prefs.notice==='3 months'?'selected':''}>3 months</option><option>6 months</option></select></div>
     </div>
-    <div class="field" style="margin-top:4px"><label>Special instructions for AI agent</label><textarea id="p2-notes" style="width:100%;padding:10px;border:1.5px solid var(--border2);border-radius:8px;font-family:var(--font);font-size:13px;resize:vertical;background:var(--surface2)" rows="2" placeholder="e.g. avoid sales roles, prefer analytical / strategy positions...">${S.prefs.notes}</textarea></div>
+    <div class="field"><label>Relocation Willingness</label>
+      <div class="chip-row" id="p-rel">${['Yes','No','GCC only','Asia only','Europe only'].map(v=>`<span class="chip ${S.prefs.reloc===v?'sel':''}" onclick="q('p-rel').querySelectorAll('.chip').forEach(c=>c.classList.remove('sel'));this.classList.add('sel')">${v}</span>`).join('')}</div>
+    </div>
+    <div class="field"><label>Special Instructions for AI Agent</label>
+      <textarea id="p-notes" rows="2" style="width:100%;padding:9px;border:1.5px solid var(--border2);border-radius:8px;font-family:var(--f);font-size:13px;resize:vertical;background:var(--s2)" placeholder="e.g. prefer management over individual contributor, avoid startups, open to GCC relocation...">${S.prefs.notes}</textarea>
+    </div>
     <div style="display:flex;gap:10px;margin-top:8px">
-      <button class="btn btn-ghost" onclick="showPhase('upload')">← Back</button>
-      <button class="btn btn-primary" onclick="savePrefs2AndRun()">Begin AI Analysis →</button>
-    </div>
-  `;
+      <button class="btn btn-g" onclick="showPhase('upload')">← Back</button>
+      <button class="btn btn-p" onclick="saveAndAnalyse()">Start AI Analysis →</button>
+    </div>`;
 }
-function savePrefs2AndRun(){
-  S.prefs.jobTypes=[...(document.getElementById('p2-jobtypes')?.querySelectorAll('.chip.sel'))||[]].map(c=>c.dataset.v);
-  S.prefs.levels=[...(document.getElementById('p2-levels')?.querySelectorAll('.chip.sel'))||[]].map(c=>c.dataset.v);
-  S.prefs.industries=[...(document.getElementById('p2-industries')?.querySelectorAll('.chip.sel'))||[]].map(c=>c.dataset.v);
-  S.prefs.salMin=document.getElementById('p2-salmin')?.value||'';
-  S.prefs.notice=document.getElementById('p2-notice')?.value||'3 months';
-  S.prefs.notes=document.getElementById('p2-notes')?.value||'';
+function getChipVals(id){return[...(q(id)?.querySelectorAll('.chip.sel')||[])].map(c=>c.dataset.v)}
+function saveAndAnalyse(){
+  S.prefs.jobTypes=getChipVals('p-jt');
+  S.prefs.levels=getChipVals('p-lv');
+  S.prefs.industries=getChipVals('p-ind');
+  S.prefs.reloc=getChipVals('p-rel')[0]||'Yes';
+  S.prefs.salMin=q('p-sal')?.value||'';
+  S.prefs.notice=q('p-notice')?.value||'3 months';
+  S.prefs.notes=q('p-notes')?.value||'';
   showPhase('analysis');
   runAnalysis();
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  PHASE 3 — ANALYSIS
-// ═══════════════════════════════════════════════════
-function buildAnalysis(){
-  const el=document.getElementById('phase-analysis');
-  el.classList.add('fade-in');
-  el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-blue">🧠</div>
-      <div><h2>AI CV Analysis</h2><p>Phase 1 — Extracting your profile and building your Master CV Intelligence.</p></div>
-    </div>
-    <div class="log" id="log-a"><span class="l-ok">▶ Analysis engine started...</span></div>
-    <div id="profile-out"></div>
-    <div id="analysis-btns"></div>`;
+// ═══════════════════════════════════════════
+function buildAnalysisPhase(){
+  q('phase-analysis').classList.add('fu');
+  q('phase-analysis').innerHTML=`
+    <div class="panel-hdr"><div class="ph-ico ico-b">🧠</div><div><h2>AI CV Analysis</h2><p>Extracting your skills, domains and building your Master Profile.</p></div></div>
+    <div class="log" id="log-a"><span class="l-ok">▶ Analysis engine started...</span><br/></div>
+    <div id="prof-out"></div><div id="an-btns"></div>`;
 }
-
 async function runAnalysis(){
-  const log=(cls,msg)=>{
-    const b=document.getElementById('log-a');if(!b)return;
-    const d=document.createElement('div');d.className=cls;d.textContent=msg;
-    b.appendChild(d);b.scrollTop=b.scrollHeight;
-  };
+  const lg=(c,m)=>{const b=q('log-a');if(!b)return;const d=document.createElement('span');d.className=c;d.textContent=m+'\n';b.appendChild(d);b.scrollTop=b.scrollHeight};
   try{
-    log('l-info','📄 Reading CV file...');await sleep(300);
-    if(!_file)throw new Error('No file selected. Please go back and upload a CV.');
-    let cvText='';
-    if(_file.type==='application/pdf'||_file.name.endsWith('.pdf')){
-      log('l-info','🔍 Sending PDF to Gemini Vision...');
-      const b64=await toB64(_file);
-      cvText=await geminiPDF(b64,'application/pdf','Extract all text from this CV/resume. Output plain text only, preserve structure.');
-    }else{
-      cvText=await _file.text();
+    lg('l-info','📄 Reading CV...');
+    if(_file){
+      if(_file.type==='application/pdf'||_file.name.endsWith('.pdf')){
+        lg('l-info','🔍 Sending PDF to Gemini Vision...');
+        const b64=await toB64(_file);
+        S.cvText=await geminiPDF(b64,'application/pdf','Extract all text. Output plain text only.');
+      }else{S.cvText=await _file.text()}
+      S.cvText=S.cvText.slice(0,5000);
+      // save to profile
+      if(S.user){S.db.users[S.user.email].savedCVText=S.cvText;saveDB()}
     }
-    S.cvText=cvText.slice(0,5000);
-    log('l-ok','✓ CV text extracted ('+S.cvText.length+' chars)');await sleep(200);
-    log('l-info','🧠 Building Master Profile...');
-
-    const prefCtx=`User preferences: JobTypes=${S.prefs.jobTypes.join(',')}, Seniority=${S.prefs.levels.join(',')}, Industries=${S.prefs.industries.join(',')||'Any'}, SalaryMin=${S.prefs.salMin||'Not specified'}, Notes=${S.prefs.notes||'None'}`;
-
-    const raw=await gemini(
-      `Analyse this CV. Return ONLY valid JSON — no markdown, no backticks:\n{"name":"full name","currentTitle":"latest title","yearsExperience":number,"topSkills":["s1","s2","s3","s4","s5","s6"],"certifications":["c1","c2"],"domains":["d1","d2","d3"],"education":"highest degree","languages":["l1"],"strengthSummary":"3-sentence professional summary","atsScore":number between 40-75,"targetCountry":"${S.country}"}\n\n${prefCtx}\n\nCV:\n${S.cvText}`,
-      'You are a senior HR analyst and ATS specialist. Return ONLY raw JSON.', 900
-    );
-    const prof=parseJSON(raw,{name:'Candidate',currentTitle:'Professional',yearsExperience:5,topSkills:['Leadership','Strategy','Analytics'],certifications:['MBA'],domains:['Finance','Operations'],education:'Post Graduate',languages:['English'],strengthSummary:'Experienced professional.',atsScore:55,targetCountry:S.country});
-    S.profile=prof;
-    S.cvAtsBase=prof.atsScore||55;
-
-    log('l-ok',`✓ Profile built — ${prof.name} · ${prof.currentTitle}`);
-    log('l-ok',`📌 ${prof.yearsExperience} yrs · ${prof.domains.slice(0,3).join(', ')}`);
-    log('l-ok',`🏆 Skills: ${prof.topSkills.slice(0,4).join(', ')}`);
-    log('l-warn',`📊 Baseline ATS Score: ${S.cvAtsBase}/100`);
-    log('l-ok','✔ Master Profile ready.');
-
-    document.getElementById('profile-out').innerHTML=`
-      <div class="profile-card fade-in">
-        <h3>🎯 Master Profile — ${prof.name}</h3>
-        <div class="pg4">
-          <div class="pf"><span>Title</span><strong>${prof.currentTitle}</strong></div>
-          <div class="pf"><span>Experience</span><strong>${prof.yearsExperience} years</strong></div>
-          <div class="pf"><span>Education</span><strong>${prof.education}</strong></div>
-          <div class="pf"><span>Baseline ATS</span><strong style="color:var(--orange)">${S.cvAtsBase}/100</strong></div>
+    lg('l-ok','✓ CV text ready ('+S.cvText.length+' chars)');
+    lg('l-info','🧠 Building Master Profile...');
+    const pref=`Prefs: JobTypes=${S.prefs.jobTypes.join(',')}, Seniority=${S.prefs.levels.join(',')}, Industries=${S.prefs.industries.join(',')||'Any'}, MinSalary=${S.prefs.salMin||'flexible'}`;
+    const raw=await gemini(`Analyse this CV. Return ONLY valid JSON — no markdown:\n{"name":"","currentTitle":"","yearsExperience":0,"topSkills":["s1","s2","s3","s4","s5","s6"],"certifications":["c1"],"domains":["d1","d2","d3"],"education":"","languages":["English"],"strengthSummary":"3-sentence summary","atsScore":55,"contactEmail":"if found else empty","contactPhone":"if found else empty","targetCountry":"${S.country}"}\n\n${pref}\n\nCV:\n${S.cvText}`,
+      'You are a senior HR analyst and ATS specialist. Return ONLY raw JSON.',900);
+    S.profile=parseJ(raw,{name:'Candidate',currentTitle:'Professional',yearsExperience:5,topSkills:['Leadership','Strategy','Analytics','Communication','Management'],certifications:['MBA'],domains:['Finance','Operations','Technology'],education:'Post Graduate',languages:['English'],strengthSummary:'Experienced professional.',atsScore:55,contactEmail:'',contactPhone:'',targetCountry:S.country});
+    S.cvAtsBase=S.profile.atsScore||55;
+    if(S.user){S.db.users[S.user.email].savedProfile=S.profile;saveDB()}
+    lg('l-ok',`✓ Profile: ${S.profile.name} · ${S.profile.currentTitle}`);
+    lg('l-ok',`📌 ${S.profile.yearsExperience}yrs · ${S.profile.domains.slice(0,3).join(', ')}`);
+    lg('l-w',`📊 Baseline ATS Score: ${S.cvAtsBase}/100 (will improve after tailoring)`);
+    lg('l-ok','✔ Master Profile ready.');
+    q('prof-out').innerHTML=`
+      <div class="profile-card fu">
+        <h3>🎯 Master Profile — ${S.profile.name}</h3>
+        <div class="pg">
+          <div class="pf"><span>Current Title</span><strong>${S.profile.currentTitle}</strong></div>
+          <div class="pf"><span>Experience</span><strong>${S.profile.yearsExperience} years</strong></div>
+          <div class="pf"><span>Education</span><strong>${S.profile.education}</strong></div>
+          <div class="pf"><span>Baseline ATS</span><strong style="color:var(--or)">${S.cvAtsBase}/100</strong></div>
         </div>
-        <div class="tags">${prof.topSkills.map(s=>`<span class="tag tag-blue">${s}</span>`).join('')}</div>
-        <div class="tags">${prof.domains.map(d=>`<span class="tag tag-sky">${d}</span>`).join('')}</div>
-        ${prof.certifications.length?`<div class="tags">${prof.certifications.map(c=>`<span class="tag tag-gold">${c}</span>`).join('')}</div>`:''}
-        <div class="profile-quote">"${prof.strengthSummary}"</div>
+        <div class="tags">${S.profile.topSkills.map(s=>`<span class="tag t-b">${s}</span>`).join('')}</div>
+        <div class="tags">${S.profile.domains.map(d=>`<span class="tag t-a">${d}</span>`).join('')}</div>
+        ${S.profile.certifications.length?`<div class="tags">${S.profile.certifications.map(c=>`<span class="tag t-go">${c}</span>`).join('')}</div>`:''}
+        <div class="pq">"${S.profile.strengthSummary}"</div>
       </div>`;
-    document.getElementById('analysis-btns').innerHTML=`<button class="btn btn-primary" onclick="showPhase('search')">Search Jobs →</button>`;
+    q('an-btns').innerHTML=`<button class="btn btn-p" onclick="checkTrialAndSearch()">🔍 Search Global Jobs →</button>`;
   }catch(e){
-    log('l-err','❌ '+e.message);
-    document.getElementById('analysis-btns').innerHTML=`<button class="btn btn-ghost" style="margin-top:8px" onclick="showPhase('upload')">← Go Back & Retry</button>`;
+    lg('l-e','❌ '+e.message);
+    q('an-btns').innerHTML=`<button class="btn btn-g" style="margin-top:8px" onclick="showPhase('upload')">← Retry</button>`;
   }
 }
+function checkTrialAndSearch(){if(useTrial())showPhase('search')}
 
-// ═══════════════════════════════════════════════════
-//  PHASE 4 — JOB SEARCH
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+//  PHASE 4 — SEARCH
+// ═══════════════════════════════════════════
 function buildSearch(){
-  const el=document.getElementById('phase-search');
-  el.classList.add('fade-in');
-  el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-green">🔍</div>
-      <div><h2>Global Job Search</h2><p>Phase 2 — Scraping ${S.portals.slice(0,4).join(', ')}${S.portals.length>4?' + '+(S.portals.length-4)+' more':''} for best-match roles.</p></div>
+  q('phase-search').classList.add('fu');
+  const dfOpts=[{v:'1',l:'Today'},{'v':'7',l:'Last 7 Days'},{v:'30',l:'Last 30 Days'},{v:'90',l:'Last 90 Days'},{v:'any',l:'Any Time'}];
+  q('phase-search').innerHTML=`
+    <div class="panel-hdr"><div class="ph-ico ico-g">🔍</div><div><h2>Global Job Search</h2><p>Scanning ${S.portals.slice(0,4).join(', ')}${S.portals.length>4?' + '+(S.portals.length-4)+' more':''} for 80%+ match roles.</p></div></div>
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap">
+      <div style="font-size:12px;font-weight:700;color:var(--text2)">📅 Posted Within:</div>
+      <div class="date-filter">${dfOpts.map(o=>`<button class="df-btn ${S.dateFilter===o.v?'sel':''}" onclick="setDateFilter('${o.v}',this)">${o.l}</button>`).join('')}</div>
     </div>
-    <div class="log" id="log-s"><span class="l-ok">▶ Starting global portal scan...</span></div>
-    <div id="jobs-out"></div>
-    <div id="search-btns"></div>`;
+    <div class="log" id="log-s"><span class="l-ok">▶ Initiating portal scan...</span><br/></div>
+    <div id="jobs-out"></div><div id="search-btns"></div>`;
   runSearch();
 }
-
+function setDateFilter(v,el){
+  S.dateFilter=v;
+  document.querySelectorAll('.df-btn').forEach(b=>b.classList.remove('sel'));
+  el.classList.add('sel');
+  if(S.jobs.length)renderJobCards();
+}
 async function runSearch(){
-  const log=(cls,msg)=>{const b=document.getElementById('log-s');if(!b)return;const d=document.createElement('div');d.className=cls;d.textContent=msg;b.appendChild(d);b.scrollTop=b.scrollHeight};
+  const lg=(c,m)=>{const b=q('log-s');if(!b)return;const d=document.createElement('span');d.className=c;d.textContent=m+'\n';b.appendChild(d);b.scrollTop=b.scrollHeight};
   const p=S.profile;
   try{
-    log('l-info',`🌍 Target: ${S.country} + International markets`);await sleep(250);
-    // Simulate per-portal scanning
-    for(const portal of S.portals.slice(0,6)){
-      log('l-info',`🔎 Scanning ${portal}...`);await sleep(200);
-    }
-    if(S.portals.length>6){log('l-info',`🔎 + ${S.portals.length-6} more portals...`);await sleep(100)}
-    log('l-info','🎯 Applying 80%+ skill-match filter...');
-
-    const prefStr=`Preferences: JobTypes=${S.prefs.jobTypes.join(',')}, Seniority=${S.prefs.levels.join(',')}, Industries=${S.prefs.industries.join(',')||'Any'}, MinSalary=${S.prefs.salMin||'flexible'}, Portals=${S.portals.slice(0,6).join(', ')}, Notes=${S.prefs.notes||'None'}`;
-
+    lg('l-info',`🌍 Scanning ${S.portals.length} portals across ${S.country} + International...`);
+    for(const pt of S.portals.slice(0,5)){await sleep(120);lg('l-info',`🔎 ${pt}...`)}
+    if(S.portals.length>5){await sleep(80);lg('l-info',`🔎 + ${S.portals.length-5} more portals...`)}
+    lg('l-info','🎯 Applying 80%+ match filter...');
+    const dfLabel={'1':'today','7':'in the last 7 days','30':'in the last 30 days','90':'in the last 90 days','any':'recently'}[S.dateFilter]||'recently';
+    const pref=`Prefs: Types=${S.prefs.jobTypes.join(',')}, Level=${S.prefs.levels.join(',')}, Industries=${S.prefs.industries.join(',')||'Any'}, MinSal=${S.prefs.salMin||'flexible'}, Notes=${S.prefs.notes||'none'}`;
     const raw=await gemini(
-      `You are a global headhunter with access to ${S.portals.join(', ')}. Generate 10 realistic job openings for this candidate from DIFFERENT portals and DIFFERENT countries. Return ONLY a valid JSON array — no markdown:\n[{"id":1,"title":"","company":"","location":"City, Country","type":"Full-time","salaryRange":"USD/local","matchScore":85,"domain":"","keyRequirements":["r1","r2","r3"],"jobUrl":"https://portal.com/job/id","growthPotential":"High","source":"LinkedIn","whyMatch":"one specific sentence","postedDate":"3 days ago"}]\n\nCANDIDATE:\nTitle:${p.currentTitle}, Exp:${p.yearsExperience}yrs, Skills:${p.topSkills.join(', ')}, Domains:${p.domains.join(', ')}, Certs:${p.certifications.join(', ')||'None'}, Target:${S.country}\n${prefStr}`,
-      'You are a global recruiter. Return ONLY raw JSON array.', 3000
-    );
-    let jobs=parseJSON(raw,[]);
-    if(!Array.isArray(jobs)||!jobs.length)throw new Error('No jobs returned. Try again.');
+      `You are a global headhunter scraping: ${S.portals.join(', ')}. Generate 10 realistic job openings posted ${dfLabel} from DIFFERENT portals and countries. Return ONLY a valid JSON array — no markdown:\n[{"id":1,"title":"","company":"","location":"City,Country","type":"Full-time","salaryRange":"","matchScore":85,"domain":"","keyRequirements":["r1","r2","r3"],"jobUrl":"https://portal.com/jobs/id","growthPotential":"High","source":"LinkedIn","postedDate":"2 days ago","recruiterEmail":"hr@company.com or empty","whyMatch":"specific one sentence"}]\n\nCANDIDATE: Title:${p.currentTitle}, Exp:${p.yearsExperience}yrs, Skills:${p.topSkills.join(',')}, Domains:${p.domains.join(',')}, Certs:${p.certifications.join(',')||'None'}, Target:${S.country}\n${pref}`,
+      'You are a global recruiter. Return ONLY raw JSON array.',3000);
+    let jobs=parseJ(raw,[]);
+    if(!Array.isArray(jobs)||!jobs.length)throw new Error('No results returned. Check API key and retry.');
     S.jobs=jobs;
-
-    log('l-ok',`✓ ${S.jobs.length} roles found across ${[...new Set(S.jobs.map(j=>j.source))].length} portals`);
-    log('l-ok','📊 Ranked by match score + growth potential.');
-    log('l-ok','✔ Selection complete.');
-
-    document.getElementById('jobs-out').innerHTML=`<div class="jobs-grid fade-in">
-      ${S.jobs.map((j,i)=>`
-        <div class="jcard" style="animation-delay:${i*50}ms">
-          <div class="jc-top">
-            <div style="flex:1;min-width:0">
-              <div class="jc-source"><span class="src-dot"></span>${j.source||'Job Portal'} · ${j.postedDate||'Recently'}</div>
-              <div class="jc-title">${j.title}</div>
-              <div class="jc-co">${j.company} · ${j.location}</div>
-            </div>
-            <span class="mbadge ${j.matchScore>=90?'mb-h':j.matchScore>=80?'mb-m':'mb-l'}">${j.matchScore}%</span>
-          </div>
-          <div class="jc-sal">${j.salaryRange}</div>
-          <div class="jc-why">${j.whyMatch}</div>
-          <div class="tags">
-            ${(j.keyRequirements||[]).slice(0,3).map(r=>`<span class="tag tag-grey">${r}</span>`).join('')}
-            <span class="tag ${j.growthPotential==='High'?'tag-green':'tag-gold'}">${j.growthPotential} Growth</span>
-          </div>
-        </div>`).join('')}
-    </div>`;
-    document.getElementById('search-btns').innerHTML=`<button class="btn btn-primary" onclick="showPhase('tailor')">Tailor Applications →</button>`;
+    renderJobCards();
+    lg('l-ok',`✓ ${S.jobs.length} roles found across ${[...new Set(S.jobs.map(j=>j.source))].length} portals`);
+    lg('l-ok','📊 Ranked by match score and growth potential.');
+    q('search-btns').innerHTML=`<button class="btn btn-p" onclick="showPhase('tailor')">✍️ Tailor All Applications →</button>`;
   }catch(e){
-    log('l-err','❌ '+e.message);
-    document.getElementById('search-btns').innerHTML=`<button class="btn btn-ghost" style="margin-top:8px" onclick="buildSearch()">🔄 Retry Search</button>`;
+    lg('l-e','❌ '+e.message);
+    q('search-btns').innerHTML=`<button class="btn btn-g" style="margin-top:8px" onclick="buildSearch()">🔄 Retry</button>`;
   }
 }
+function renderJobCards(){
+  const jobs=S.jobs;
+  q('jobs-out').innerHTML=`<div class="jobs-grid fu">${jobs.map((j,i)=>`
+    <div class="jcard" style="animation-delay:${i*45}ms">
+      <div class="jc-top">
+        <div style="flex:1;min-width:0">
+          <div class="jc-src"><span class="src-dot"></span>${j.source||'Portal'}</div>
+          <div class="jc-title">${j.title}</div>
+          <div class="jc-co">${j.company} · ${j.location}</div>
+        </div>
+        <span class="mb ${j.matchScore>=90?'mb-h':j.matchScore>=80?'mb-m':'mb-l'}">${j.matchScore}%</span>
+      </div>
+      <div class="jc-date">📅 ${j.postedDate||'Recently posted'}</div>
+      <div class="jc-sal">💰 ${j.salaryRange}</div>
+      <div class="jc-why">${j.whyMatch}</div>
+      <div class="tags">
+        ${(j.keyRequirements||[]).slice(0,3).map(r=>`<span class="tag t-gr">${r}</span>`).join('')}
+        <span class="tag ${j.growthPotential==='High'?'t-g':'t-go'}">${j.growthPotential} Growth</span>
+        ${j.recruiterEmail?`<span class="tag t-a">📧 Email available</span>`:''}
+      </div>
+    </div>`).join('')}</div>`;
+}
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  PHASE 5 — TAILORING
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function buildTailor(){
-  const el=document.getElementById('phase-tailor');
-  el.classList.add('fade-in');
-  el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-orange">✍️</div>
-      <div><h2>CV & Cover Letter Tailoring</h2><p>Phase 3 — Rewriting your CV for each role and calculating ATS score improvements.</p></div>
-    </div>
-    <div class="prog-wrap"><div class="prog-bg"><div class="prog-fill" id="prog-f" style="width:0%"></div></div><div class="prog-txt" id="prog-t">0%</div></div>
-    <div class="log" id="log-t"><span class="l-ok">▶ Tailoring engine active...</span></div>
+  q('phase-tailor').classList.add('fu');
+  q('phase-tailor').innerHTML=`
+    <div class="panel-hdr"><div class="ph-ico ico-o">✍️</div><div><h2>CV & Cover Letter Tailoring</h2><p>Phase 3 — AI rewriting your CV for each role + calculating ATS improvement.</p></div></div>
+    <div class="prog"><div class="prog-bg"><div class="prog-fill" id="pf" style="width:0%"></div></div><div class="prog-pct" id="pp">0%</div></div>
+    <div class="log" id="log-t"><span class="l-ok">▶ Tailoring engine active...<br/></span></div>
     <div id="tailor-btns"></div>`;
   runTailor();
 }
-
 async function runTailor(){
-  const log=(cls,msg)=>{const b=document.getElementById('log-t');if(!b)return;const d=document.createElement('div');d.className=cls;d.textContent=msg;b.appendChild(d);b.scrollTop=b.scrollHeight};
-  const p=S.profile;
-  S.tailored=[];
+  const lg=(c,m)=>{const b=q('log-t');if(!b)return;const d=document.createElement('span');d.className=c;d.textContent=m+'\n';b.appendChild(d);b.scrollTop=b.scrollHeight};
+  const p=S.profile;S.tailored=[];S.approved={};
   try{
     for(let i=0;i<S.jobs.length;i++){
       const j=S.jobs[i];
       const pct=Math.round((i/S.jobs.length)*100);
-      const pf=document.getElementById('prog-f');const pt=document.getElementById('prog-t');
-      if(pf)pf.style.width=pct+'%';if(pt)pt.textContent=pct+'%';
-      log('l-info',`✍️ [${i+1}/${S.jobs.length}] ${j.title} @ ${j.company}`);
-
+      const pf=q('pf'),pp=q('pp');if(pf)pf.style.width=pct+'%';if(pp)pp.textContent=pct+'%';
+      lg('l-info',`✍️ [${i+1}/${S.jobs.length}] ${j.title} @ ${j.company}`);
       const raw=await gemini(
-        `Tailor this candidate's application for the specific job. Return ONLY valid JSON — no markdown:\n{"tailoredSummary":"3-sentence professional summary using JD keywords, no fabrication","keyAchievements":["role-specific achievement 1","achievement 2","achievement 3"],"coverLetter":"Full 3-paragraph cover letter, professional, specific to this role","atsScore":number between 78-96,"keywordsAdded":["kw1","kw2","kw3"]}\n\nCANDIDATE:\n- ${p.currentTitle}, ${p.yearsExperience}yrs, Skills:${p.topSkills.join(', ')}, Domains:${p.domains.join(', ')}\n- Strengths:${p.strengthSummary}\n\nJOB:\n- ${j.title} @ ${j.company}, ${j.location}\n- Requirements:${(j.keyRequirements||[]).join(', ')}\n- ${j.whyMatch}`,
-        'Professional CV writer. Never fabricate. Return only raw JSON.',1500
-      );
-      const td=parseJSON(raw,{tailoredSummary:`Experienced ${p.currentTitle} with ${p.yearsExperience} years aligned to ${j.title} at ${j.company}.`,keyAchievements:['Led cross-functional initiatives to deliver strategic outcomes','Optimised workflows for measurable efficiency improvements','Built and mentored high-performance teams'],coverLetter:`Dear Hiring Team,\n\nI am writing to apply for the ${j.title} position at ${j.company}. With ${p.yearsExperience} years of expertise in ${p.domains.slice(0,2).join(' and ')}, I am confident in my ability to add immediate value.\n\nMy background in ${p.topSkills.slice(0,3).join(', ')} directly aligns with your stated requirements. I am particularly excited by this opportunity at ${j.company} and the potential for growth.\n\nI look forward to discussing how my experience can contribute to your team's success.\n\nSincerely,\n${p.name}`,atsScore:82,keywordsAdded:['leadership','strategy','analytics']});
+        `Tailor application for this job. Return ONLY valid JSON — no markdown:\n{"tailoredSummary":"3-sentence professional summary using JD keywords, no fabrication","keyAchievements":["specific achievement aligned to role 1","achievement 2","achievement 3"],"coverLetter":"Full professional 3-paragraph cover letter specific to role and company","emailSubject":"Application: [Role] at [Company]","emailBody":"Professional email body for directly emailing the recruiter","atsScore":number 78-96,"keywordsAdded":["k1","k2","k3","k4"]}\n\nCANDIDATE: ${p.currentTitle}, ${p.yearsExperience}yrs, Skills:${p.topSkills.join(', ')}, Strengths:${p.strengthSummary}\n\nJOB: ${j.title} @ ${j.company}, ${j.location}\nRequirements: ${(j.keyRequirements||[]).join(', ')}`,
+        'Professional CV writer. Never fabricate. Return only raw JSON.',1600);
+      const td=parseJ(raw,{tailoredSummary:`${p.currentTitle} with ${p.yearsExperience}yrs aligned to ${j.title} at ${j.company}.`,keyAchievements:['Led strategic cross-functional initiatives','Optimised operations delivering measurable results','Mentored high-performance teams'],coverLetter:`Dear Hiring Team,\n\nI am writing to apply for the ${j.title} role at ${j.company}. With ${p.yearsExperience} years in ${p.domains.slice(0,2).join(' and ')}, I am confident I can add immediate value.\n\nMy expertise in ${p.topSkills.slice(0,3).join(', ')} directly meets your requirements.\n\nI look forward to discussing this opportunity.\n\nSincerely,\n${p.name}`,emailSubject:`Application: ${j.title} at ${j.company}`,emailBody:`Dear Recruiter,\n\nI came across the ${j.title} position at ${j.company} and would like to express my strong interest.\n\nWith ${p.yearsExperience} years of experience in ${p.domains.slice(0,2).join(' and ')}, I believe I am an excellent fit for this role. My key strengths include ${p.topSkills.slice(0,3).join(', ')}.\n\nI would love to discuss how I can contribute to ${j.company}. Please find my CV attached.\n\nBest regards,\n${p.name}\n${p.contactEmail||''}`,atsScore:82,keywordsAdded:['leadership','strategy','analytics','management']});
       S.tailored.push({...j,...td});
-      log('l-ok',`✓ ATS: ${S.cvAtsBase} → ${td.atsScore} (+${td.atsScore-S.cvAtsBase})`);
-      await sleep(80);
+      lg('l-ok',`✓ ATS: ${S.cvAtsBase} → ${td.atsScore} (+${td.atsScore-S.cvAtsBase} pts)`);
+      await sleep(60);
     }
-    const pf=document.getElementById('prog-f');const pt=document.getElementById('prog-t');
-    if(pf)pf.style.width='100%';if(pt)pt.textContent='100%';
-    log('l-ok','✔ All 10 applications tailored.');
-    log('l-warn','⏸ PAUSED — Review and approve before submission.');
-    document.getElementById('tailor-btns').innerHTML=`
-      <div class="alert al-blue fade-in" style="margin-top:12px">
-        <div class="alert-ico">⏸</div>
-        <div><strong>Approval Gate — Your review is required</strong><p>All applications are ready. Preview each tailored CV and cover letter, then approve individually.</p></div>
+    const pf=q('pf'),pp=q('pp');if(pf)pf.style.width='100%';if(pp)pp.textContent='100%';
+    // save applications to user profile
+    if(S.user){
+      S.db.users[S.user.email].applications=S.tailored.map(j=>({title:j.title,company:j.company,location:j.location,matchScore:j.matchScore,atsScore:j.atsScore,appliedDate:new Date().toISOString().split('T')[0],status:'Ready'}));
+      saveDB();
+    }
+    lg('l-ok','✔ All tailored. ⏸ PAUSED — Your approval required before submission.');
+    q('tailor-btns').innerHTML=`
+      <div class="alert al-b fu" style="margin-top:10px">
+        <div class="al-ic">⏸</div>
+        <div class="al-body"><strong>Approval Gate</strong><p>Review and approve each tailored CV + cover letter individually before proceeding.</p></div>
       </div>
-      <button class="btn btn-primary" onclick="showPhase('preview')">Review & Approve →</button>`;
+      <button class="btn btn-p" onclick="showPhase('preview')">👁 Review & Approve Applications →</button>`;
   }catch(e){
-    log('l-err','❌ '+e.message);
-    document.getElementById('tailor-btns').innerHTML=`<button class="btn btn-ghost" style="margin-top:8px" onclick="buildTailor()">🔄 Retry</button>`;
+    lg('l-e','❌ '+e.message);
+    q('tailor-btns').innerHTML=`<button class="btn btn-g" style="margin-top:8px" onclick="buildTailor()">🔄 Retry</button>`;
   }
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  PHASE 6 — PREVIEW
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function renderPreview(){
-  const el=document.getElementById('phase-preview');
-  if(!el)return;
-  el.classList.add('fade-in');
-  const apprCount=Object.values(S.approved).filter(Boolean).length;
+  const el=q('phase-preview');if(!el)return;
+  el.classList.add('fu');
+  const apprN=Object.values(S.approved).filter(Boolean).length;
   const j=S.tailored[S.jobIdx]||{};
   const mc=j.matchScore>=90?'mb-h':j.matchScore>=80?'mb-m':'mb-l';
-  const atsDelta=j.atsScore?j.atsScore-S.cvAtsBase:0;
+  const atsDelta=(j.atsScore||82)-S.cvAtsBase;
+
   const sidebar=S.tailored.map((t,i)=>`
-    <div class="sb-item ${i===S.jobIdx?'active':''} ${S.approved[t.id]?'appr':''}" onclick="selJob(${i})">
-      <div class="sb-n">${i+1}</div>
-      <div class="sb-info"><strong>${t.title}</strong><span>${t.company}</span></div>
-      ${S.approved[t.id]?'<span class="sb-chk">✓</span>':''}
+    <div class="sbi ${i===S.jobIdx?'active':''} ${S.approved[t.id]?'appr':''}" onclick="selJob(${i})">
+      <div class="sbi-n">${i+1}</div>
+      <div class="sbi-info"><strong>${t.title}</strong><span>${t.company}</span></div>
+      ${S.approved[t.id]?'<span class="sbi-chk">✓</span>':''}
     </div>`).join('');
 
-  const tabContent=()=>{
+  const getTab=()=>{
     if(S.tab==='summary')return`<div class="cv-blk"><h4>Tailored Professional Summary</h4><p>${j.tailoredSummary||''}</p></div>`;
-    if(S.tab==='achievements')return`<div class="cv-blk"><h4>Key Achievements</h4><ul>${(j.keyAchievements||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
+    if(S.tab==='achieve')return`<div class="cv-blk"><h4>Key Achievements</h4><ul>${(j.keyAchievements||[]).map(a=>`<li>${a}</li>`).join('')}</ul></div>`;
     if(S.tab==='cover')return`<div class="cv-blk"><h4>Cover Letter</h4><pre>${j.coverLetter||''}</pre></div>`;
-    return`<div class="cv-blk"><h4>ATS Score Analysis</h4>
-      <div class="ats-wrap">
-        <div class="ats-card"><div class="lbl">Before Tailoring</div>${atsRing(S.cvAtsBase,'#ea580c')}<div class="ats-num" style="position:static;font-size:13px;font-weight:700;color:var(--orange)">${S.cvAtsBase}/100</div></div>
-        <div class="ats-card"><div class="lbl">After Tailoring</div>${atsRing(j.atsScore||82,'#059669')}<div class="ats-num" style="position:static;font-size:13px;font-weight:700;color:var(--green)">${j.atsScore||82}/100</div><div class="ats-change up">▲ +${atsDelta} points</div></div>
+    if(S.tab==='ats')return`<div class="cv-blk"><h4>ATS Score Analysis</h4>
+      <div class="ats-wrap" style="max-width:360px">
+        <div class="ats-card"><div class="ats-lbl">Before Tailoring</div>${atsRing(S.cvAtsBase,'#c2410c')}</div>
+        <div class="ats-card"><div class="ats-lbl">After Tailoring</div>${atsRing(j.atsScore||82,'#047857')}<div class="ats-ch up">▲ +${atsDelta} points</div></div>
       </div>
-      <p style="font-size:12px;color:var(--text2);margin-top:8px">Keywords added: ${(j.keywordsAdded||[]).map(k=>`<span class="tag tag-green" style="font-size:11px">${k}</span>`).join(' ')}</p>
+      <p style="font-size:12px;color:var(--text2);margin-top:8px">Keywords added: ${(j.keywordsAdded||[]).map(k=>`<span class="tag t-g">${k}</span>`).join(' ')}</p>
+    </div>`;
+    return`<div class="cv-blk"><h4>Recruiter Email Draft</h4>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Subject: <strong style="color:var(--text)">${j.emailSubject||''}</strong></div>
+      <pre>${j.emailBody||''}</pre>
+      ${j.recruiterEmail?`<div style="margin-top:10px;font-size:12px;color:var(--g)">📧 Recruiter email found: <strong>${j.recruiterEmail}</strong></div>`:
+      `<div style="margin-top:10px;font-size:12px;color:var(--muted)">⚠ No public recruiter email. Use the Apply button to open the job portal.</div>`}
     </div>`;
   };
 
   el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-purple">👁</div>
-      <div><h2>Review & Approve</h2><p>Approved: <strong>${apprCount}/${S.tailored.length}</strong> · Click each job to review before submitting.</p></div>
-    </div>
+    <div class="panel-hdr"><div class="ph-ico ico-p">👁</div><div><h2>Review & Approve</h2><p>Approved: <strong>${apprN}/${S.tailored.length}</strong> · Select a job to preview its tailored documents.</p></div></div>
     <div class="prev-layout">
-      <div class="prev-sidebar">${sidebar}</div>
+      <div class="prev-sb">${sidebar}</div>
       <div class="prev-main">
-        <div class="prev-jh">
-          <div>
-            <h3>${j.title}</h3>
-            <p>${j.company} · ${j.location} · ${j.salaryRange}</p>
-          </div>
-          <span class="mbadge ${mc} mb-lg">${j.matchScore}%</span>
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:8px">
+          <div><div style="font-family:var(--fd);font-size:18px;font-weight:600;margin-bottom:3px">${j.title}</div>
+          <div style="font-size:12px;color:var(--muted)">${j.company} · ${j.location} · ${j.salaryRange}</div></div>
+          <span class="mb ${mc} mb-lg">${j.matchScore}%</span>
         </div>
-        <div class="prev-url">🌐 Source: <strong style="color:var(--text2);margin-right:6px">${j.source||'Job Portal'}</strong> <a href="${j.jobUrl}" target="_blank" rel="noreferrer">${j.jobUrl}</a></div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap">
+          <div style="font-size:11px;color:var(--muted)">🌐 ${j.source||'Portal'}</div>
+          <a href="${j.jobUrl}" target="_blank" rel="noreferrer" style="font-size:11px;color:var(--p)">View Job Posting →</a>
+          ${j.recruiterEmail?`<span style="font-size:11px;color:var(--g)">📧 ${j.recruiterEmail}</span>`:''}
+        </div>
         <div class="tabs">
-          <button class="tab ${S.tab==='summary'?'active':''}" onclick="setTab('summary')">Summary</button>
-          <button class="tab ${S.tab==='achievements'?'active':''}" onclick="setTab('achievements')">Achievements</button>
-          <button class="tab ${S.tab==='cover'?'active':''}" onclick="setTab('cover')">Cover Letter</button>
-          <button class="tab ${S.tab==='ats'?'active':''}" onclick="setTab('ats')">📊 ATS Score</button>
+          ${[['summary','Summary'],['achieve','Achievements'],['cover','Cover Letter'],['ats','📊 ATS Score'],['email','📧 Email Draft']].map(([t,l])=>`<button class="tab ${S.tab===t?'active':''}" onclick="setTab('${t}')">${l}</button>`).join('')}
         </div>
-        <div>${tabContent()}</div>
+        <div>${getTab()}</div>
         <div class="prev-acts">
-          <button class="${'btn-appr'+(S.approved[j.id]?'':' btn-unappr')}" onclick="toggleAppr('${j.id}')">
-            ${S.approved[j.id]?'✓ Approved — Click to Undo':'Approve Application'}
+          <button class="btn-appr${S.approved[j.id]?'':' btn-unappr'}" onclick="toggleAppr('${j.id}')">
+            ${S.approved[j.id]?'✓ Approved':'Approve Application'}
           </button>
-          ${S.jobIdx<S.tailored.length-1?`<button class="btn btn-ghost btn-sm" onclick="selJob(${S.jobIdx+1})">Next →</button>`:''}
+          <button class="btn btn-p btn-sm" onclick="openApplyModal(${S.jobIdx})">🚀 Smart Apply</button>
+          ${S.jobIdx<S.tailored.length-1?`<button class="btn btn-g btn-sm" onclick="selJob(${S.jobIdx+1})">Next →</button>`:''}
         </div>
       </div>
     </div>
-    ${apprCount===S.tailored.length?`<div class="alert al-green fade-in"><div class="alert-ico">✅</div><div><strong>All ${S.tailored.length} Approved!</strong><p>Ready for your final Placement Report.</p></div></div>`
-    :apprCount>0?`<div class="alert al-warn fade-in"><div class="alert-ico">ℹ️</div><div><strong>${apprCount} of ${S.tailored.length} approved.</strong><p>You can generate the report now or approve more applications.</p></div></div>`:''}
-    <button class="btn btn-primary" style="margin-top:8px" ${apprCount===0?'disabled':''} onclick="showPhase('report')">
-      Generate Report (${apprCount} approved) →
+    ${apprN===S.tailored.length?`<div class="alert al-g fu"><div class="al-ic">✅</div><div class="al-body"><strong>All ${S.tailored.length} Approved!</strong><p>Generate your final Placement Report now.</p></div></div>`:
+    apprN>0?`<div class="alert al-w fu"><div class="al-ic">ℹ️</div><div class="al-body"><strong>${apprN} of ${S.tailored.length} approved.</strong><p>Continue reviewing or generate report now.</p></div></div>`:''}
+    <button class="btn btn-p" style="margin-top:8px" ${apprN===0?'disabled':''} onclick="showPhase('report')">
+      Generate Report (${apprN} approved) →
     </button>`;
 }
 function selJob(i){S.jobIdx=i;S.tab='summary';renderPreview()}
 function setTab(t){S.tab=t;renderPreview()}
 function toggleAppr(id){S.approved[id]=!S.approved[id];renderPreview()}
 
-function atsRing(score,color){
-  const r=32,c=2*Math.PI*r,offset=c-(score/100)*c;
-  return`<div class="ats-ring"><svg width="72" height="72" viewBox="0 0 72 72"><circle class="ring-bg" cx="36" cy="36" r="${r}"/><circle class="ring-fill" cx="36" cy="36" r="${r}" stroke="${color}" stroke-dasharray="${c}" stroke-dashoffset="${offset}"/></svg><div class="ats-num">${score}</div></div>`;
+function atsRing(sc,col){
+  const r=32,c=2*Math.PI*r,off=c-(sc/100)*c;
+  return`<div class="ats-ring"><svg width="70" height="70" viewBox="0 0 70 70"><circle class="ring-bg" cx="35" cy="35" r="${r}"/><circle class="ring-fill" cx="35" cy="35" r="${r}" stroke="${col}" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${off.toFixed(1)}"/></svg><div class="ats-num">${sc}</div></div>`;
 }
 
-// ═══════════════════════════════════════════════════
+// ═══ SMART APPLY MODAL ═══
+function openApplyModal(idx){
+  const j=S.tailored[idx];S.currentJobForApply=j;
+  const p=S.profile;
+  q('apply-job-title').textContent=`${j.title} @ ${j.company}`;
+  // Build apply data clipboard string
+  const clipData=`Name: ${p.name}\nEmail: ${p.contactEmail||'your-email@example.com'}\nPhone: ${p.contactPhone||'your-phone'}\n\nProfessional Summary:\n${j.tailoredSummary}\n\nKey Achievements:\n${(j.keyAchievements||[]).map((a,i)=>`${i+1}. ${a}`).join('\n')}`;
+  q('apply-steps').innerHTML=`
+    <div class="apply-step"><div class="apply-step-n">1</div><div class="apply-step-body"><strong>Open the Job Portal</strong><p>Click the button below to open the application page in a new tab.</p><a href="${j.jobUrl}" target="_blank" class="btn btn-p btn-sm" style="margin-top:6px;display:inline-flex">🌐 Open Job Posting →</a></div></div>
+    <div class="apply-step"><div class="apply-step-n">2</div><div class="apply-step-body"><strong>Copy Your Pre-filled Data</strong><p>Click to copy your tailored profile data — paste it into the application form fields.</p>
+      <div class="copy-box">${clipData}</div>
+      <button class="btn btn-g btn-sm" style="margin-top:6px" onclick="copyToClip(\`${clipData.replace(/`/g,"'")}\`)">📋 Copy All Data</button>
+    </div></div>
+    <div class="apply-step"><div class="apply-step-n">3</div><div class="apply-step-body"><strong>Upload Your Tailored CV</strong><p>When the portal asks for a CV, upload your file. Your CV has been AI-optimised for this role (ATS: ${S.cvAtsBase} → ${j.atsScore}).</p></div></div>
+    <div class="apply-step"><div class="apply-step-n">4</div><div class="apply-step-body"><strong>Paste Cover Letter</strong><p>Copy your cover letter from the Preview tab and paste it into the cover letter field.</p>
+      <button class="btn btn-g btn-sm" onclick="copyToClip(\`${(j.coverLetter||'').replace(/`/g,"'")}\`)">📋 Copy Cover Letter</button>
+    </div></div>`;
+  // Email section
+  const emailSec=q('apply-email-section');
+  if(j.recruiterEmail&&j.recruiterEmail.includes('@')){
+    emailSec.classList.remove('hidden');
+    const mailBody=encodeURIComponent(j.emailBody||'');
+    const mailSubj=encodeURIComponent(j.emailSubject||`Application: ${j.title}`);
+    S.applyMailtoHref=`mailto:${j.recruiterEmail}?subject=${mailSubj}&body=${mailBody}`;
+    q('apply-mail-preview').innerHTML=`<div class="mf">To: ${j.recruiterEmail}</div><div class="mf">Subject: ${j.emailSubject}</div><pre>${j.emailBody}</pre>`;
+  }else{emailSec.classList.add('hidden')}
+  showModal('apply-modal');
+}
+function openMailto(){window.location.href=S.applyMailtoHref}
+function copyMailContent(){
+  const j=S.currentJobForApply;
+  copyToClip(`To: ${j.recruiterEmail}\nSubject: ${j.emailSubject}\n\n${j.emailBody}`);
+}
+function copyToClip(txt){
+  navigator.clipboard.writeText(txt).then(()=>{
+    const t=document.createElement('div');
+    t.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--g);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999;animation:fadeUp .3s ease';
+    t.textContent='✓ Copied to clipboard!';document.body.appendChild(t);
+    setTimeout(()=>t.remove(),2500);
+  }).catch(()=>alert('Please copy manually:\n\n'+txt));
+}
+
+// ═══════════════════════════════════════════
 //  PHASE 7 — REPORT
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 function buildReport(){
-  const el=document.getElementById('phase-report');
+  const el=q('phase-report');el.classList.add('fu');
   const approved=S.tailored.filter(j=>S.approved[j.id]);
   const avg=Math.round(approved.reduce((a,j)=>a+j.matchScore,0)/(approved.length||1));
   const avgAts=Math.round(approved.reduce((a,j)=>a+(j.atsScore||82),0)/(approved.length||1));
-  const countries=[...new Set(approved.map(j=>j.location.split(',').pop().trim()))].length;
-  const hg=approved.filter(j=>j.growthPotential==='High').length;
+  const ctries=[...new Set(approved.map(j=>j.location.split(',').pop().trim()))].length;
   S.expandedRow=-1;
-
   const rows=approved.map((j,i)=>`
-    <tr class="tr-main" onclick="togRow(${i})" id="rw-${i}">
+    <tr class="tr-m" onclick="togRow(${i})" id="rw-${i}">
       <td>${i+1}</td><td><strong>${j.company}</strong></td><td>${j.title}</td>
-      <td>${j.location}</td><td style="color:var(--green);font-weight:600">${j.salaryRange}</td>
-      <td><span class="mbadge ${j.matchScore>=90?'mb-h':j.matchScore>=80?'mb-m':'mb-l'}">${j.matchScore}%</span></td>
-      <td><span class="pill ${j.atsScore>=85?'pl-green':'pl-blue'}">${j.atsScore||82}</span></td>
-      <td><span class="pill ${j.growthPotential==='High'?'pl-green':'pl-gold'}">${j.growthPotential}</span></td>
-      <td><span class="pill pl-sub">✓ Approved</span></td>
+      <td>${j.location}</td><td style="color:var(--g);font-weight:600">${j.salaryRange}</td>
+      <td><span class="mb ${j.matchScore>=90?'mb-h':j.matchScore>=80?'mb-m':'mb-l'}">${j.matchScore}%</span></td>
+      <td><span class="pill ${(j.atsScore||82)>=85?'pl-g':'pl-b'}">${j.atsScore||82}</span></td>
+      <td><span class="pill ${j.growthPotential==='High'?'pl-g':'pl-go'}">${j.growthPotential}</span></td>
+      <td>
+        <button class="btn btn-p btn-sm" onclick="event.stopPropagation();openApplyModal(${S.tailored.indexOf(j)})">🚀 Apply</button>
+      </td>
     </tr>
-    <tr class="tr-exp hidden" id="ex-${i}"><td colspan="9">
-      <div class="exp-inner">
-        <div><h5>Why It Matches</h5><p>${j.whyMatch}</p><h5>Source Portal</h5><p>${j.source||'Job Portal'} · <a href="${j.jobUrl}" target="_blank">Apply Here →</a></p></div>
-        <div><h5>ATS Improvement</h5><p style="color:var(--green);font-weight:600">+${(j.atsScore||82)-S.cvAtsBase} points (${S.cvAtsBase} → ${j.atsScore||82})</p><h5>Keywords Added</h5><div class="tags">${(j.keywordsAdded||[]).map(k=>`<span class="tag tag-green">${k}</span>`).join('')}</div></div>
+    <tr class="tr-x hidden" id="ex-${i}"><td colspan="9">
+      <div class="ex-in">
+        <div><h5>Why Match</h5><p>${j.whyMatch}</p></div>
+        <div><h5>ATS Improvement</h5><p style="color:var(--g);font-weight:700">+${(j.atsScore||82)-S.cvAtsBase} pts (${S.cvAtsBase}→${j.atsScore||82})</p>
+          <h5>Keywords</h5><div class="tags">${(j.keywordsAdded||[]).map(k=>`<span class="tag t-g">${k}</span>`).join('')}</div></div>
+        <div><h5>Apply</h5><p><a href="${j.jobUrl}" target="_blank">View posting →</a></p>
+          ${j.recruiterEmail?`<h5>Recruiter Email</h5><p><a href="mailto:${j.recruiterEmail}">${j.recruiterEmail}</a></p>`:''}
+        </div>
       </div>
     </td></tr>`).join('');
-
-  el.classList.add('fade-in');
   el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-gold">📊</div>
-      <div><h2>Placement Report</h2><p>${approved.length} applications ready · Click rows to expand · All ATS-optimised</p></div>
-    </div>
+    <div class="panel-hdr"><div class="ph-ico ico-go">📊</div><div><h2>Placement Report</h2><p>${approved.length} applications ready · Click rows for details · Click Apply for Smart Apply</p></div></div>
     <div class="stat-row">
       <div class="stat"><span class="stat-n">${approved.length}</span><span class="stat-l">Applications</span></div>
-      <div class="stat"><span class="stat-n">${avg}%</span><span class="stat-l">Avg Match Score</span></div>
+      <div class="stat"><span class="stat-n">${avg}%</span><span class="stat-l">Avg Match</span></div>
       <div class="stat"><span class="stat-n">${avgAts}</span><span class="stat-l">Avg ATS Score</span></div>
-      <div class="stat"><span class="stat-n">${countries}</span><span class="stat-l">Countries</span></div>
+      <div class="stat"><span class="stat-n">${ctries}</span><span class="stat-l">Countries</span></div>
     </div>
     <div class="tbl-wrap">
-      <table>
-        <thead><tr><th>#</th><th>Company</th><th>Role</th><th>Location</th><th>Salary</th><th>Match</th><th>ATS</th><th>Growth</th><th>Status</th></tr></thead>
-        <tbody>${rows}</tbody>
-      </table>
+      <table><thead><tr><th>#</th><th>Company</th><th>Role</th><th>Location</th><th>Salary</th><th>Match</th><th>ATS</th><th>Growth</th><th>Action</th></tr></thead>
+      <tbody>${rows}</tbody></table>
     </div>
-    <div class="agent-note">
-      <span>📋 Compliance Note: All ${approved.length} applications tailored using only verified CV content. No fabricated experience. Personal data not shared outside official portals. ATS scores are AI estimates based on keyword alignment.</span>
-    </div>
-    <div style="display:flex;gap:10px;margin-top:16px">
-      <button class="btn btn-outline" onclick="switchMainTab2('cvbuilder')">📄 Build Professional CV</button>
-      <button class="btn btn-ghost" onclick="showPhase('upload')">↩ New Search</button>
+    <div class="agent-note"><strong>📋 Compliance Note:</strong>&nbsp;All ${approved.length} applications tailored from verified CV data only. No fabrication. ATS scores are AI estimates. Use "Smart Apply" on each row to open the portal and auto-fill your data.</div>
+    <div style="display:flex;gap:10px;margin-top:14px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="gotoTab('cvbuilder')">📄 Build Pro CV</button>
+      <button class="btn btn-g" onclick="showPhase('upload')">↩ New Search</button>
     </div>`;
 }
-function switchMainTab2(t){
-  document.querySelectorAll('.hdr-tab').forEach(b=>b.classList.remove('active'));
-  document.querySelectorAll('.hdr-tab')[t==='placement'?0:1]?.classList.add('active');
-  switchMainTab(t);
-}
 function togRow(i){
-  if(S.expandedRow===i){document.getElementById('ex-'+i)?.classList.add('hidden');S.expandedRow=-1}
-  else{if(S.expandedRow>=0)document.getElementById('ex-'+S.expandedRow)?.classList.add('hidden');document.getElementById('ex-'+i)?.classList.remove('hidden');S.expandedRow=i}
+  if(S.expandedRow===i){q('ex-'+i)?.classList.add('hidden');S.expandedRow=-1}
+  else{if(S.expandedRow>=0)q('ex-'+S.expandedRow)?.classList.add('hidden');q('ex-'+i)?.classList.remove('hidden');S.expandedRow=i}
 }
 
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
 //  CV BUILDER TAB
-// ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════
+const TMPLS=[{id:'modern',n:'Modern Blue',c:'tp-modern'},{id:'classic',n:'Classic',c:'tp-classic'},{id:'executive',n:'Executive',c:'tp-executive'},{id:'minimal',n:'Minimal',c:'tp-minimal'},{id:'creative',n:'Creative',c:'tp-creative'},{id:'compact',n:'Compact',c:'tp-compact'}];
 let _cvFile=null;
 function buildCVBuilder(){
-  const el=document.getElementById('cv-builder-panel');
-  el.classList.add('fade-in');
+  const el=q('cvb-panel');el.classList.add('fu');
   el.innerHTML=`
-    <div class="panel-hdr">
-      <div class="phase-ico ico-purple">📄</div>
-      <div><h2>Professional CV Builder</h2><p>Upload your existing CV, choose a template, and let AI generate a polished, ATS-optimised version.</p></div>
+    <div class="panel-hdr"><div class="ph-ico ico-p">📄</div><div><h2>Professional CV Builder</h2><p>Upload your existing CV, choose a template, edit sections, then download as PDF.</p></div></div>
+    <div class="sdiv"><span>Step 1 — Source CV</span></div>
+    <div class="dz" id="cvdz" ondragover="cvDzDrag(event,true)" ondragleave="cvDzDrag(event,false)" ondrop="cvDzDrop(event)" onclick="q('cvfi').click()">
+      <div class="dz-ic">📎</div><div class="dz-t">${S.cvText?'CV loaded from your profile — drop new to replace':'Drop your CV here or click to browse'}</div>
+      <div class="dz-s">PDF or TXT · Or use profile CV below</div>
     </div>
-
-    <div class="section-div"><span>Step 1 — Upload Source CV</span></div>
-    <div class="dz" id="cv-dz" ondragover="doCvDrag(event,true)" ondragleave="doCvDrag(event,false)" ondrop="doCvDrop(event)" onclick="document.getElementById('cv-fi').click()">
-      <div class="dz-ico">📎</div>
-      <div class="dz-t">Drop existing CV to reformat</div>
-      <div class="dz-s">PDF or TXT · Or skip to generate from profile</div>
-    </div>
-    <input type="file" id="cv-fi" accept=".pdf,.txt" style="display:none" onchange="onCvFile(event)"/>
-
-    <div class="section-div"><span>Step 2 — Choose Template</span></div>
-    <div class="tmpl-grid" id="tmpl-grid">
-      ${TEMPLATES.map(t=>`
-        <div class="tmpl-card ${S.cvTemplate===t.id?'sel':''}" onclick="selTmpl('${t.id}')">
-          <div class="tmpl-preview ${t.cls}"></div>
-          <div class="tmpl-name">${t.name}</div>
-        </div>`).join('')}
-    </div>
-
-    <div class="section-div"><span>Step 3 — Target Role (optional)</span></div>
+    <input type="file" id="cvfi" accept=".pdf,.txt" style="display:none" onchange="onCvFile(event)"/>
+    <div class="sdiv"><span>Step 2 — Choose Template</span></div>
+    <div class="tmpl-grid">${TMPLS.map(t=>`<div class="tmpl-c ${S.cvTemplate===t.id?'sel':''}" onclick="selTmpl('${t.id}')"><div class="tmpl-prev ${t.c}"></div><div class="tmpl-nm">${t.n}</div></div>`).join('')}</div>
+    <div class="sdiv"><span>Step 3 — Target Role</span></div>
     <div class="field-row">
-      <div class="field"><label>Target Job Title</label><input type="text" id="cv-jobtitle" placeholder="e.g. Head of Underwriting, VP Finance" value="${S.profile?.currentTitle||''}"/></div>
-      <div class="field"><label>Target Industry</label><input type="text" id="cv-industry" placeholder="e.g. Life Insurance, FinTech" value="${S.prefs.industries[0]||''}"/></div>
+      <div class="field"><label>Target Job Title</label><input type="text" id="cv-jt" placeholder="e.g. Head of Underwriting" value="${S.profile?.currentTitle||''}"/></div>
+      <div class="field"><label>Target Industry</label><input type="text" id="cv-ind" placeholder="e.g. Life Insurance, FinTech" value="${S.prefs.industries[0]||''}"/></div>
     </div>
-
-    <div id="cv-ats-before" style="display:none">
-      <div class="section-div"><span>Current ATS Score</span></div>
-      <div class="ats-wrap" style="max-width:320px">
-        <div class="ats-card"><div class="lbl">Before Optimisation</div>${atsRing(S.cvAtsBase||55,'#ea580c')}</div>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" id="cv-gen-btn" onclick="generateCV()" style="margin-top:8px">
-      🤖 Generate Professional CV
-    </button>
-
-    <div id="cv-output" style="margin-top:24px"></div>`;
-
-  if(S.profile){
-    document.getElementById('cv-ats-before').style.display='block';
-  }
+    ${S.cvAtsBase?`<div class="alert al-w" style="margin-top:4px"><div class="al-ic">📊</div><div class="al-body"><strong>Current ATS Score: ${S.cvAtsBase}/100</strong><p>Generating a new CV will improve this score.</p></div></div>`:''}
+    <button class="btn btn-p" onclick="generateCV()" style="margin-top:6px">🤖 Generate AI CV</button>
+    <div id="cv-out" style="margin-top:20px"></div>`;
 }
-
-function doCvDrag(e,on){e.preventDefault();document.getElementById('cv-dz')?.classList.toggle('drag',on)}
-function doCvDrop(e){e.preventDefault();document.getElementById('cv-dz')?.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleCvFile(f)}
-function onCvFile(e){if(e.target.files[0])handleCvFile(e.target.files[0])}
-function handleCvFile(f){
+function cvDzDrag(e,on){e.preventDefault();q('cvdz')?.classList.toggle('drag',on)}
+function cvDzDrop(e){e.preventDefault();q('cvdz')?.classList.remove('drag');const f=e.dataTransfer.files[0];if(f)handleCvUpload(f)}
+function onCvFile(e){if(e.target.files[0])handleCvUpload(e.target.files[0])}
+async function handleCvUpload(f){
   _cvFile=f;
-  const dz=document.getElementById('cv-dz');
-  dz.classList.add('has-file');
-  dz.innerHTML=`<div class="dz-ok">✅ ${f.name} <span style="font-size:11px;color:var(--muted)">(${(f.size/1024).toFixed(1)} KB)</span></div>`;
+  const dz=q('cvdz');dz.classList.add('ok');
+  dz.innerHTML=`<div class="dz-ok">✅ ${f.name}</div>`;
+  if(f.type==='application/pdf'||f.name.endsWith('.pdf')){
+    const b64=await toB64(f);
+    S.cvText=await geminiPDF(b64,'application/pdf','Extract all text.').catch(()=>'');
+  }else{S.cvText=await f.text().catch(()=>'')}
+  S.cvText=S.cvText.slice(0,5000);
 }
 function selTmpl(id){
   S.cvTemplate=id;
-  document.querySelectorAll('.tmpl-card').forEach(c=>{
-    c.classList.toggle('sel',c.getAttribute('onclick').includes(`'${id}'`));
+  document.querySelectorAll('.tmpl-c').forEach(c=>{
+    c.classList.toggle('sel',c.querySelector('.tmpl-nm')?.textContent===TMPLS.find(t=>t.id===id)?.n);
   });
 }
-
 async function generateCV(){
-  const btn=document.getElementById('cv-gen-btn');
-  btn.disabled=true;btn.textContent='⟳ Generating...';
-  const out=document.getElementById('cv-output');
-  out.innerHTML=`<div class="log" id="cv-log"><span class="l-ok">▶ CV generation started...</span></div>`;
-  const clog=(cls,msg)=>{const b=document.getElementById('cv-log');if(!b)return;const d=document.createElement('div');d.className=cls;d.textContent=msg;b.appendChild(d);b.scrollTop=b.scrollHeight};
-
+  const out=q('cv-out');
+  out.innerHTML=`<div class="log" id="cvlog"><span class="l-ok">▶ Generating CV...<br/></span></div>`;
+  const lg=(c,m)=>{const b=q('cvlog');if(!b)return;const d=document.createElement('span');d.className=c;d.textContent=m+'\n';b.appendChild(d);b.scrollTop=b.scrollHeight};
   try{
-    let srcText=S.cvText||'';
-    if(_cvFile&&!srcText){
-      clog('l-info','📄 Reading uploaded CV...');
-      if(_cvFile.type==='application/pdf'||_cvFile.name.endsWith('.pdf')){
-        const b64=await toB64(_cvFile);
-        srcText=await geminiPDF(b64,'application/pdf','Extract all text from this CV.');
-      }else{srcText=await _cvFile.text()}
-    }
-    const jobTitle=document.getElementById('cv-jobtitle')?.value||S.profile?.currentTitle||'Professional';
-    const industry=document.getElementById('cv-industry')?.value||'General';
-    const tmplName=TEMPLATES.find(t=>t.id===S.cvTemplate)?.name||'Modern Blue';
-
-    clog('l-info',`🎨 Template: ${tmplName}`);await sleep(200);
-    clog('l-info','🧠 Generating optimised CV content...');
-
+    if(!S.apiKey)throw new Error('Connect your Gemini API key first.');
+    lg('l-info','🧠 Analysing CV content...');
+    const jt=q('cv-jt')?.value||S.profile?.currentTitle||'Professional';
+    const ind=q('cv-ind')?.value||'General';
     const raw=await gemini(
-      `Create a complete, ATS-optimised professional CV for the following candidate. Target role: ${jobTitle}. Industry: ${industry}.\n\n${srcText?'SOURCE CV:\n'+srcText.slice(0,3000):''}\n${S.profile?`PROFILE: ${JSON.stringify(S.profile)}`:''}\n\nReturn ONLY valid JSON — no markdown:\n{"name":"","email":"","phone":"","location":"","linkedin":"linkedin.com/in/profile","summary":"4-sentence professional summary","experience":[{"role":"","company":"","period":"","achievements":["ach1","ach2","ach3"]}],"education":[{"degree":"","institution":"","year":""}],"skills":["s1","s2","s3","s4","s5","s6","s7","s8"],"certifications":["c1","c2"],"languages":["l1"],"atsScore":number between 80-96,"atsKeywords":["k1","k2","k3","k4","k5"]}`,
-      'You are a professional CV writer and ATS specialist. Generate realistic, professional CV content. Return ONLY raw JSON.',2500
-    );
-    const cv=parseJSON(raw,{name:S.profile?.name||'Candidate',summary:'Experienced professional.',experience:[],education:[],skills:[],certifications:[],languages:['English'],atsScore:85,atsKeywords:[]});
-    S.cvGenerated=cv;
-    S.cvAtsNew=cv.atsScore;
-    clog('l-ok',`✓ CV generated. ATS Score: ${cv.atsScore}/100`);
-    clog('l-ok','✔ Ready to download or copy.');
-
-    out.innerHTML=`
-      <div class="section-div"><span>ATS Score Comparison</span></div>
-      <div class="ats-wrap" style="max-width:400px">
-        <div class="ats-card"><div class="lbl">Original CV</div>${atsRing(S.cvAtsBase||55,'#ea580c')}</div>
-        <div class="ats-card"><div class="lbl">New CV</div>${atsRing(cv.atsScore,'#059669')}<div class="ats-change up">▲ +${cv.atsScore-(S.cvAtsBase||55)} pts</div></div>
-      </div>
-      <div class="section-div"><span>Generated CV — ${tmplName} Template</span></div>
-      <div id="cv-rendered">${renderCVTemplate(cv,S.cvTemplate)}</div>
-      <div style="margin-top:16px;display:flex;gap:10px;flex-wrap:wrap">
-        <button class="btn btn-primary" onclick="copyCV()">📋 Copy CV Text</button>
-        <button class="btn btn-outline" onclick="buildCVBuilder()">🔄 Regenerate</button>
-      </div>
-      <div style="margin-top:12px;font-size:12px;color:var(--muted)">💡 Keywords boosting ATS score: ${(cv.atsKeywords||[]).map(k=>`<span class="tag tag-green" style="font-size:11px">${k}</span>`).join(' ')}</div>`;
+      `Create a complete ATS-optimised professional CV. Target: ${jt} in ${ind}.\n\n${S.cvText?'SOURCE CV:\n'+S.cvText.slice(0,3000):''}${S.profile?'\nPROFILE: '+JSON.stringify(S.profile):''}\n\nReturn ONLY valid JSON — no markdown:\n{"name":"","email":"","phone":"","location":"","linkedin":"","summary":"4-sentence professional summary","experience":[{"role":"","company":"","period":"","achievements":["ach1","ach2","ach3"]}],"education":[{"degree":"","institution":"","year":""}],"skills":["s1","s2","s3","s4","s5","s6","s7","s8"],"certifications":["c1","c2"],"languages":["English"],"atsScore":88,"atsKeywords":["k1","k2","k3","k4","k5"]}`,
+      'Professional CV writer and ATS specialist. Return ONLY raw JSON.',2500);
+    const cv=parseJ(raw,{name:S.profile?.name||'Your Name',email:S.profile?.contactEmail||'email@example.com',phone:S.profile?.contactPhone||'+XX XXX XXX XXXX',location:S.country||'',linkedin:'',summary:'Experienced professional.',experience:[],education:[],skills:[],certifications:[],languages:['English'],atsScore:88,atsKeywords:[]});
+    S.cvData=cv;S.cvAtsNew=cv.atsScore;
+    lg('l-ok',`✓ CV generated. ATS Score: ${cv.atsScore}/100 (+${cv.atsScore-S.cvAtsBase} improvement)`);
+    lg('l-ok','✔ Edit fields below, then download as PDF.');
+    renderCVEditor(cv,out);
   }catch(e){
-    out.innerHTML=`<div class="alert" style="background:var(--red-lt);border:1px solid var(--red);border-radius:8px;padding:12px;margin-top:8px;font-size:13px;color:var(--red)">❌ ${e.message}</div>`;
+    out.innerHTML=`<div class="alert al-r"><div class="al-ic">❌</div><div class="al-body"><strong>Error</strong><p>${e.message}</p></div></div>`;
   }
-  btn.disabled=false;btn.textContent='🤖 Generate Professional CV';
 }
 
-function renderCVTemplate(cv,tmpl){
-  const styles={
-    modern:`background:#fff;border:1px solid var(--border);border-radius:10px;overflow:hidden;font-size:12px;line-height:1.6;`,
-    classic:`background:#fff;border:1px solid var(--border);border-radius:6px;padding:24px;font-size:12px;`,
-    executive:`background:linear-gradient(180deg,#1e3a5f 100px,#f8fafc 100px);border-radius:10px;overflow:hidden;font-size:12px;`,
-    minimal:`background:#fafafa;border-left:3px solid var(--primary);border-radius:0;padding:20px;font-size:12px;`,
-    creative:`background:linear-gradient(135deg,#7c3aed,#0ea5e9);border-radius:10px;overflow:hidden;font-size:12px;`,
-    compact:`background:#fff;border:1px solid var(--border);border-radius:6px;font-size:11px;`
-  };
-  const hdrStyle=tmpl==='executive'?'color:#fff;padding:20px;':'color:var(--text);padding:20px 20px 12px;border-bottom:2px solid var(--primary);';
-  const hdrStyle2=tmpl==='creative'||tmpl==='executive'?'color:rgba(255,255,255,.8)':'color:var(--muted)';
-  const bodyPad=tmpl==='executive'?'background:#f8fafc;':'';
-
-  const expHtml=(cv.experience||[]).map(e=>`
-    <div style="margin-bottom:12px">
-      <div style="font-weight:700;font-size:13px">${e.role}</div>
-      <div style="color:var(--primary);font-size:11px;margin-bottom:4px">${e.company} · ${e.period}</div>
-      <ul style="padding-left:14px;color:var(--text2)">${(e.achievements||[]).map(a=>`<li>${a}</li>`).join('')}</ul>
-    </div>`).join('');
-
-  return`<div style="${styles[tmpl]||styles.modern}max-width:700px;">
-    <div style="${hdrStyle}">
-      <div style="font-size:20px;font-weight:800;font-family:var(--font-d)">${cv.name||'Your Name'}</div>
-      <div style="${hdrStyle2};font-size:12px;margin-top:3px">${cv.email||'email@example.com'} · ${cv.phone||'+XX XXX XXX XXXX'} · ${cv.location||'Location'}</div>
-      <div style="${hdrStyle2};font-size:11px">${cv.linkedin||''}</div>
+function renderCVEditor(cv,container){
+  const tmplName=TMPLS.find(t=>t.id===S.cvTemplate)?.n||'Modern Blue';
+  container.innerHTML=`
+    <div class="sdiv"><span>📊 ATS Comparison</span></div>
+    <div class="ats-wrap" style="max-width:380px">
+      <div class="ats-card"><div class="ats-lbl">Original CV</div>${atsRing(S.cvAtsBase||55,'#c2410c')}</div>
+      <div class="ats-card"><div class="ats-lbl">New CV</div>${atsRing(cv.atsScore,'#047857')}<div class="ats-ch up">▲ +${cv.atsScore-(S.cvAtsBase||55)} pts</div></div>
     </div>
-    <div style="padding:16px 20px;${bodyPad}">
-      <div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--primary);margin-bottom:5px">Professional Summary</div><p style="color:var(--text2)">${cv.summary||''}</p></div>
-      <div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--primary);margin-bottom:5px">Experience</div>${expHtml||'<p style="color:var(--muted)">Experience will appear here</p>'}</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
-        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--primary);margin-bottom:6px">Skills</div><div style="display:flex;flex-wrap:wrap;gap:4px">${(cv.skills||[]).map(s=>`<span class="tag tag-blue">${s}</span>`).join('')}</div></div>
-        <div><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--primary);margin-bottom:6px">Education</div>${(cv.education||[]).map(e=>`<div style="font-size:12px"><strong>${e.degree}</strong><br><span style="color:var(--muted)">${e.institution} · ${e.year}</span></div>`).join('')}</div>
+    <div class="sdiv"><span>✏️ Edit Your CV — ${tmplName} Template</span></div>
+    <div class="cv-editor">
+      <h4>📝 Personal Details</h4>
+      <div class="ce-section">
+        <div class="field-row3">
+          <div><label>Full Name</label><input id="ce-name" value="${cv.name}"/></div>
+          <div><label>Email</label><input id="ce-email" value="${cv.email}"/></div>
+          <div><label>Phone</label><input id="ce-phone" value="${cv.phone}"/></div>
+        </div>
+        <div class="field-row" style="margin-top:8px">
+          <div><label>Location</label><input id="ce-loc" value="${cv.location}"/></div>
+          <div><label>LinkedIn</label><input id="ce-li" value="${cv.linkedin||''}"/></div>
+        </div>
       </div>
-      ${(cv.certifications||[]).length?`<div style="margin-top:12px"><div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--primary);margin-bottom:5px">Certifications</div><div style="display:flex;gap:5px;flex-wrap:wrap">${cv.certifications.map(c=>`<span class="tag tag-gold">${c}</span>`).join('')}</div></div>`:''}
+      <h4>📋 Professional Summary</h4>
+      <div class="ce-section">
+        <label>Summary</label><textarea id="ce-sum" rows="4">${cv.summary}</textarea>
+      </div>
+      <h4>💼 Experience</h4>
+      <div id="ce-exp-wrap">
+        ${(cv.experience||[]).map((e,i)=>`
+          <div class="exp-entry" id="exp-${i}">
+            <button class="exp-del" onclick="delExp(${i})">✕</button>
+            <div class="field-row3" style="margin-bottom:8px">
+              <div><label>Role</label><input id="er-${i}" value="${e.role}"/></div>
+              <div><label>Company</label><input id="ec-${i}" value="${e.company}"/></div>
+              <div><label>Period</label><input id="ep-${i}" value="${e.period}"/></div>
+            </div>
+            <label>Achievements (one per line)</label>
+            <textarea id="ea-${i}" rows="3">${(e.achievements||[]).join('\n')}</textarea>
+          </div>`).join('')}
+      </div>
+      <button class="add-more" onclick="addExp()">+ Add Experience</button>
+      <h4 style="margin-top:16px">🎓 Education</h4>
+      <div id="ce-edu-wrap">
+        ${(cv.education||[]).map((e,i)=>`
+          <div class="exp-entry" id="edu-${i}">
+            <button class="exp-del" onclick="delEdu(${i})">✕</button>
+            <div class="field-row3">
+              <div><label>Degree</label><input id="ed-${i}" value="${e.degree}"/></div>
+              <div><label>Institution</label><input id="ei-${i}" value="${e.institution}"/></div>
+              <div><label>Year</label><input id="ey-${i}" value="${e.year}"/></div>
+            </div>
+          </div>`).join('')}
+      </div>
+      <button class="add-more" onclick="addEdu()">+ Add Education</button>
+      <h4 style="margin-top:16px">🛠 Skills & Certifications</h4>
+      <div class="ce-section">
+        <label>Skills (comma-separated)</label>
+        <input id="ce-skills" value="${(cv.skills||[]).join(', ')}"/>
+        <label style="margin-top:10px">Certifications (comma-separated)</label>
+        <input id="ce-certs" value="${(cv.certifications||[]).join(', ')}"/>
+        <label style="margin-top:10px">Languages</label>
+        <input id="ce-langs" value="${(cv.languages||[]).join(', ')}"/>
+      </div>
+    </div>
+    <div style="margin-top:14px;font-size:12px;color:var(--muted)">
+      💡 ATS Keywords: ${(cv.atsKeywords||[]).map(k=>`<span class="tag t-g">${k}</span>`).join(' ')}
+    </div>
+    <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+      <button class="btn btn-p" onclick="downloadCVpdf()">⬇️ Download PDF</button>
+      <button class="btn btn-o" onclick="downloadCVtxt()">📄 Download TXT</button>
+      <button class="btn btn-g" onclick="copyCVtxt()">📋 Copy to Clipboard</button>
+    </div>`;
+}
+
+function collectCVFromEditor(){
+  const exp=[];
+  document.querySelectorAll('[id^="er-"]').forEach((_,i)=>{
+    exp.push({role:q('er-'+i)?.value||'',company:q('ec-'+i)?.value||'',period:q('ep-'+i)?.value||'',achievements:(q('ea-'+i)?.value||'').split('\n').filter(Boolean)});
+  });
+  const edu=[];
+  document.querySelectorAll('[id^="ed-"]').forEach((_,i)=>{
+    edu.push({degree:q('ed-'+i)?.value||'',institution:q('ei-'+i)?.value||'',year:q('ey-'+i)?.value||''});
+  });
+  return{
+    name:q('ce-name')?.value||S.cvData?.name||'',
+    email:q('ce-email')?.value||'',phone:q('ce-phone')?.value||'',
+    location:q('ce-loc')?.value||'',linkedin:q('ce-li')?.value||'',
+    summary:q('ce-sum')?.value||'',experience:exp,education:edu,
+    skills:(q('ce-skills')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    certifications:(q('ce-certs')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    languages:(q('ce-langs')?.value||'').split(',').map(s=>s.trim()).filter(Boolean),
+    atsScore:S.cvData?.atsScore||88,atsKeywords:S.cvData?.atsKeywords||[]
+  };
+}
+
+let _expCount=0,_eduCount=0;
+function addExp(){
+  const w=q('ce-exp-wrap');
+  const i=Date.now();
+  const d=document.createElement('div');d.className='exp-entry';d.id='exp-'+i;
+  d.innerHTML=`<button class="exp-del" onclick="this.parentElement.remove()">✕</button>
+    <div class="field-row3" style="margin-bottom:8px">
+      <div><label>Role</label><input id="er-${i}" placeholder="Job Title"/></div>
+      <div><label>Company</label><input id="ec-${i}" placeholder="Company Name"/></div>
+      <div><label>Period</label><input id="ep-${i}" placeholder="2020 – Present"/></div>
+    </div>
+    <label>Achievements (one per line)</label>
+    <textarea id="ea-${i}" rows="3" placeholder="• Achievement 1\n• Achievement 2"></textarea>`;
+  w.appendChild(d);
+}
+function delExp(i){q('exp-'+i)?.remove()}
+function addEdu(){
+  const w=q('ce-edu-wrap');const i=Date.now();
+  const d=document.createElement('div');d.className='exp-entry';d.id='edu-'+i;
+  d.innerHTML=`<button class="exp-del" onclick="this.parentElement.remove()">✕</button>
+    <div class="field-row3">
+      <div><label>Degree</label><input id="ed-${i}" placeholder="MBA / B.Tech"/></div>
+      <div><label>Institution</label><input id="ei-${i}" placeholder="University Name"/></div>
+      <div><label>Year</label><input id="ey-${i}" placeholder="2018"/></div>
+    </div>`;
+  w.appendChild(d);
+}
+function delEdu(i){q('edu-'+i)?.remove()}
+
+function buildCVText(cv){
+  return`${cv.name}
+${cv.email} | ${cv.phone} | ${cv.location}${cv.linkedin?' | '+cv.linkedin:''}
+
+PROFESSIONAL SUMMARY
+${cv.summary}
+
+EXPERIENCE
+${(cv.experience||[]).map(e=>`${e.role} — ${e.company} (${e.period})\n${(e.achievements||[]).map(a=>'• '+a).join('\n')}`).join('\n\n')}
+
+EDUCATION
+${(cv.education||[]).map(e=>`${e.degree} — ${e.institution} (${e.year})`).join('\n')}
+
+SKILLS
+${(cv.skills||[]).join(' • ')}
+
+${cv.certifications?.length?`CERTIFICATIONS\n${cv.certifications.join(', ')}\n\n`:''}${cv.languages?.length?`LANGUAGES\n${cv.languages.join(', ')}`:''}`;
+}
+function downloadCVtxt(){
+  const cv=collectCVFromEditor();
+  const txt=buildCVText(cv);
+  const a=document.createElement('a');
+  a.href='data:text/plain;charset=utf-8,'+encodeURIComponent(txt);
+  a.download=(cv.name||'CV').replace(/\s+/g,'_')+'_CareerAxis.txt';
+  a.click();
+}
+function copyCVtxt(){
+  const cv=collectCVFromEditor();
+  copyToClip(buildCVText(cv));
+}
+async function downloadCVpdf(){
+  const cv=collectCVFromEditor();
+  const tmpl=TMPLS.find(t=>t.id===S.cvTemplate)||TMPLS[0];
+  try{
+    const {jsPDF}=window.jspdf;
+    const doc=new jsPDF({orientation:'portrait',unit:'mm',format:'a4'});
+    const W=210,ml=18,mr=18,tw=W-ml-mr;
+    let y=0;
+    // Template-specific header
+    if(S.cvTemplate==='modern'||S.cvTemplate==='executive'||S.cvTemplate==='creative'){
+      doc.setFillColor(29,78,216);doc.rect(0,0,W,42,'F');
+      doc.setTextColor(255,255,255);
+      doc.setFontSize(20);doc.setFont('helvetica','bold');
+      doc.text(cv.name||'Your Name',ml,18);
+      doc.setFontSize(10);doc.setFont('helvetica','normal');
+      doc.text(`${cv.email} | ${cv.phone} | ${cv.location}`,ml,26);
+      if(cv.linkedin)doc.text(cv.linkedin,ml,33);
+      y=50;
+    }else if(S.cvTemplate==='minimal'){
+      doc.setDrawColor(29,78,216);doc.setLineWidth(1);doc.line(0,0,0,297);
+      doc.setTextColor(15,30,61);doc.setFontSize(22);doc.setFont('helvetica','bold');
+      doc.text(cv.name||'Your Name',ml,20);
+      doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(112,136,180);
+      doc.text(`${cv.email} | ${cv.phone} | ${cv.location}`,ml,28);
+      doc.setDrawColor(220,230,248);doc.setLineWidth(.3);doc.line(ml,32,W-mr,32);
+      y=40;
+    }else{
+      doc.setFillColor(238,243,255);doc.rect(0,0,W,36,'F');
+      doc.setTextColor(15,30,61);doc.setFontSize(20);doc.setFont('helvetica','bold');
+      doc.text(cv.name||'Your Name',ml,16);
+      doc.setFontSize(9);doc.setFont('helvetica','normal');doc.setTextColor(112,136,180);
+      doc.text(`${cv.email} | ${cv.phone} | ${cv.location}`,ml,24);
+      y=42;
+    }
+    const addSection=(title,content)=>{
+      if(y>260){doc.addPage();y=20}
+      doc.setFontSize(9);doc.setFont('helvetica','bold');
+      doc.setTextColor(29,78,216);doc.text(title.toUpperCase(),ml,y);
+      doc.setDrawColor(29,78,216);doc.setLineWidth(.4);doc.line(ml,y+1.5,W-mr,y+1.5);
+      y+=7;
+      doc.setTextColor(15,30,61);doc.setFont('helvetica','normal');doc.setFontSize(9);
+      const lines=doc.splitTextToSize(content,tw);
+      lines.forEach(l=>{if(y>270){doc.addPage();y=20}doc.text(l,ml,y);y+=5});
+      y+=3;
+    };
+    addSection('Professional Summary',cv.summary||'');
+    (cv.experience||[]).forEach(e=>{
+      if(y>260){doc.addPage();y=20}
+      doc.setFont('helvetica','bold');doc.setFontSize(9.5);doc.setTextColor(15,30,61);doc.text(e.role,ml,y);
+      doc.setFont('helvetica','normal');doc.setFontSize(8.5);doc.setTextColor(112,136,180);doc.text(`${e.company} · ${e.period}`,ml,y+5);
+      y+=10;
+      (e.achievements||[]).forEach(a=>{
+        if(y>270){doc.addPage();y=20}
+        const lines=doc.splitTextToSize('• '+a,tw-4);
+        lines.forEach(l=>{doc.text(l,ml+2,y);y+=4.5});
+      });
+      y+=3;
+    });
+    if(cv.education?.length){
+      const edStr=(cv.education||[]).map(e=>`${e.degree} — ${e.institution} (${e.year})`).join('\n');
+      addSection('Education',edStr);
+    }
+    if(cv.skills?.length)addSection('Skills',cv.skills.join(' • '));
+    if(cv.certifications?.length)addSection('Certifications',cv.certifications.join(', '));
+    if(cv.languages?.length)addSection('Languages',cv.languages.join(', '));
+    // Footer
+    doc.setFontSize(7);doc.setTextColor(180,200,235);
+    doc.text(`Generated by CareerAxis AI · ATS Score: ${cv.atsScore}/100`,ml,290);
+    doc.save((cv.name||'CV').replace(/\s+/g,'_')+'_CareerAxis_'+tmpl.n.replace(/\s/g,'')+'.pdf');
+  }catch(err){
+    alert('PDF generation error: '+err.message+'. Try downloading as TXT instead.');
+  }
+}
+
+// ═══════════════════════════════════════════
+//  PROFILE TAB
+// ═══════════════════════════════════════════
+function buildProfileTab(){
+  const el=q('profile-tab-content');el.classList.add('fu');
+  if(!S.user){el.innerHTML='<p>Please sign in.</p>';return}
+  const u=S.db.users[S.user.email];
+  const apps=u.applications||[];
+  const plan=u.plan==='pro'?`<span class="pro-badge">⭐ Pro Plan</span>`:`<span class="trial-badge">${3-(u.trialsUsed||0)} free searches left</span>`;
+  el.innerHTML=`
+    <div class="profile-page-hdr">
+      <div class="pp-av">${(u.firstName||'U')[0]}</div>
+      <div class="pp-info">
+        <h2>${u.firstName} ${u.lastName}</h2>
+        <p>${u.title||'Professional'} · ${u.email}</p>
+        <div style="margin-top:6px">${plan}</div>
+      </div>
+    </div>
+    <div class="pp-grid">
+      <div class="pp-card">
+        <h4>👤 Account Details</h4>
+        <div class="form-group"><label>First Name</label><input id="pp-fn" value="${u.firstName}"/></div>
+        <div class="form-group"><label>Last Name</label><input id="pp-ln" value="${u.lastName}"/></div>
+        <div class="form-group"><label>Job Title</label><input id="pp-title" value="${u.title||''}"/></div>
+        <div class="form-group"><label>Email</label><input value="${u.email}" disabled style="opacity:.6"/></div>
+        <button class="btn btn-p btn-sm" onclick="saveProfileDetails()">💾 Save Changes</button>
+      </div>
+      <div class="pp-card">
+        <h4>📊 Activity Summary</h4>
+        <div class="stat-row" style="grid-template-columns:1fr 1fr">
+          <div class="stat"><span class="stat-n">${apps.length}</span><span class="stat-l">Applications</span></div>
+          <div class="stat"><span class="stat-n">${3-(u.trialsUsed||0)}</span><span class="stat-l">Searches Left</span></div>
+        </div>
+        ${u.plan!=='pro'?`<div style="margin-top:12px"><button class="btn btn-p btn-full" onclick="gotoTab('pricing')">⭐ Upgrade to Pro</button></div>`:''}
+      </div>
+    </div>
+    ${apps.length?`
+    <div class="panel" style="margin-top:16px">
+      <h4 style="font-family:var(--fd);font-size:16px;margin-bottom:14px">📋 Recent Applications</h4>
+      <div class="tbl-wrap">
+        <table><thead><tr><th>#</th><th>Company</th><th>Role</th><th>Location</th><th>Match</th><th>ATS</th><th>Date</th><th>Status</th></tr></thead>
+        <tbody>${apps.map((a,i)=>`<tr class="tr-m"><td>${i+1}</td><td>${a.company}</td><td>${a.title}</td><td>${a.location}</td><td><span class="mb ${a.matchScore>=90?'mb-h':'mb-m'}">${a.matchScore}%</span></td><td>${a.atsScore||'-'}</td><td>${a.appliedDate||'-'}</td><td><span class="pill pl-g">${a.status}</span></td></tr>`).join('')}</tbody>
+        </table>
+      </div>
+    </div>`:''}
+    <div class="panel" style="margin-top:16px">
+      <h4 style="font-family:var(--fd);font-size:16px;margin-bottom:14px">🔑 API Key</h4>
+      <div class="form-group"><label>Gemini API Key</label>
+        <div class="inp-ico"><input type="password" id="pp-api" placeholder="AIza•••" value="${S.apiKey}"/>
+        <button class="eye" onclick="toggleEye('pp-api')">👁</button></div>
+      </div>
+      <button class="btn btn-p btn-sm" onclick="saveApiFromProfile()">Save Key</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:8px">Get free key: <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--p)">aistudio.google.com</a></p>
+    </div>
+    <div style="margin-top:16px"><button class="btn btn-red btn-sm" onclick="doLogout()">Sign Out</button></div>`;
+}
+function saveProfileDetails(){
+  const u=S.db.users[S.user.email];
+  u.firstName=q('pp-fn')?.value||u.firstName;
+  u.lastName=q('pp-ln')?.value||u.lastName;
+  u.title=q('pp-title')?.value||u.title;
+  saveDB();
+  document.getElementById('user-name-hdr').textContent=u.firstName;
+  document.getElementById('user-av').textContent=(u.firstName||'U')[0].toUpperCase();
+  const t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--g);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999';t.textContent='✓ Profile saved!';document.body.appendChild(t);setTimeout(()=>t.remove(),2000);
+}
+async function saveApiFromProfile(){
+  const key=q('pp-api')?.value.trim();
+  if(!key)return;
+  try{
+    S.apiKey=key;
+    await gemini('Say OK','',5);
+    q('api-dot').classList.add('ok');q('api-txt').textContent='Gemini ✓';
+    const t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--g);color:#fff;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;z-index:9999';t.textContent='✓ API key saved!';document.body.appendChild(t);setTimeout(()=>t.remove(),2000);
+  }catch(e){S.apiKey='';alert('Key verification failed: '+e.message)}
+}
+
+// ═══════════════════════════════════════════
+//  PRICING TAB
+// ═══════════════════════════════════════════
+function buildPricingTab(){
+  const el=q('pricing-content');el.classList.add('fu');
+  el.innerHTML=`
+    <div style="text-align:center;margin-bottom:28px">
+      <h2 style="font-family:var(--fd);font-size:28px;margin-bottom:8px">Simple, Transparent Pricing</h2>
+      <p style="color:var(--muted);font-size:14px">Start free. Upgrade when you're ready to accelerate your job search.</p>
+    </div>
+    <div class="pricing-grid">
+      <div class="plan-card">
+        <div class="plan-name">Free Starter</div>
+        <div class="plan-price">₹0 <span>/ forever</span></div>
+        <div class="plan-sub">3 AI job searches included</div>
+        <ul class="plan-feats">
+          <li>3 complete job search sessions</li>
+          <li>AI CV analysis & Master Profile</li>
+          <li>10 tailored applications per search</li>
+          <li>ATS score before & after</li>
+          <li>CV Builder (1 template)</li>
+          <li>Smart Apply assistant</li>
+          <li class="no">Unlimited searches</li>
+          <li class="no">Priority AI processing</li>
+          <li class="no">All 6 CV templates</li>
+          <li class="no">PDF download</li>
+        </ul>
+        <button class="btn btn-g btn-full" onclick="gotoTab('placement')">Get Started Free</button>
+      </div>
+      <div class="plan-card pro">
+        <div class="plan-badge">⭐ MOST POPULAR</div>
+        <div class="plan-name">Pro Plan</div>
+        <div style="display:flex;gap:12px;align-items:flex-end;margin-bottom:4px">
+          <div><div class="plan-price">₹999 <span>/ month</span></div></div>
+          <div style="margin-bottom:8px"><div style="font-size:12px;font-weight:700;color:var(--g)">or ₹9,999/year</div><div style="font-size:10px;color:var(--muted)">Save ₹1,989</div></div>
+        </div>
+        <div class="plan-sub">Everything you need to land your dream job</div>
+        <ul class="plan-feats">
+          <li>Unlimited AI job searches</li>
+          <li>AI CV analysis & Master Profile</li>
+          <li>10 tailored applications per search</li>
+          <li>ATS score optimisation</li>
+          <li>All 6 premium CV templates</li>
+          <li>PDF & TXT CV download</li>
+          <li>Smart Apply assistant</li>
+          <li>Recruiter email drafting</li>
+          <li>Priority Gemini AI processing</li>
+          <li>Saved profile & history</li>
+        </ul>
+        <button class="btn btn-p btn-full" onclick="activatePro()">⭐ Activate Pro — ₹999/mo</button>
+        <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:10px">or ₹9,999/year · Cancel anytime</div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px;text-align:center">
+      <p style="font-size:13px;color:var(--text2);max-width:500px;margin:0 auto">
+        💳 <strong>Payment Gateway:</strong> Razorpay / Stripe integration ready to activate. Contact <strong>Raman Jha</strong> at <a href="mailto:founder@careeraxis.ai" style="color:var(--p)">founder@careeraxis.ai</a> to enable billing or for enterprise pricing.
+      </p>
+    </div>`;
+}
+function activatePro(){
+  if(!S.user){alert('Please sign in first.');gotoTab('profile');return}
+  // Demo: activate pro immediately (in production, this would go to payment)
+  S.db.users[S.user.email].plan='pro';
+  saveDB();updateTrialBadge();
+  const t=document.createElement('div');t.style.cssText='position:fixed;bottom:20px;right:20px;background:var(--p);color:#fff;padding:12px 20px;border-radius:10px;font-size:13px;font-weight:600;z-index:9999;box-shadow:0 4px 20px rgba(29,78,216,.4)';
+  t.textContent='⭐ Pro activated! (Demo mode — real payment via Razorpay)';document.body.appendChild(t);setTimeout(()=>t.remove(),4000);
+}
+function showUpgradeModal(){
+  q('upgrade-plans').innerHTML=`<div class="pricing-grid" style="margin-top:8px">
+    <div class="plan-card">
+      <div class="plan-name">Monthly</div>
+      <div class="plan-price">₹999 <span>/ month</span></div>
+      <button class="btn btn-o btn-full" style="margin-top:12px" onclick="activatePro();closeModal('upgrade-modal')">Subscribe Monthly</button>
+    </div>
+    <div class="plan-card pro"><div class="plan-badge">BEST VALUE</div>
+      <div class="plan-name">Annual</div>
+      <div class="plan-price">₹9,999 <span>/ year</span></div>
+      <div style="font-size:11px;color:var(--g);margin-bottom:8px">Save ₹1,989</div>
+      <button class="btn btn-p btn-full" style="margin-top:4px" onclick="activatePro();closeModal('upgrade-modal')">Subscribe Annually</button>
     </div>
   </div>`;
+  showModal('upgrade-modal');
 }
 
-function copyCV(){
-  const cv=S.cvGenerated;
-  if(!cv){alert('No CV generated yet.');return}
-  const txt=`${cv.name}\n${cv.email} | ${cv.phone} | ${cv.location}\n\nPROFESSIONAL SUMMARY\n${cv.summary}\n\nEXPERIENCE\n${(cv.experience||[]).map(e=>`${e.role} — ${e.company} (${e.period})\n${(e.achievements||[]).map(a=>'• '+a).join('\n')}`).join('\n\n')}\n\nSKILLS\n${(cv.skills||[]).join(' • ')}\n\nEDUCATION\n${(cv.education||[]).map(e=>`${e.degree} — ${e.institution} (${e.year})`).join('\n')}\n\nCERTIFICATIONS\n${(cv.certifications||[]).join(', ')}`;
-  navigator.clipboard.writeText(txt).then(()=>alert('CV copied to clipboard!')).catch(()=>alert('Copy failed. Please select and copy manually.'));
+// ═══════════════════════════════════════════
+//  ABOUT TAB
+// ═══════════════════════════════════════════
+function buildAboutTab(){
+  const el=q('about-content');el.classList.add('fu');
+  el.innerHTML=`
+    <div class="about-hero">
+      <div style="font-size:48px;margin-bottom:16px">🎯</div>
+      <h1>CareerAxis AI</h1>
+      <p>The world's most intelligent career placement platform — combining AI-powered job search, CV tailoring, ATS optimisation, and smart application automation in one seamless experience.</p>
+    </div>
+    <div class="about-grid">
+      <div class="about-card">
+        <h3>🚀 Our Mission</h3>
+        <p>CareerAxis AI was founded with a singular mission: to democratise access to intelligent career tools that were previously available only to those with expensive recruiters and executive coaches. We believe every professional deserves a platform that works as hard as they do.</p>
+        <p style="margin-top:10px">Our AI placement engine combines the depth of a senior headhunter with the speed of technology — scanning dozens of portals, tailoring every application, and giving you the edge to stand out in a crowded market.</p>
+      </div>
+      <div class="about-card">
+        <h3>💡 What Makes Us Different</h3>
+        <p>Unlike generic job boards, CareerAxis AI doesn't just show you jobs — it actively <strong>prepares you</strong> for each one. Every application is uniquely tailored, every CV is ATS-optimised, and every cover letter speaks directly to what the employer is looking for.</p>
+        <p style="margin-top:10px">Our Smart Apply assistant bridges the gap between AI intelligence and real-world application — giving you the exact data to paste, the cover letter to copy, and the email draft to send.</p>
+      </div>
+      <div class="about-card">
+        <h3>🌍 Global Reach</h3>
+        <p>CareerAxis AI searches across 14+ job portals spanning India, UAE, USA, UK, Europe, Australia and Southeast Asia simultaneously. Whether you're a seasoned senior executive or a rising professional, we find the roles that truly match your calibre.</p>
+        <p style="margin-top:10px">From <strong>Naukri</strong> and <strong>LinkedIn</strong> to <strong>Gulf Talent</strong>, <strong>Reed UK</strong>, and <strong>SEEK Australia</strong> — your next opportunity is already waiting.</p>
+      </div>
+      <div class="about-card">
+        <h3>🔒 Privacy & Security</h3>
+        <p>Your CV, profile and personal data never leave your browser. CareerAxis AI processes everything locally using your own Gemini API key — we are never a middleman for your sensitive career data.</p>
+        <p style="margin-top:10px">We are committed to full GDPR and DPDP Act (India) compliance. Your data is yours — always.</p>
+      </div>
+    </div>
+    <div class="team-card">
+      <div class="team-av">RJ</div>
+      <div class="team-info">
+        <h3>Raman Jha</h3>
+        <div class="role">Founder & CEO, CareerAxis AI</div>
+        <p>Raman Jha is a senior insurance and underwriting professional with deep expertise in AI-powered automation, InsurTech, and financial services. With a background spanning life insurance underwriting, AI product development, and regulatory compliance (IRDAI), Raman built CareerAxis AI to solve a real problem he witnessed first-hand: talented professionals losing out on opportunities not because of their skills, but because their applications didn't stand out.</p>
+        <p style="margin-top:10px">"Great professionals deserve great opportunities. CareerAxis AI exists to make that connection — intelligently, efficiently, and at scale." — <em>Raman Jha</em></p>
+        <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+          <a href="mailto:raman@careeraxis.ai" class="btn btn-o btn-sm">📧 raman@careeraxis.ai</a>
+          <a href="https://linkedin.com/in/ramanjha" target="_blank" class="btn btn-g btn-sm">🔗 LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top:20px;text-align:center">
+      <h3 style="font-family:var(--fd);font-size:18px;margin-bottom:8px">Ready to accelerate your career?</h3>
+      <p style="color:var(--muted);font-size:13px;margin-bottom:16px">Join thousands of professionals finding better roles with CareerAxis AI.</p>
+      <button class="btn btn-p btn-lg" onclick="gotoTab('placement')">🚀 Start Your Job Search</button>
+    </div>`;
 }
+
+// ═══ SAVE PREFS (modal) ═══
+function savePrefs(){
+  S.prefs.jobTypes=getChipVals('pm-jt')||S.prefs.jobTypes;
+  closeModal('prefs-modal');
+}
+
+// ═══ INIT ═══
+window.addEventListener('load',initApp);
 </script>
 </body>
 </html>
